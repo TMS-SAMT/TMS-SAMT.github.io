@@ -245,7 +245,7 @@
             body {
                 max-width: 720px;
                 border: 1px solid black;
-		margin: auto;
+                margin: auto;
             }
 
             * {
@@ -822,7 +822,7 @@
 			</p>
 		</div>	
 		<div class="w3-container w3-light-blue">
-            <h3>Initialize procedure</h2>
+            <h3>Initialize procedure</h3>
         </div>
         <div class="w3-container">
 			<table><tr><td><fieldset hidden>
@@ -834,7 +834,7 @@
 							<label for="DCS1">Digital (default)</label>
 						</div>
 						<div>	
-							<input type="radio" id="analog"  name="control_sequence" onclick="handleClick_CS(this);" value="ACS1">
+							<input type="radio" id="analog" name="control_sequence" onclick="handleClick_CS(this);" value="ACS1">
 							<!--<div id="input_Vpp_th_box">-->
 							<label for="ACS1">Analog, with EMG threshold:</label>
 							<input type="number" id="Vpp_th" name="Vpp_th" max="1000" min="1" placeholder="50" step="1" value="50" size="4" disabled required>
@@ -844,11 +844,11 @@
 					<fieldset>
 						<legend>Stepping adaptiveness of control sequence</legend>
 						<div>
-							<input type="radio" id="non_adapt" name="stepping_method"onclick="handleClick_A(this);"  value="non_adapt" checked>
+							<input type="radio" id="non_adapt" name="stepping_method" onclick="handleClick_A(this);" value="non_adapt" checked>
 							<label for="non_adapt">Non-adaptive (default)</label>
 						</div>
 						<div>
-							<input type="radio" id="adapt"     name="stepping_method" onclick="handleClick_A(this);" value="adapt">
+							<input type="radio" id="adapt" name="stepping_method" onclick="handleClick_A(this);" value="adapt">
 							<label for="adapt">Adaptive</label>
 						</div>
 						
@@ -892,7 +892,7 @@
         </div>
 
         <div class="w3-container w3-light-blue">
-            <h3>Motor threshold estimate</h2>
+            <h3>Motor threshold estimate</h3>
         </div>
 
         <div class="w3-container">
@@ -901,7 +901,7 @@
 			<table id="response_input" hidden><tr><td>
 			<fieldset id="is_suprathreshold_bottoms" hidden>
 				<legend>TMS response present / suprathreshold?</legend>
-				<button class="w3-green" id="MT_MEP" onclick="MT_stimulate(true);"  disabled><u>Y</u>es: present / suprathreshold</button> 
+				<button class="w3-green" id="MT_MEP" onclick="MT_stimulate(true);" disabled><u>Y</u>es: present / suprathreshold</button> 
 				<button class="w3-red" id="MT_noMEP" onclick="MT_stimulate(false);" disabled><u>N</u>o:  absent  / subthreshold  </button>
 			</fieldset>
 			<fieldset id="response_Vpp_box" hidden>
@@ -932,10 +932,10 @@
         </div>
 
         <div class="w3-container w3-blue">
-            <h2>Information about this app</h3>
+            <h2>Information about this app</h2>
         </div>
 		<div class="w3-container w3-light-blue">
-            <h3>Method description</h2>
+            <h3>Method description</h3>
         </div>
 		<div class="w3-container">
 			<p>The MT is estimated using a stochastic approximation method with a first-order digital control sequence (DCS). The step size of the control sequence follows harmonic convergence without adaptive stepping. The initial step size of the control sequence, <i>a</i><sub>0</sub>, is 6.7% MSO.</p>
@@ -946,9 +946,9 @@
             <ul>
                 <li>The tool is provided as is. In particular, the description of the quality of the MT estimation is based on an approximate algorithm which may prematurely declare the estimation “good”. The final judgement on the MT must always be made by the operator!</li>
 				
-		<li>The stochastic approximation algorithm may attempt to step to impossible amplitudes for the MT estimate (below 0% or above 100% MSO). The implementation in this app limits both the MT estimate and the next amplitude on the lower end, whereas only the next amplitude is limited on the upper end, with the MT estimate possibly exceeding 100% MSO. When the stimulation amplitude is at or near these two limits, the confidence interval or probable range may also be inaccurate.</li>
+                <li>The stochastic approximation algorithm may attempt to step to impossible amplitudes for the MT estimate (below 0% or above 100% MSO). The implementation in this app limits both the MT estimate and the next amplitude on the lower end, whereas only the next amplitude is limited on the upper end, with the MT estimate possibly exceeding 100% MSO. When the stimulation amplitude is at or near these two limits, the confidence interval or probable range may also be inaccurate.</li>
                 
-		<li>The copy button does not work on some mobile devices. Please copy the text manually if the copy button fails.</li>
+                <li>The copy button does not work on some mobile devices. Please copy the text manually if the copy button fails.</li>
 				
             </ul>
 			<p>If you have questions or feedback, please email Boshuo Wang at <a href="mailto:boshuo.wang@duke.edu">boshuo.wang@duke.edu</a>.</p>
@@ -959,7 +959,7 @@
 			</p>
 		</div>
 		<div class="w3-container w3-light-blue">
-            <h3>References</h2>
+            <h3>References</h3>
         </div>
 		<div class="w3-container">	
 			<p>This HTML/JS application is written by Boshuo Wang and Lari M. Koponen.</p>
@@ -975,7 +975,7 @@
 			<!-- <ul><li></li></ul> -->
 		</div>
 		<div class="w3-container w3-light-blue">
-            <h3>Copyright, licensing, and no warranty</h2>
+            <h3>Copyright, licensing, and no warranty</h3>
         </div>
 		<div class="w3-container">
 			<p>
