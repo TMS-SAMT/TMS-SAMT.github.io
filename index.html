@@ -813,38 +813,39 @@
             <h2>Stochastic Approximator of MT (SAMT)</h2>
         </div>
 		<div class="w3-container">
-			<p>
-				<font size="1">
-				<div>version 1.3, March 5, 2023.</div>
-				<div>© 2022-2023, Boshuo Wang, Lari Koponen, Stefan Goetz, Angel Peterchev, at Duke University, the University of Birmingham.</div>
-				<div>All rights reserved.</div>
-				</font>
-			</p>
+			<font size="1">
+				<p>
+					version 1.3, March 5, 2023.<br>
+					© 2022-2023, Boshuo Wang, Lari Koponen, Stefan Goetz, Angel Peterchev, at Duke University, the University of Birmingham.<br>
+					All rights reserved.
+				</p>
+			</font>
+			
 		</div>	
 		<div class="w3-container w3-light-blue">
             <h3>Initialize procedure</h3>
         </div>
         <div class="w3-container">
-			<table><tr><td><fieldset hidden>
+			<table><tbody><tr><td><fieldset hidden="">
 				<legend>Estimation method</legend>
 					<fieldset>
 						<legend>Control sequence</legend>
 						<div>
-							<input type="radio" id="digital" name="control_sequence" onclick="handleClick_CS(this);" value="DCS1" checked>
+							<input type="radio" id="digital" name="control_sequence" onclick="handleClick_CS(this);" value="DCS1" checked="">
 							<label for="DCS1">Digital (default)</label>
 						</div>
 						<div>	
 							<input type="radio" id="analog" name="control_sequence" onclick="handleClick_CS(this);" value="ACS1">
 							<!--<div id="input_Vpp_th_box">-->
 							<label for="ACS1">Analog, with EMG threshold:</label>
-							<input type="number" id="Vpp_th" name="Vpp_th" max="1000" min="1" placeholder="50" step="1" value="50" size="4" disabled required>
+							<input type="number" id="Vpp_th" name="Vpp_th" max="1000" min="1" placeholder="50" step="1" value="50" size="4" disabled="" required="">
 							μV<sub>pp</sub>, (0 to 1000].
 						</div>	
 					</fieldset>
 					<fieldset>
 						<legend>Stepping adaptiveness of control sequence</legend>
 						<div>
-							<input type="radio" id="non_adapt" name="stepping_method" onclick="handleClick_A(this);" value="non_adapt" checked>
+							<input type="radio" id="non_adapt" name="stepping_method" onclick="handleClick_A(this);" value="non_adapt" checked="">
 							<label for="non_adapt">Non-adaptive (default)</label>
 						</div>
 						<div>
@@ -856,7 +857,7 @@
 					<fieldset>
 						<legend>Initial step size of control sequence (<i>a</i><sub>0</sub>)</legend>
 						<div>
-							<input type="radio" id="default_a0" name="a0" onclick="handleClick_a0(this);" value="default" checked>
+							<input type="radio" id="default_a0" name="a0" onclick="handleClick_a0(this);" value="default" checked="">
 								
 							<label for="default_a0">Optimal (default)</label>
 						</div>
@@ -864,7 +865,7 @@
 							<input type="radio" id="custom_a0" name="a0" onclick="handleClick_a0(this);" value="custom">
 							<!--<div id="id="input_a0_box">-->
 							<label for="custom_a0">Custom:</label>
-							<input type="number" id="a0_custom" name="a0_custom" max="20" min="1" placeholder="6.7" step="0.1" value="6.7" size="4" disabled required>
+							<input type="number" id="a0_custom" name="a0_custom" max="20" min="1" placeholder="6.7" step="0.1" value="6.7" size="4" disabled="" required="">
 							% MSO, [1, 20].
 						</div>
 					</fieldset>
@@ -874,21 +875,21 @@
 			</fieldset></td></tr>
 			<tr><td><fieldset>
                 <legend>Enter initial (suprathreshold) TMS pulse amplitude (intensity)</legend>
-                <input type="number" id="MT_0" name="MT_0" max="100" min="1" placeholder="50" step="1" value="50" size="4" required>
+                <input type="number" id="MT_0" name="MT_0" max="100" min="1" placeholder="50" step="1" value="50" size="3" required="">
 				% MSO
-			</fieldset></td></tr></table>
+			</fieldset></td></tr></tbody></table>
 			
 			<!--
 			<p id="start_button">
 				
 			</p>
-			<p id="reset_button" hidden>
+			<p id="reset_button" hidden="">
 				
 			</p>
 			-->
 			
             <p id="Start_msg"><button class="w3-green" id="MT_start" onclick="MT_start();"><u>S</u>tart</button> and move to next section. </p>
-			<p id="Reset_msg" hidden><button class="w3-black" id="MT_reset" onclick="MT_reset();"><u>R</u>eset</button> to start a new procedure.</p>
+			<p id="Reset_msg" hidden=""><button class="w3-black" id="MT_reset" onclick="MT_reset();"><u>R</u>eset</button> to start a new procedure.</p>
         </div>
 
         <div class="w3-container w3-light-blue">
@@ -896,28 +897,28 @@
         </div>
 
         <div class="w3-container">
-			<p hidden><output id="MT_method"></output></p>
+			<p hidden=""><output id="MT_method"></output></p>
             <p><output id="MT_nextPulse">Start procedure first.</output></p>
-			<table id="response_input" hidden><tr><td>
-			<fieldset id="is_suprathreshold_bottoms" hidden>
+			<table id="response_input" hidden=""><tbody><tr><td>
+			<fieldset id="is_suprathreshold_bottoms" hidden="">
 				<legend>TMS response present / suprathreshold?</legend>
-				<button class="w3-green" id="MT_MEP" onclick="MT_stimulate(true);" disabled><u>Y</u>es: present / suprathreshold</button> 
-				<button class="w3-red" id="MT_noMEP" onclick="MT_stimulate(false);" disabled><u>N</u>o:  absent  / subthreshold  </button>
+				<button class="w3-green" id="MT_MEP" onclick="MT_stimulate(true);" disabled=""><u>Y</u>es: present / suprathreshold</button> 
+				<button class="w3-red" id="MT_noMEP" onclick="MT_stimulate(false);" disabled=""><u>N</u>o:  absent  / subthreshold  </button>
 			</fieldset>
-			<fieldset id="response_Vpp_box" hidden>
+			<fieldset id="response_Vpp_box" hidden="">
 				<legend>TMS response</legend>
 				<div>
 					<label>EMG:</label>
-					<input type="number" id="V_pp" name="V_pp" max="1000000" min="0" placeholder="50" step="1" value="50" size="6" required>
+					<input type="number" id="V_pp" name="V_pp" max="1000000" min="0" placeholder="50" step="1" value="50" size="6" required="">
 					μV<sub>pp</sub>, (0 to 10<sup>6</sup>].
 				</div>
 				<div>
-					<button class="w3-green" id="Enter_Vpp" onclick="MT_stimulate(false);" disabled><u>Enter</u></button>	<!--Dummy input for analog methods-->
+					<button class="w3-green" id="Enter_Vpp" onclick="MT_stimulate(false);" disabled=""><u>Enter</u></button>	<!--Dummy input for analog methods-->
 				</div>
 			</fieldset>
-			</td></tr></table>
-			<p><output id="MT_estimate" hidden></output>
-            <br><output id="MT_estimateDescription" hidden></output></p>
+			</td></tr></tbody></table>
+			<p><output id="MT_estimate" hidden=""></output>
+            <br><output id="MT_estimateDescription" hidden=""></output></p>
         </div>
 
         <div class="w3-container w3-light-blue">
@@ -927,7 +928,7 @@
         <div class="w3-container">
             <p>A read-only list of information from the latest estimation. <br>
 			<button class="w3-green" onclick="copyToClipboard()"><u>C</u>opy</button> and save if needed.</p>
-            <textarea id="MT_pulseList" rows="2" style="font-size:85%;" readonly></textarea>
+            <textarea id="MT_pulseList" rows="2" style="font-size:85%;" readonly=""></textarea>
             <p></p>
         </div>
 
