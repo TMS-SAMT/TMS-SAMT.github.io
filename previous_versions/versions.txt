@@ -1,0 +1,100 @@
+Filename							Date			Version		Description
+SAMT_v20230417.html					2023.04.17		1.3.5		Fixed issues with alt, ctrl, shift keys (code for meta key doesn't work);
+																Updated version to 1.3.5 and date to 4.17;
+
+SAMT_v20230414.html					2023.04.14		1.3.4		MAJOR UPDATE: repository
+																Changed webpage title; 
+																Centered contents to center of page (line 248); 
+																Fixed <div> and <p> ordering; 
+																Fixed non-matching <h3> and </h2>; 
+																Added <tbody>; 
+																Added ="" to "checked", "disabled", "hidden", "readonly" and "required" properties; 
+																Changed width of initial amplitude input box to 3;
+																Removed embedded version on BSEL site;
+																Removed text regarding behavior of app embedded on BSEL site;
+																Initial upload to GitHub repository: TMS-SAMT/TMS-SAMT.github.io
+																Updated description date to 4.14;
+
+SAMT_v20230412.html					2023.04.12		1.3.3		Reduced font size of text on version and copyright at top of page;
+																Added description about range for initial amplitude to be considered close to threshold; 
+																Changed description on number of steps for accurate estimation from 15 to a range of 15-18 with comparison to both IFCN 5/10 and adapative ML-PEST;
+																Updated description on copy button behavior;
+																Added email for comments and questions;
+																Added date 4.12 for update of app information (for update that is only on the app's description and appearance (mostly HTML) and not on the app's algorithm implementation (JavaScript));
+
+SAMT_v20230305.html					2023.03.05		1.3.2		Added text regarding behavior of shortcuts of app embedded on BSEL site;
+																Updated text regarding algorithm's behavior near 0 and 100 %MSO;
+																Updated the version date to 3.05 (v);
+
+SAMT_v20230215.html					2023.02.15		1.3.1		Updated the version date to 2.15;
+																Updated CI look-up table;
+																Moved short text on version and copyright to top of page;
+																Changed heading level for app information title;
+																Reinstated text about CI to be described in future publication
+																Updated language on licensing and warranty to include links and to state No warranty in title;
+
+SAMT_v20230207.html					2023.02.07		1.3.0		MAJOR UPDATE: keeping one method only; licensing
+																Updated version number from 1.2 to 1.3;
+																Updated the version date to 2.07;
+																Changed file name and app name from SAMTE to SAMT;
+																Provided more specific instructions regarding new initial amplitude if restart is recommended;
+																Changed variable name for adaptiveness radio selection from "adapt" to "non_adapt";
+																Removed display of descriptions regarding method's control sequence, adaptiveness, and initial step size;
+																Hid selection buttoms for different methods;
+																Sub-divided the information section;
+																Removed information on analog method and adaptive stepping;
+																Moved information on publication to a new Reference section
+																Added new section with detailed copyright and licensing language based on discussion with Duke OTC;
+
+SAMTE_v20230118.html				2023.01.18		1.2.0		MAJOR UPDATE: CI LUT
+																Updated version number from 1.1 to 1.2;
+																Updated the version date to 1.18;
+																Added count of responses in past 10 pulses;
+																Added distinction of CI and probable range;
+																Reduced number of pulses for accurate estimation from 20 to 15;
+																Added CI look-up table;
+																Updated optimal initial step size for non-adaptive methods (based on new results);
+											
+SAMTE_v20230116.html				2023.01.16		1.1.1		Added version number and date for display within app;
+																Updated the version date to 1.16, then 1.17;
+																Activated keyboard shortcuts when page is loaded;
+																Added shortcuts for start, reset, and copy, and updated all bottons;
+																Changed app name to SAMTE (within app);
+																Updates on display text for table;
+																Revised text for display ranges of inputs;
+												
+SAMTE_v20230115.html				2023.01.15		1.1.0		MAJOR UPDATE: customizable a_0 (version 1.1, retro)
+																Updated the version date to 1.15;
+																Added customizable a_0											
+
+SAMTE_v20230113.html				2023.01.13		1.0.2		Changed file name app to SAMTE (but name not changed within app);
+																Numerous minor updates in JavaScript;
+																Added specific descriptions on response quality for analog versions;
+																Added recordings of both steps and deltaYs;
+																Removed MT_UI_start();
+																Added Brain Stim letter 10.1016/j.brs.2022.07.057 to references;
+
+MT_estimator_2x2_v20230113.html 	2023.01.13		1.0.1		Updated the version date to 1.13 (typo 23); 
+																Added MT_UI_start();
+																Numerous minor updates in JavaScript;
+												
+MT_estimator_2x2_v20230112.html 	2023.01.12		1.0.0		MAJOR UPDATE: merged 4 methods (version 1.0, retro)
+																Updated the version date to 1.12; 
+																Moved information on publication etc. to information section, which is renamed and expanded from the previous sub-section "Known bugs and limitation";
+
+MT_estimator_DCS1_v20230111.html	2023.01.11		0.4			MAJOR UPDATE: merged DCS-H and DCS-HA;
+																Added radio selection button for methods;
+																Added copyright notice;
+																Added publication information;
+
+MT_estimator_ACS1-HA_v20230110.html 2023.01.10		0.3			MAJOR UPDATE: Analog version
+																Added input boxes for custom threshold definition and to input Vpp response;
+
+MT_estimator_DCS1-HA_v20230110.html 2023.01.10		0.2			MAJOR UPDATE: Adaptive version
+																Changed algorithm to record sign changes of response;
+
+MT_estimator_DCS1-H_v20230110.html  2023.01.10		0.1			Updated the version date to 2023.01.10;
+																Minor changes compared v0.0;
+
+MT_estimator.html					2022.06.16		0.0			Original version scripted by Lari (dated 2022.06.16);
+																Nonadaptive DCS only with "optimal" a_0 (based on preprint version June 2022);
