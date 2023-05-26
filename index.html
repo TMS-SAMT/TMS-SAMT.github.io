@@ -329,17 +329,17 @@
                         var MEPs=this.countMEPs[this.index-1];
                         
 						if (this.digital){
-							if (MEPs<3) {
+							if (MEPs<2) {
 								return "The last 10 pulses have too few responses ("+MEPs+"). Give a few more pulses or restart at a higher initial TMS pulse amplitude.";
-							} else if (MEPs>7) {
+							} else if (MEPs>8) {
 								return "The last 10 pulses have too many responses ("+MEPs+"). Give a few more pulses or restart at a lower initial TMS pulse amplitude.";
 							} else {
 								return "At "+this.index+" pulses, and with reasonable number of both responses and no responses, this estimate is potentially accurate.";
 							}
 						} else {
-							if (MEPs<3) {
+							if (MEPs<2) {
 								return "The last 10 pulses have too few suprathreshold responses ("+MEPs+"). Give a few more pulses or restart at a higher initial TMS pulse amplitude.";
-							} else if (MEPs>7) {
+							} else if (MEPs>8) {
 								return "The last 10 pulses have too few subthreshold responses ("+(10-MEPs)+"). Give a few more pulses or restart at a lower initial TMS pulse amplitude.";
 							} else {
 								return "At "+this.index+" pulses, and with reasonable number of both supra- and subthreshold responses, this estimate is potentially accurate.";
@@ -349,17 +349,17 @@
 						var MEPs=this.countMEPs[this.index-1];
                         var tmp_str="<br> <strong>Procedure terminated!</strong> Reset to start a new procedure.";
 						if (this.digital){
-							if (MEPs<3) {
+							if (MEPs<2) {
 								return "The last 10 pulses have too few responses ("+MEPs+"). Restart at a higher initial TMS pulse amplitude." + tmp_str;
-							} else if (MEPs>7) {
+							} else if (MEPs>8) {
 								return "The last 10 pulses have too many responses ("+MEPs+"). Restart at a lower initial TMS pulse amplitude."+ tmp_str;
 							} else {
 								return "At "+this.index+" pulses, and with reasonable number of both responses and no responses, this estimate is potentially accurate."+ tmp_str;
 							}
 						} else {
-							if (MEPs<3) {
+							if (MEPs<2) {
 								return "The last 10 pulses have too few suprathreshold responses ("+MEPs+"). Restart at a higher initial TMS pulse amplitude."+ tmp_str;
-							} else if (MEPs>7) {
+							} else if (MEPs>8) {
 								return "The last 10 pulses have too few subthreshold responses ("+(10-MEPs)+"). Restart at a lower initial TMS pulse amplitude."+ tmp_str;
 							} else {
 								return "At "+this.index+" pulses, and with reasonable number of both supra- and subthreshold responses, this estimate is potentially accurate."+ tmp_str;
@@ -441,7 +441,7 @@
 						additional_steps=10;
 						LB = get_CI_range(10-this.countMEPs[index-1],index)*(a_0*expected_deltaY);
 						UB = get_CI_range(this.countMEPs[index-1],   index)*(a_0*expected_deltaY);
-						if ((this.countMEPs[index-1]>=3) && this.countMEPs[index-1]<=7) {
+						if ((this.countMEPs[index-1]>=2) && this.countMEPs[index-1]<=8) {
 							this.isCI.push(true);
 						} else {
 							this.isCI.push(false);
