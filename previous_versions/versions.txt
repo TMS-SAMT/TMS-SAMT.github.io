@@ -1,4 +1,20 @@
 Filename							Date			Version		Description
+SAMT_v20230531.html					2023.05.31		1.4.1		Remove tab from end of row of display list
+																Change info to stats for 25 pulses.
+
+SAMT_v20230526.html					2023.05.26		1.4.0		Update version number to 1.4.0 and date to 5.26;
+																Removed mentioning that CI will be implemented in a future version.
+																The app now displays that there are too few pulses until pulse No. 24. After pulse No. 25, the app starts to describe the estimate to be "potentially accurate" or having too few/many responses.
+																Threshold misestimation only given for 0,1,9,10 responses. Removed 2 and 8.
+																Auto-terminate the procedure after step 29 and provide instruction to restart.
+																
+SAMT_v20230525.html					2023.05.25		1.3.6		Removed confidence intervals and related text/displays. In the info section, indicated that CI will be implemented in a future version.
+																The app now displays that there are too few pulses until pulse No. 19. After pulse No. 20, the app starts to describe the estimate to be "potentially accurate" or having too few/many responses.
+																Auto-terminate the procedure after step 30 and provide instruction to restart.
+																Description updated to indicate that on average it takes 20 and 30 pulse to reach median relative error of 1.5% and 1.2%, respectively. (However, doesn't guarantee error of individual subjects.)
+																The output log is now in reverse order, showing later pulses first.
+																Updated version to 1.3.6 and date to 5.25;
+
 SAMT_v20230417.html					2023.04.17		1.3.5		Fixed issues with alt, ctrl, shift keys (code for meta key doesn't work);
 																Updated version to 1.3.5 and date to 4.17;
 
