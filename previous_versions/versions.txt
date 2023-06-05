@@ -1,6 +1,7 @@
 Filename							Date			Version		Description
 SAMT_v20230531.html					2023.05.31		1.4.1		Remove tab from end of row of display list
 																Change info to stats for 25 pulses.
+																Fixed extra lines at end of log.
 
 SAMT_v20230526.html					2023.05.26		1.4.0		Update version number to 1.4.0 and date to 5.26;
 																Removed mentioning that CI will be implemented in a future version.
