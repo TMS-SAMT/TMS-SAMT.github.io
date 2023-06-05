@@ -741,9 +741,10 @@
 				
                 var lines = document.getElementById("MT_pulseList").innerHTML.split('\n');
 				var newout=lines[0]+"\n"+str;
-				for(var i = 1;i < lines.length;i++){
+				for(var i = 1;i < lines.length-1;i++){
 					newout+=lines[i]+"\n";
 				}
+				newout+=lines[i];
 				document.getElementById("MT_pulseList").innerHTML=newout;
                 document.getElementById("MT_pulseList").rows=MT_estimator.index+2;
 
