@@ -264,7 +264,7 @@
              * In addition, the class implements a coarse estimate of the probable range of the MT estimation.
              * 
              * Author: Lari Koponen (initial version: DCS1-H), Boshuo Wang (additional versions and parameter choices, other UI updates and improvements)
-             * Version: 2023-05-31
+             * Version: 2023-06-07
              */
             var MT_estimator;
 
@@ -324,48 +324,28 @@
                 get description() {
                     if (this.index<25) {
                         return "This estimate is likely inaccurate due to too few pulses ("+this.index+").";
-                    } else if (this.index<29){
+                    } else {
                         // A good estimation sequence must have both MEPs and no MEPs towards the end, count last 10 pulses
                         var MEPs=this.countMEPs[this.index-1];
                         
 						if (this.digital){
 							if (MEPs<2) {
-								return "The last 10 pulses have too few responses ("+MEPs+"). Give a few more pulses or restart at a higher initial TMS pulse amplitude.";
+								return "The last 10 pulses have too few responses ("+MEPs+"). Give a few more pulses or restart at a 20% MSO higher initial TMS pulse amplitude.";
 							} else if (MEPs>8) {
-								return "The last 10 pulses have too many responses ("+MEPs+"). Give a few more pulses or restart at a lower initial TMS pulse amplitude.";
+								return "The last 10 pulses have too many responses ("+MEPs+"). Give a few more pulses or restart at a 20% MSO lower initial TMS pulse amplitude.";
 							} else {
 								return "At "+this.index+" pulses, and with reasonable number of both responses and no responses, this estimate is potentially accurate.";
 							}
 						} else {
 							if (MEPs<2) {
-								return "The last 10 pulses have too few suprathreshold responses ("+MEPs+"). Give a few more pulses or restart at a higher initial TMS pulse amplitude.";
+								return "The last 10 pulses have too few suprathreshold responses ("+MEPs+"). Give a few more pulses or restart at a 20% MSO higher initial TMS pulse amplitude.";
 							} else if (MEPs>8) {
-								return "The last 10 pulses have too few subthreshold responses ("+(10-MEPs)+"). Give a few more pulses or restart at a lower initial TMS pulse amplitude.";
+								return "The last 10 pulses have too few subthreshold responses ("+(10-MEPs)+"). Give a few more pulses or restart at a 20% MSO lower initial TMS pulse amplitude.";
 							} else {
 								return "At "+this.index+" pulses, and with reasonable number of both supra- and subthreshold responses, this estimate is potentially accurate.";
 							}
 						}
-                    } else {
-						var MEPs=this.countMEPs[this.index-1];
-                        var tmp_str="<br> <strong>Procedure terminated!</strong> Reset to start a new procedure.";
-						if (this.digital){
-							if (MEPs<2) {
-								return "The last 10 pulses have too few responses ("+MEPs+"). Restart at a higher initial TMS pulse amplitude." + tmp_str;
-							} else if (MEPs>8) {
-								return "The last 10 pulses have too many responses ("+MEPs+"). Restart at a lower initial TMS pulse amplitude."+ tmp_str;
-							} else {
-								return "At "+this.index+" pulses, and with reasonable number of both responses and no responses, this estimate is potentially accurate."+ tmp_str;
-							}
-						} else {
-							if (MEPs<2) {
-								return "The last 10 pulses have too few suprathreshold responses ("+MEPs+"). Restart at a higher initial TMS pulse amplitude."+ tmp_str;
-							} else if (MEPs>8) {
-								return "The last 10 pulses have too few subthreshold responses ("+(10-MEPs)+"). Restart at a lower initial TMS pulse amplitude."+ tmp_str;
-							} else {
-								return "At "+this.index+" pulses, and with reasonable number of both supra- and subthreshold responses, this estimate is potentially accurate."+ tmp_str;
-							}
-						}
-					}
+                    }
                 }
                 
                 stimulate(MEP,Vpp) {									// Update routine
@@ -745,6 +725,7 @@
 					newout+=lines[i]+"\n";
 				}
 				newout+=lines[i];
+				
 				document.getElementById("MT_pulseList").innerHTML=newout;
                 document.getElementById("MT_pulseList").rows=MT_estimator.index+2;
 
@@ -752,7 +733,8 @@
                 MT_UI();
 				
 				if (MT_estimator.index==29) {
-					//document.getElementById("response_input").hidden=true;
+					document.getElementById("response_input").hidden=true;
+					document.getElementById("MT_nextPulse").innerHTML="<strong>Procedure terminated!</strong> Reset to start a new procedure.";
 					document.getElementById("MT_MEP").disabled=true;
 					document.getElementById("MT_noMEP").disabled=true;
 					MT_estimator=null;
@@ -853,7 +835,7 @@
 		<div class="w3-container">
 			<font size="1">
 				<p>
-					version 1.4.1, May 31, 2023.<br>
+					version 1.4.2, June 07, 2023.<br>
 					© 2022-2023, Boshuo Wang, Lari Koponen, Stefan Goetz, Angel Peterchev, at Duke University, the University of Birmingham.<br>
 					All rights reserved.
 				</p>
