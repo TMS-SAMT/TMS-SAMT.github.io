@@ -5,6 +5,7 @@ SAMT_v20230608.html			2023.06.08	1.4.3		Updated version to 1.4.3 and date to 6.0
 									Included "+" for positive steps in output log.
 									Included counts of responses and no responses in display for potentially accurate estimate.
 									Replaced spaces with tabs (4 spaces = 1 tab).
+									Larger Y/N buttons (for better accessiblity on phone).
 									
 SAMT_v20230607.html			2023.06.07	1.4.2		Updated version to 1.4.2 and date to 6.07.
 									Moved message of "Procedure terminated! Reset to start a new procedure." up to replace the next stimulation amplitude suggestion at pulse No. 29.
