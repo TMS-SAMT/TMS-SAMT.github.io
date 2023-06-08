@@ -1,7 +1,7 @@
 Filename							Date			Version		Description
 SAMT_v20230607.html					2023.06.07		1.4.2		Updated version to 1.4.2 and date to 6.07.
-																Provided recommendation when threshold estimate is not accurate, a restart should used a 20% MSO higher/lower initial amplitude than the current trial.
 																Moved message of "Procedure terminated! Reset to start a new procedure." up to replace the next stimulation amplitude suggestion at pulse No. 29.
+																Included version info in the output log so it is also copied.
 
 SAMT_v20230531.html					2023.05.31		1.4.1		Removed tab from end of row of display list.
 																Changed info to stats for 25 pulses.
