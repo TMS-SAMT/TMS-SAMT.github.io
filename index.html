@@ -781,7 +781,26 @@
 
 			function downloadFile() {
 				var text = document.getElementById("MT_pulseList").innerHTML;
-				var filename = "SAMT_subjectID.txt";
+				const dateTime=new Date();
+				var M_str,d_str,h_str,m_str;
+				M_str=""+(dateTime.getMonth()+1);
+				d_str=""+dateTime.getDate();
+				h_str=""+dateTime.getHours();
+				m_str=""+dateTime.getMinutes();
+				if ((dateTime.getMonth()+1) < 10) {
+					M_str="0"+M_str;
+				}
+				if (dateTime.getDate() < 10) {
+					d_str="0"+d_str;
+				} 
+				if (dateTime.getHours() < 10) {
+					h_str="0"+h_str;
+				}
+				if (dateTime.getMinutes() < 10) {
+					m_str="0"+m_str;
+				}
+				var filename = "SAMT_"+dateTime.getFullYear()+M_str+d_str+"-"+h_str+m_str+"_subjectID.txt";
+				//var filename = "SAMT_subjectID.txt";
 				download(filename, text);
 			}
 
