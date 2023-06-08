@@ -534,7 +534,10 @@
 							}
 							break;
 						case "c":
-							copyToClipboard()
+							copyToClipboard();
+							break;
+						case "v":
+							downloadFile();
 							break;
 						case "y":
 							if (MT_estimator.digital) {
@@ -754,7 +757,25 @@
 
                 navigator.clipboard.writeText(element.textContent).then(() => {alert("Copied pulse list to clipboard.")}).catch(() => {alert("Copy to clipboard failed, a known problem with Android phones.")});
             }
-		
+			
+			function downloadFile() {
+                var text = document.getElementById("MT_pulseList").innerHTML;
+				var filename = "MT_subjectID.txt";
+				download(filename, text);
+            }
+			function download(filename, text) {
+				var element = document.createElement('a');
+				element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+				element.setAttribute('download', filename);
+
+				element.style.display = 'none';
+				document.body.appendChild(element);
+
+				element.click();
+
+				document.body.removeChild(element);
+			}
+			
 			function handleClick_CS(radio) {
 				if (radio.value=="DCS1") {
 					//document.getElementById("input_Vpp_th_box").hidden=true;
@@ -947,7 +968,7 @@
         <div class="w3-container">
             <p>
 				A read-only list of information from the latest estimation. <br>
-				<button class="w3-green" onclick="copyToClipboard()"><u>C</u>opy</button> and save if needed.
+				<button class="w3-green" onclick="copyToClipboard()"><u>C</u>opy</button> or <button class="w3-green" onclick="downloadFile()">Sa<u>v</u>e</button> if needed.
 			</p>
             <textarea id="MT_pulseList" rows="2" style="font-size:85%;" readonly=""></textarea>
             <p></p>
