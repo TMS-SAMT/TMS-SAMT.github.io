@@ -616,7 +616,7 @@
 						var info_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\tCount\n";
 					}
 					var version_str = "SAMT version 1.4.3, June 08, 2023.\n";
-					var date_str = "Procedure start time: \t"+getCurrentDateAndTime()+"\n";
+					var date_str = "Procedure start time:\t"+getCurrentDateAndTime()+"\n";
 					document.getElementById("MT_pulseList").innerHTML=version_str+date_str+info_str;
 					
 					// Add event listener for keyboard
@@ -760,7 +760,7 @@
 				var newout=lines[0]+"\n"+lines[1]+"\n";
 				document.getElementById("MT_pulseList").rows=MT_estimator.index+4;
 				if (MT_estimator.index==29) {
-					newout+="Procedure end time: \t"+getCurrentDateAndTime()+"\n";
+					newout+="Procedure end time:\t"+getCurrentDateAndTime()+"\n";
 					document.getElementById("MT_pulseList").rows=MT_estimator.index+5;
 				}
 				newout+=(lines[2]+"\n"+str);
