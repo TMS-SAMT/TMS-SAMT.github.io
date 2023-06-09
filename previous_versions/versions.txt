@@ -1,11 +1,14 @@
+Filename				Date		Version		Description
+
 SAMT_v20230608.html			2023.06.08	1.4.3		Updated version to 1.4.3 and date to 6.08.
-									Added feature to download the output log.
+									Added feature to download the output log. Pregenerated default filename.
 									Included date and time when procedure started and ended (when terminated at pulse 29) at beginning of output log.
 									Included column of MEP counts in output log.
 									Included "+" for positive steps in output log.
 									Included counts of responses and no responses in display for potentially accurate estimate.
-									Replaced spaces with tabs (4 spaces = 1 tab).
-									Larger Y/N buttons (for better accessiblity on phone).
+									Replaced spaces with tabs (1 tab =4 spaces).
+									Larger buttons (especially Y/N) for better accessiblity on phone.
+									Feedback on Y/N button clicks (brief flash, i.e., button style changes to w3-black for 20 ms then back to original color).
 									
 SAMT_v20230607.html			2023.06.07	1.4.2		Updated version to 1.4.2 and date to 6.07.
 									Moved message of "Procedure terminated! Reset to start a new procedure." up to replace the next stimulation amplitude suggestion at pulse No. 29.

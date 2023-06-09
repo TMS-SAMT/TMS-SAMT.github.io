@@ -685,7 +685,10 @@
 
 			// Process stimulate button
 			function MT_stimulate(MEP) {
+				var button_name,button_color;
+				var flash_time=20;
 				if (!MT_estimator.digital) {			// Get EMG response for analog methods
+					button_name="Enter_Vpp";					
 					try {
 						var Vpp=document.getElementById("V_pp").value;
 						if (Vpp=="") {					// Check for a missing value
@@ -701,7 +704,15 @@
 					}
 				} else {
 					var Vpp=50;							// Dummy value for digital methods
+					if (MEP) {
+						button_name="MT_MEP";
+					} else {
+						button_name="MT_noMEP";
+					}
 				}
+				button_color=document.getElementById(button_name).className;
+				document.getElementById(button_name).className="w3-black";
+				
 				// Update MT estimator
 				MT_estimator.stimulate(MEP,Vpp);
 				
@@ -762,6 +773,8 @@
 				// Update user inferface
 				MT_UI();
 				
+				setTimeout(function(){document.getElementById(button_name).className=button_color;}, flash_time);
+								
 				if (MT_estimator.index==29) {
 					document.getElementById("response_input").hidden=true;
 					document.getElementById("MT_nextPulse").innerHTML="<strong>Procedure terminated!</strong> Reset to start a new procedure.";
@@ -1008,7 +1021,7 @@
 		<div class="w3-container">
 			<p>
 				A read-only list of information from the latest estimation. <br>
-				<button class="w3-green" onclick="downloadFile()"style="height:35px;width:100px"><u>D</u>ownload</button> or <button class="w3-green" onclick="copyToClipboard()"style="height:35px;width:60px"><u>C</u>opy</button> if needed.
+				<button class="w3-green" onclick="downloadFile();" style="height:35px;width:100px"><u>D</u>ownload</button> or <button class="w3-green" onclick="copyToClipboard();" style="height:35px;width:60px"><u>C</u>opy</button> if needed.
 			</p>
 			<textarea id="MT_pulseList" rows="2" style="font-size:85%;" readonly=""></textarea>
 			<p></p>
