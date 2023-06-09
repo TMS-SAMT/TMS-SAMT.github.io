@@ -9,7 +9,7 @@ SAMT_v20230608.html			2023.06.08	1.4.3		Updated version to 1.4.3 and date to 6.0
 									Replaced spaces with tabs (1 tab =4 spaces).
 									Larger buttons (especially Y/N) for better accessiblity on phone.
 									Feedback on Y/N button clicks (brief flash, i.e., button style changes to w3-black for 20 ms then back to original color).
-									
+
 SAMT_v20230607.html			2023.06.07	1.4.2		Updated version to 1.4.2 and date to 6.07.
 									Moved message of "Procedure terminated! Reset to start a new procedure." up to replace the next stimulation amplitude suggestion at pulse No. 29.
 									Included version info in the output log so it is also copied.
