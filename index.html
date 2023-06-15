@@ -264,7 +264,7 @@
 			 * In addition, the class implements a coarse estimate of the probable range of the MT estimation.
 			 * 
 			 * Author: Lari Koponen (initial version: DCS1-H), Boshuo Wang (additional versions and parameter choices, other UI updates and improvements)
-			 * Version: 1.4.3, 2023-06-08
+			 * Version: 1.4.4, 2023-06-15
 			 */
 			// Tab is 4 spaces
 			var MT_estimator;
@@ -336,17 +336,17 @@
 						
 						if (this.digital){
 							if (MEPs<2) {
-								return "The last 10 pulses have too few responses ("+MEPs+"). " + tmp_str + "at a higher initial TMS pulse amplitude.";
+								return "This estimate is likely inaccurate because the last 10 pulses have too few responses ("+MEPs+"). " + tmp_str + "at a higher initial TMS pulse amplitude.";
 							} else if (MEPs>8) {
-								return "The last 10 pulses have too many responses ("+MEPs+"). " + tmp_str + "at a lower initial TMS pulse amplitude.";
+								return "This estimate is likely inaccurate because the last 10 pulses have too many responses ("+MEPs+"). " + tmp_str + "at a lower initial TMS pulse amplitude.";
 							} else {
 								return "At "+this.index+" pulses, and with reasonable number of both responses ("+MEPs+") and no responses ("+(10-MEPs)+") during the last 10 pulses, this estimate is potentially accurate.";
 							}
 						} else {
 							if (MEPs<2) {
-								return "The last 10 pulses have too few suprathreshold responses ("+MEPs+"). " + tmp_str + "at a higher initial TMS pulse amplitude.";
+								return "This estimate is likely inaccurate because the last 10 pulses have too few suprathreshold responses ("+MEPs+"). " + tmp_str + "at a higher initial TMS pulse amplitude.";
 							} else if (MEPs>8) {
-								return "The last 10 pulses have too few subthreshold responses ("+(10-MEPs)+"). " + tmp_str + "at a lower initial TMS pulse amplitude.";
+								return "This estimate is likely inaccurate because the last 10 pulses have too few subthreshold responses ("+(10-MEPs)+"). " + tmp_str + "at a lower initial TMS pulse amplitude.";
 							} else {
 								return "At "+this.index+" pulses, and with reasonable number of both suprathreshold ("+MEPs+") and subthreshold ("+(10-MEPs)+") responses during the last 10 pulses, this estimate is potentially accurate.";
 							}
@@ -915,7 +915,7 @@
 		<div class="w3-container">
 			<font size="1">
 				<p>
-					version 1.4.3, June 08, 2023.<br>
+					version 1.4.4, June 15, 2023.<br>
 					© 2022-2023, Boshuo Wang, Lari Koponen, Stefan Goetz, Angel Peterchev, at Duke University, the University of Birmingham.<br>
 					All rights reserved.
 				</p>
@@ -1050,17 +1050,12 @@
 				
 			</ul>
 			<p>If you have questions or feedback, please email Boshuo Wang at <a href="mailto:boshuo.wang@duke.edu">boshuo.wang@duke.edu</a>.</p>
-			<p>
-				<font size="1">
-					Description last updated: May 31, 2023.
-				</font>
-			</p>
 		</div>
 
 		<div class="w3-container w3-light-blue">
 			<h3>References</h3>
 		</div>
-		<div class="w3-container">	
+		<div class="w3-container">
 			<p>This HTML/JS application is written by Boshuo Wang and Lari M. Koponen.</p>
 			<p>The stochastic approximation MT methods are described in the following manuscript, which explores the performance of different control sequences, stepping adaptiveness, and initial step size.</p>
 			<ul>
