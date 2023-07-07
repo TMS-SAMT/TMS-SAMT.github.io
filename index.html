@@ -241,6 +241,10 @@
 			.w3-border-dark-grey,.w3-hover-border-dark-grey:hover,.w3-border-dark-gray,.w3-hover-border-dark-gray:hover{border-color:#616161!important}
 			.w3-border-pale-red,.w3-hover-border-pale-red:hover{border-color:#ffe7e7!important}.w3-border-pale-green,.w3-hover-border-pale-green:hover{border-color:#e7ffe7!important}
 			.w3-border-pale-yellow,.w3-hover-border-pale-yellow:hover{border-color:#ffffcc!important}.w3-border-pale-blue,.w3-hover-border-pale-blue:hover{border-color:#e7ffff!important}
+			.bigger {font-size:135%;color:#4caf50;font-weight: bold;}
+			.red-warning {color:#f44336;font-weight: bold;}
+			.orange-caution {color:#ff9800;font-weight: bold;}
+			.green-ok {color:#4caf50;font-weight: bold;}
 
 			body {
 				max-width: 720px;
@@ -264,7 +268,7 @@
 			 * In addition, the class implements a coarse estimate of the probable range of the MT estimation.
 			 * 
 			 * Author: Lari Koponen (initial version: DCS1-H), Boshuo Wang (additional versions and parameter choices, other UI updates and improvements)
-			 * Version: 1.4.4, 2023-06-15
+			 * Version: 1.4.5, 2023-07-07
 			 */
 			// Tab is 4 spaces
 			var MT_estimator;
@@ -324,7 +328,7 @@
 				// Description of the quality of current estimation, based on relative frequency of positive/negative responses during last 10 pulses
 				get description() {
 					if (this.index<25) {
-						return "This estimate is likely inaccurate due to too few pulses ("+this.index+").";
+						return "This estimate is <span class='red-warning'>likely inaccurate</span> due to too few pulses ("+this.index+").";
 					} else {
 						// A good estimation sequence must have both MEPs and no MEPs towards the end, count last 10 pulses
 						var MEPs=this.countMEPs[this.index-1];
@@ -336,19 +340,27 @@
 						
 						if (this.digital){
 							if (MEPs<2) {
-								return "This estimate is likely inaccurate because the last 10 pulses have too few responses ("+MEPs+"). " + tmp_str + "at a higher initial TMS pulse amplitude.";
+								return "<span class='red-warning'>Warning!</span> This estimate is <span class='red-warning'>likely inaccurate</span> because the last 10 pulses have too few responses ("+MEPs+"). " + tmp_str + "at a higher initial TMS pulse amplitude.";
 							} else if (MEPs>8) {
-								return "This estimate is likely inaccurate because the last 10 pulses have too many responses ("+MEPs+"). " + tmp_str + "at a lower initial TMS pulse amplitude.";
+								return "<span class='red-warning'>Warning!</span> This estimate is <span class='red-warning'>likely inaccurate</span> because the last 10 pulses have too many responses ("+MEPs+"). " + tmp_str + "at a lower initial TMS pulse amplitude.";
+							} else if (MEPs==2){
+								return "<span class='orange-caution'>Caution!</span> This estimate is <span class='orange-caution'>borderline accurate/inaccurate</span> because the last 10 pulses have few responses ("+MEPs+"). Evaluate the procedure, espcially the last 10 pulse to determine whether to accept this estimate or to restart and refine.";
+							} else if (MEPs==8){
+								return "<span class='orange-caution'>Caution!</span> This estimate is <span class='orange-caution'>borderline accurate/inaccurate</span> because the last 10 pulses have many responses ("+MEPs+"). Evaluate the procedure, espcially the last 10 pulse to determine whether to accept this estimate or to restart and refine.";
 							} else {
-								return "At "+this.index+" pulses, and with reasonable number of both responses ("+MEPs+") and no responses ("+(10-MEPs)+") during the last 10 pulses, this estimate is potentially accurate.";
+								return "This estimate is <span class='green-ok'>likely accurate</span> with a reasonable number of both responses ("+MEPs+") and no responses ("+(10-MEPs)+") during the last 10 pulses.";
 							}
 						} else {
 							if (MEPs<2) {
-								return "This estimate is likely inaccurate because the last 10 pulses have too few suprathreshold responses ("+MEPs+"). " + tmp_str + "at a higher initial TMS pulse amplitude.";
+								return "This estimate is <span class='red-warning'>likely inaccurate</span> because the last 10 pulses have too few suprathreshold responses ("+MEPs+"). " + tmp_str + "at a higher initial TMS pulse amplitude.";
 							} else if (MEPs>8) {
-								return "This estimate is likely inaccurate because the last 10 pulses have too few subthreshold responses ("+(10-MEPs)+"). " + tmp_str + "at a lower initial TMS pulse amplitude.";
+								return "This estimate is <span class='red-warning'>likely inaccurate</span> because the last 10 pulses have too few subthreshold responses ("+(10-MEPs)+"). " + tmp_str + "at a lower initial TMS pulse amplitude.";
+							} else if (MEPs==2){
+								return "<span class='orange-caution'>Caution!</span> This estimate is <span class='orange-caution'>borderline accurate/inaccurate</span> because the last 10 pulses have few suprathreshold responses ("+MEPs+"). Evaluate the procedure, espcially the last 10 pulse to determine whether to accept this estimate or to restart and refine.";
+							} else if (MEPs==8){
+								return "<span class='orange-caution'>Caution!</span> This estimate is <span class='orange-caution'>borderline accurate/inaccurate</span> because the last 10 pulses have few subthreshold responses ("+MEPs+"). Evaluate the procedure, espcially the last 10 pulse to determine whether to accept this estimate or to restart and refine.";
 							} else {
-								return "At "+this.index+" pulses, and with reasonable number of both suprathreshold ("+MEPs+") and subthreshold ("+(10-MEPs)+") responses during the last 10 pulses, this estimate is potentially accurate.";
+								return "This estimate is <span class='green-ok'>potentially accurate</span> with a reasonable number of both suprathreshold ("+MEPs+") and subthreshold ("+(10-MEPs)+") responses during the last 10 pulses.";
 							}
 						}
 					}
@@ -489,14 +501,21 @@
 					}
 					//document.getElementById("MT_method").innerHTML="<strong>"+CS_str+A_str+" stepping.</strong> Initial step size:"+MT_estimator.a_0.toFixed(1)+"% MSO. "+add_str;
 					//document.getElementById("MT_method").innerHTML="<strong>"+CS_str+"</strong>. "+method_str+" and "+a0_str+add_str;	
-					document.getElementById("MT_nextPulse").innerHTML="Give a TMS pulse at <strong>"+MT_estimator.MT_nextPulse+"% MSO</strong>.";
+					document.getElementById("MT_nextPulse").innerHTML="Give a TMS pulse at <span class='bigger'>"+MT_estimator.MT_nextPulse+"% MSO</span>.";
 					
 					var x=MT_estimator.MT_estimate.toFixed(1);
 					var y=MT_estimator.MT_estimate_CI[0].toFixed(1);
 					var z=MT_estimator.MT_estimate_CI[1].toFixed(1);
 					
-					
-					var esti_str="Pulse No. "+MT_estimator.index+": Current estimate of MT is <strong>"+x+"% MSO</strong>. ";
+					var esti_str="Pulse No. "+MT_estimator.index+": Current estimate of MT is ";
+					var MEPs=MT_estimator.countMEPs[MT_estimator.index-1];
+					if ((MT_estimator.index<25) || (MEPs<2) || (MEPs>8)) {
+						esti_str += "<span class='red-warning'>"+x+"% MSO.</span> ";
+					} else if ((MEPs==2) || (MEPs==8)){
+						esti_str += "<span class='orange-caution'>"+x+"% MSO</span>. ";
+					} else {
+						esti_str += "<span class='green-ok'>"+x+"% MSO</span>. ";
+					}
 					/*if (MT_estimator.index<10) {
 						esti_str+="with a probable range of ("+y+"%, "+z+"%) MSO.";
 					} else if (MT_estimator.isCI[MT_estimator.index-1]){
@@ -596,7 +615,7 @@
 					document.getElementById("Reset_msg").hidden=false;
 					
 					// Reset pulse list, add header to it based on method
-					document.getElementById("MT_pulseList").rows=MT_estimator.index+4;
+					document.getElementById("MT_pulseList").rows=MT_estimator.index+5;
 					
 					// Set states for buttons and inputs related to MT procedure
 					document.getElementById("response_input").hidden=false;
@@ -615,8 +634,8 @@
 						//document.getElementById("MT_pulseList").innerHTML="No.\tAmplitude\tEMG\tResponse\tStep\tNext\tMT\tMT range/CI\n";
 						var info_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\tCount\n";
 					}
-					var version_str = "SAMT version 1.4.4, June 15, 2023.\n";
-					var date_str = "Procedure start time:\t"+getCurrentDateAndTime()+"\n";
+					var version_str = "SAMT version 1.4.5, July 07, 2023.\n";
+					var date_str = "Procedure start time:\t"+getCurrentDateAndTime()+"\n\n";
 					document.getElementById("MT_pulseList").innerHTML=version_str+date_str+info_str;
 					
 					// Add event listener for keyboard
@@ -758,13 +777,23 @@
 				
 				var lines = document.getElementById("MT_pulseList").innerHTML.split('\n');
 				var newout=lines[0]+"\n"+lines[1]+"\n";
-				document.getElementById("MT_pulseList").rows=MT_estimator.index+4;
+				document.getElementById("MT_pulseList").rows=MT_estimator.index+5;
 				if (MT_estimator.index==29) {
 					newout+="Procedure end time:\t"+getCurrentDateAndTime()+"\n";
-					document.getElementById("MT_pulseList").rows=MT_estimator.index+5;
+					newout+="Starting amplitude:\t"+MT_estimator.pulses[0]+"% MSO\n";
+					newout+="Threshold estimate:\t"+MT_estimator.pulses[MT_estimator.index-1]+"% MSO, ";
+					if ((uu<2) || (uu>8)) {
+						newout+="likely inaccurate";
+					} else if ((uu==2) || (uu==8)){
+						newout+="borderline accurate/inaccurate";
+					} else {
+						newout+="likely accurate";
+					}
+					newout+=" ("+uu+"/"+vv+").\n"
+					document.getElementById("MT_pulseList").rows=MT_estimator.index+8;
 				}
-				newout+=(lines[2]+"\n"+str);
-				for(var i = 3;i < lines.length-1;i++){
+				newout+=("\n"+lines[3]+"\n"+str);
+				for(var i = 4;i < lines.length-1;i++){
 					newout+=lines[i]+"\n";
 				}
 				newout+=lines[i];
@@ -774,7 +803,7 @@
 				MT_UI();
 				
 				setTimeout(function(){document.getElementById(button_name).className=button_color;}, flash_time);
-								
+				
 				if (MT_estimator.index==29) {
 					document.getElementById("response_input").hidden=true;
 					document.getElementById("MT_nextPulse").innerHTML="<strong>Procedure terminated!</strong> Reset to start a new procedure.";
@@ -915,7 +944,7 @@
 		<div class="w3-container">
 			<font size="1">
 				<p>
-					version 1.4.4, June 15, 2023.<br>
+					version 1.4.5, June 07, 2023.<br>
 					© 2022-2023, Boshuo Wang, Lari Koponen, Stefan Goetz, Angel Peterchev, at Duke University, the University of Birmingham.<br>
 					All rights reserved.
 				</p>
