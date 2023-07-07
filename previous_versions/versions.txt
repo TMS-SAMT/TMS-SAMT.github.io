@@ -1,5 +1,18 @@
 Filename				Date		Version		Description
 
+SAMT_v20230707.html			2023.07.07	1.4.5		Updated version to 1.4.5 and date to 7.07.
+									Bolded text with larger font size and green color for the next pulse amplitude.
+									Color font for the threshold estimate and threshold quality.
+										Red: before pulse No. 25, and inaccurate estimate for edge cases of 0,1,9,10 response after pulse No. 25.
+										Orange: after pulse No. 25, caution that operator should further evaluate for borderline situations with 8 or 2 responses.
+										Green: after pulse No. 25, likely accurate estimate for other situations between 3 to 7 responses.
+									At end of procedure, output logs includes information before table: starting amplitude, threshold, and whether it's accurate.
+									Line to separate info (version, date/time etc.) and table in output log.
+
+SAMT_v20230615.html			2023.06.15	1.4.4		Updated version to 1.4.4 and date to 6.15.
+									Changed display text for threshold estimate with only 0,1,9,10 response to indicate that they are likely inaccurate.
+									Removed note of date for description-only updates.
+
 SAMT_v20230608.html			2023.06.08	1.4.3		Updated version to 1.4.3 and date to 6.08.
 									Added feature to download the output log. Pregenerated default filename.
 									Included date and time when procedure started and ended (when terminated at pulse 29) at beginning of output log.
