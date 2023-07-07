@@ -344,9 +344,9 @@
 							} else if (MEPs>8) {
 								return "<span class='red-warning'>Warning!</span> This estimate is <span class='red-warning'>likely inaccurate</span> because the last 10 pulses have too many responses ("+MEPs+"). " + tmp_str + "at a lower initial TMS pulse amplitude.";
 							} else if (MEPs==2){
-								return "<span class='orange-caution'>Caution!</span> This estimate is <span class='orange-caution'>borderline accurate/inaccurate</span> because the last 10 pulses have few responses ("+MEPs+"). Evaluate the procedure, espcially the last 10 pulse to determine whether to accept this estimate or to restart and refine.";
+								return "<span class='orange-caution'>Caution!</span> This estimate is <span class='orange-caution'>borderline accurate/inaccurate</span> because the last 10 pulses have few responses ("+MEPs+"). Evaluate the procedure, espcially the last 10 pulses to determine whether to accept this estimate or to restart and refine.";
 							} else if (MEPs==8){
-								return "<span class='orange-caution'>Caution!</span> This estimate is <span class='orange-caution'>borderline accurate/inaccurate</span> because the last 10 pulses have many responses ("+MEPs+"). Evaluate the procedure, espcially the last 10 pulse to determine whether to accept this estimate or to restart and refine.";
+								return "<span class='orange-caution'>Caution!</span> This estimate is <span class='orange-caution'>borderline accurate/inaccurate</span> because the last 10 pulses have many responses ("+MEPs+"). Evaluate the procedure, espcially the last 10 pulses to determine whether to accept this estimate or to restart and refine.";
 							} else {
 								return "This estimate is <span class='green-ok'>likely accurate</span> with a reasonable number of both responses ("+MEPs+") and no responses ("+(10-MEPs)+") during the last 10 pulses.";
 							}
@@ -356,9 +356,9 @@
 							} else if (MEPs>8) {
 								return "This estimate is <span class='red-warning'>likely inaccurate</span> because the last 10 pulses have too few subthreshold responses ("+(10-MEPs)+"). " + tmp_str + "at a lower initial TMS pulse amplitude.";
 							} else if (MEPs==2){
-								return "<span class='orange-caution'>Caution!</span> This estimate is <span class='orange-caution'>borderline accurate/inaccurate</span> because the last 10 pulses have few suprathreshold responses ("+MEPs+"). Evaluate the procedure, espcially the last 10 pulse to determine whether to accept this estimate or to restart and refine.";
+								return "<span class='orange-caution'>Caution!</span> This estimate is <span class='orange-caution'>borderline accurate/inaccurate</span> because the last 10 pulses have few suprathreshold responses ("+MEPs+"). Evaluate the procedure, espcially the last 10 pulses to determine whether to accept this estimate or to restart and refine.";
 							} else if (MEPs==8){
-								return "<span class='orange-caution'>Caution!</span> This estimate is <span class='orange-caution'>borderline accurate/inaccurate</span> because the last 10 pulses have few subthreshold responses ("+MEPs+"). Evaluate the procedure, espcially the last 10 pulse to determine whether to accept this estimate or to restart and refine.";
+								return "<span class='orange-caution'>Caution!</span> This estimate is <span class='orange-caution'>borderline accurate/inaccurate</span> because the last 10 pulses have few subthreshold responses ("+MEPs+"). Evaluate the procedure, espcially the last 10 pulses to determine whether to accept this estimate or to restart and refine.";
 							} else {
 								return "This estimate is <span class='green-ok'>potentially accurate</span> with a reasonable number of both suprathreshold ("+MEPs+") and subthreshold ("+(10-MEPs)+") responses during the last 10 pulses.";
 							}
