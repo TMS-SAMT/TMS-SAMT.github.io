@@ -1,5 +1,11 @@
 Filename				Date		Version		Description
 
+SAMT_v20230908.html			2023.09.08	1.4.6		Updated version to 1.4.6 and date to 9.08. Split branch from 1.4.5.
+									Updated status of thresholding paper to JNE.
+									Added stat counter for page view.
+									In the "Initialize procedure" block, changed description for input box from "Enter initial (suprathreshold) TMS pulse amplitude (intensity)" to "Enter final TMS intensity used for motor hot spot determination". 
+									Removed default input value for TMS amplitude.
+
 SAMT_v20230707.html			2023.07.07	1.4.5		Updated version to 1.4.5 and date to 7.07.
 									Bolded text with larger font size and green color for the next pulse amplitude.
 									Color font for the threshold estimate and threshold quality.
