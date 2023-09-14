@@ -1,10 +1,72 @@
 Filename				Date		Version		Description
 
+SAMT_v1.5.7W.html & SAMT_v1.5.7N.html	2023.09.14	1.5.7		Updated version to 1.5.7 and date to 9.14.
+									Provided two version, one wide layout for desktop or tablets and one vertical layout for mobile devices.
+									Wide layout max width increased to 1280 pixels (from 1080).
+									Changed minimum value for custom MEP threshold to 10 uVpp.
+									Added text at beginning with links to instruction and information; added link to copyright section.
+									Added link to narrow layout for wide layout version and vice versa.
+									Added "back to top" links.
+									Removed "% stim" from log and lower figure. 
+									Reverted "% p10" to "count" in log; reverted "response rate" to "Count..." in figure axis and removed legend.
+
+SAMT_v202300911.html			2023.09.11	1.5.6		Updated version to 1.5.6 and date to 9.11.
+									Changed "amplitude" to "intensity"
+									Section title "Pulses, responses, and other information of the threshold procedure" changed to "Estimation history".
+									Reorganized sections in "Information about this app".
+
+SAMT_v202300909.html			2023.09.09	1.5.5		Updated version to 1.5.5 and date to 9.09. (Back from 1.4.6)
+									Updated JNE thresholding paper info.
+									In the "Initialize procedure" block, changed description for input box from "Enter initial (suprathreshold) TMS pulse amplitude (intensity)" to "Enter final TMS intensity used for motor hot spot determination". 
+									Removed default input value for TMS amplitude (also after resetting).
+
 SAMT_v20230908.html			2023.09.08	1.4.6		Updated version to 1.4.6 and date to 9.08. Split branch from 1.4.5.
 									Updated status of thresholding paper to JNE.
 									Added stat counter for page view.
 									In the "Initialize procedure" block, changed description for input box from "Enter initial (suprathreshold) TMS pulse amplitude (intensity)" to "Enter final TMS intensity used for motor hot spot determination". 
-									Removed default input value for TMS amplitude.
+									Removed default input value for TMS amplitude (also after resetting).
+									
+
+SAMT_v20230821.html			2023.08.21	1.5.4		Updated version to 1.5.4 and date to 8.21.
+									Added response rate at a given amplitude in lower panel of figure.
+									Included DOI of JNE article.
+									Removed in the log the next stimulation amplitude after the last pulse.
+
+SAMT_v20230818.html			2023.08.18	1.5.3		Updated version to 1.5.3 and date to 8.18.
+									Added counter display for response rate at a given amplitude (vs. previous for past 10 pulses).
+									
+SAMT_v20230814.html			2023.08.14	1.5.2		Updated version to 1.5.2 and date to 8.14.
+									Added stat counter for page view.
+									Add button to directly restart procedure at the current pulse amplitude.
+									Trigger "save data / figure" automatically when resetting/refining, if data.figure not saved.
+									Updated status of thresholding paper to JNE, in press.
+									
+
+SAMT_v20230726.html			2023.07.26	1.5.1		MAJOR UPDATE! Updated version to 1.5.1 and date to 7.26.
+									Changed heading of "List of pulses for latest estimation" section to "Pulses, responses, and related information."
+									Changed ' to " in code wherever possible.
+									Changed id names of html elements for better clarification:
+										Radio buttons: added "radio_" prefix.
+										Input boxes for numbers: added "input_" prefix.
+										Text: added "_msg" suffix.
+										Added "table_", "field_", "textarea_" prefix.
+									Message for threshold quality included new "inaccurate" description for less than 15 pulses, with description for 15-25 pulse now as "likely inaccurate".
+									New layout to fit more information on one screen. Using tables.
+										Wider: 1080px
+										Side-by-side for initialization and input.
+										Fixed size/height for text box.
+									Names of methods: DCS-H. Removed numbers from old names (DCS1-H).
+									MT clipped to 101% MSO on upper end.
+									MT_estimator object not deleted at pulse No. 29.
+									Two plots for visualization.
+										Amplitude vs. pulse, with color indicate whether response was supra- or subthreshold.
+										Response count for past 10 pulses, with background color shading to indicate accuracy.
+									Save figure button. Shortcut "v".
+									Flash bottons changed to 5 ms, to avoid color stuck in black and not changing back (occurs sometimes when key is held down).
+									Added non-breaking spaces in display text where appropiate.
+									Indentation of html mark-ups.
+									Justify text.
+									Added starting amplitude in log before start time. Shown when procedure starts.
 
 SAMT_v20230707.html			2023.07.07	1.4.5		Updated version to 1.4.5 and date to 7.07.
 									Bolded text with larger font size and green color for the next pulse amplitude.
