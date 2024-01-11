@@ -1610,20 +1610,14 @@
 										<td>
 											<fieldset>
 												<legend>Stepping method of control sequence</legend>
-												<table>
-													<tbody>
-														<tr>
-															<td style="width:40%">
-																<input type="radio" id="radio_non_adapt" name="stepping_method" onclick="handleClick_A(this);" value="non_adapt" checked="">
-																<label for="non_adapt">Non-adaptive (default)</label>
-															</td>
-															<td style="width:40%">
-																<input type="radio" id="radio_adapt" name="stepping_method" onclick="handleClick_A(this);" value="adapt">
-																<label for="adapt">Adaptive (see <a href="#header_instructions">instructions</a>)</label>
-															</td>
-														</tr>
-													</tbody>
-												</table>
+												<div>
+													<input type="radio" id="radio_non_adapt" name="stepping_method" onclick="handleClick_A(this);" value="non_adapt" checked="">
+													<label for="non_adapt">Non-adaptive (default)</label>
+												</div>
+												<div>
+													<input type="radio" id="radio_adapt" name="stepping_method" onclick="handleClick_A(this);" value="adapt">
+													<label for="adapt">Adaptive (see <a href="#header_instructions">instructions and method descriptions</a>)</label>
+												</div>
 											</fieldset>
 										</td>
 									</tr>
