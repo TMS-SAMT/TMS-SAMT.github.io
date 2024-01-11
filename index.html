@@ -246,7 +246,7 @@
 			.green-ok {color:#4caf50;font-weight: bold;}
 
 			body {
-				max-width: 720px;
+				max-width: 640px;
 				border: 1px solid black;
 				margin: auto;
 			}
@@ -267,7 +267,7 @@
 			 * In addition, the class implements a coarse estimate of the probable range of the MT estimation.
 			 * 
 			 * Author: Lari Koponen (initial version: DCS-H), Boshuo Wang (additional versions and parameter choices, other UI updates and improvements)
-			 * Version: 1.5.7N, 2023-09-14
+			 * Version: 1.6.0N, 2024-01-11
 			 */
 			// Tab is 4 spaces
 			var MT_estimator;
@@ -526,7 +526,8 @@
 					//var A_str=(MT_estimator.adaptive)?"A, adaptive":", non-adaptive";		// adaptiveness string
 					var a_0=Number(document.getElementById("input_custom_a0").value);
 					var use_default_a0=document.getElementById("radio_default_a0").checked;
-					var a0_str=(use_default_a0)?"default <i>a</i><sub>0</sub>.  ":("custom <i>a</i><sub>0</sub>: "+a_0.toFixed(1)+"% MSO. ");
+					//var a0_str=(use_default_a0)?"default <i>a</i><sub>0</sub>. ":("custom <i>a</i><sub>0</sub>: "+a_0.toFixed(1)+"% MSO. ");
+					var a0_str=(", initial step size <i>a</i><sub>0</sub>: "+a_0.toFixed(1)+"% MSO.");
 					
 					// additional information for analog methods on defined EMG threshold
 					var add_str="";
@@ -534,7 +535,7 @@
 						add_str="<br><strong>Non-default EMG threshold</strong>: "+MT_estimator.Vpp_th.toFixed(0)+" μV<sub>pp</sub>.";
 					}
 					//document.getElementById("MT_method_msg").innerHTML="<strong>"+CS_str+A_str+" stepping.</strong> Initial step size:"+MT_estimator.a_0.toFixed(1)+"% MSO. "+add_str;
-					document.getElementById("MT_method_msg").innerHTML="<strong>"+CS_str+"</strong>. "+method_str+" and "+a0_str+add_str;	
+					document.getElementById("MT_method_msg").innerHTML="<strong>"+CS_str+"</strong>: "+method_str+a0_str+add_str;
 					document.getElementById("MT_nextPulse_msg").innerHTML="Give a TMS pulse at <span class='bigger'>"+MT_estimator.MT_nextPulse+"% MSO</span>.";
 					
 					var x=MT_estimator.MT_estimate.toFixed(1);
@@ -597,7 +598,7 @@
 							downloadFile();
 							break;
 						case "f":
-							if (!document.getElementById("button_MT_reset").disabled) {
+							if (!document.getElementById("button_MT_refine").disabled) {
 								MT_refine();
 							}
 							break;
@@ -690,10 +691,13 @@
 						//var heading_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\t% stim\t% p10\n";
 						var heading_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\tCount\n";
 					}
-					var version_str = "SAMT version 1.5.7, September 14, 2023.\n";
-					var info_str = "Starting intensity:\t"+MT_0+"% MSO\n";
+					var version_str = "SAMT version 1.6.0, January 11, 2024.\n";
+					var CS_str=(MT_estimator.digital)?"DCS-H":"ACS-H";
+					if (MT_estimator.adaptive) {
+						CS_str+="A";
+					}
+					var info_str = "Stepping method:\t"+CS_str+"\nStarting intensity:\t"+MT_0+"% MSO\n";
 					info_str += "Procedure start time:\t"+getCurrentDateAndTime()+"\n\n";
-					
 					document.getElementById("textarea_MT_pulseList").innerHTML=version_str+info_str+heading_str;
 					
 					// Add event listener for keyboard
@@ -783,8 +787,8 @@
 				var digital=MT_estimator.digital;
 				var adaptive=MT_estimator.adaptive;
 				var a_0=MT_estimator.a_0;
-				// Remove MT estimator object
-				MT_estimator=null;
+				document.getElementById("input_MT_0").value=MT_0;
+				MT_estimator=null;		// Remove MT estimator object
 				MT_start_proc(MT_0, Vpp_th, digital, adaptive, a_0);
 			}
 
@@ -878,7 +882,7 @@
 				str+="\n";
 				
 				var lines = document.getElementById("textarea_MT_pulseList").innerHTML.split("\n");
-				var newout=lines[0]+"\n"+lines[1]+"\n"+lines[2]+"\n";
+				var newout=lines[0]+"\n"+lines[1]+"\n"+lines[2]+"\n"+lines[3]+"\n";
 				//document.getElementById("textarea_MT_pulseList").rows=MT_estimator.index+5;
 				if (MT_estimator.index==29) {
 					newout+="Procedure end time:\t"+getCurrentDateAndTime()+"\n";
@@ -897,8 +901,8 @@
 					newout+=" ("+uu+"/"+vv+").\n"
 					//document.getElementById("textarea_MT_pulseList").rows=MT_estimator.index+8;
 				}
-				newout+=("\n"+lines[4]+"\n"+str);
-				for(var i = 5;i < lines.length-1;i++){
+				newout+=("\n"+lines[5]+"\n"+str);
+				for(var i = 6;i < lines.length-1;i++){
 					newout+=lines[i]+"\n";
 				}
 				newout+=lines[i];
@@ -1047,7 +1051,7 @@
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 				// Set up chart properties
-				const margin = { top: 10, right: 10, bottom: 390, left: 50 };
+				const margin = { top: 10, right: 10, bottom: 400, left: 50 };
 				const chartWidth = canvas.width - margin.left - margin.right;
 				const chartHeight = canvas.height - margin.top - margin.bottom;
 
@@ -1059,23 +1063,32 @@
 				} else {
 					var MT_0=Number(document.getElementById("input_MT_0").value);
 				}
-				var minY = 0;
-				var legY;
-				if ( MT_0 < 30 ) {
+				var minY,legY,maxY;
+				if (MT_estimator.adaptive) {
 					minY = 0;
-					legY = 59;
-				} else if ( MT_0 > 70) {
-					minY = 40;
-					legY = 49;
-				} else {
-					minY = Math.round(MT_0/5)*5-30;
-					if (Math.round(MT_0/5)*5 <= MT_0) {
-						legY = minY+9;
+					maxY = 100;
+					if ( MT_0 > 70) {
+						legY = 15;
 					} else {
-						legY = minY+59;
+						legY = 99;
 					}
+				} else {
+					if ( MT_0 < 30 ) {
+						minY = 0;
+						legY = 59;
+					} else if ( MT_0 > 70) {
+						minY = 40;
+						legY = 49;
+					} else {
+						minY = Math.round(MT_0/5)*5-30;
+						if (Math.round(MT_0/5)*5 <= MT_0) {
+							legY = minY+9;
+						} else {
+							legY = minY+59;
+						}
+					}
+					maxY = minY + 60;
 				}
-				var maxY = minY + 60;
 				
 				// Calculate scaling factors
 				const xScale = chartWidth / (maxX - minX);
@@ -1161,8 +1174,13 @@
 				
 				// Legends
 				ctx.fillStyle = "#ffffff";
-				ctx.fillRect(margin.left + (0.5 - minX) * xScale, canvas.height - margin.bottom - (legY+0.5 - minY) * yScale, 9 * xScale, 9 * yScale);
-				
+				if (MT_estimator.adaptive) {
+					ctx.fillRect(margin.left + (0.5 - minX) * xScale, canvas.height - margin.bottom - (legY+0.5 - minY) * yScale, 9 * xScale, 15 * yScale);
+					var leg_space = 5;
+				} else {
+					ctx.fillRect(margin.left + (0.5 - minX) * xScale, canvas.height - margin.bottom - (legY+0.5 - minY) * yScale, 9 * xScale, 9 * yScale);
+					var leg_space = 3;
+				}
 				const radius1 = 5;
 				const radius2 = 3.5;
 				var x2 = margin.left + (1 - minX) * xScale;
@@ -1182,7 +1200,7 @@
 				ctx.fillText("Threshold estimate", x2 + 0.5*xScale, y2+0.25*yScale);
 
 				ctx.fillStyle = "#4caf50";
-				y2 = canvas.height - margin.bottom - (legY - 4 - minY) * yScale;
+				y2 = canvas.height - margin.bottom - (legY - 1-leg_space - minY) * yScale;
 				ctx.beginPath();
 				ctx.arc(x2, y2, radius1, 0, 2 * Math.PI);
 				ctx.fill();
@@ -1190,7 +1208,7 @@
 				ctx.fillText("Suprathreshold response", x2 + 0.5*xScale, y2+0.25*yScale);
 				
 				ctx.fillStyle = "#f44336";
-				y2 = canvas.height - margin.bottom - (legY - 7 - minY) * yScale;
+				y2 = canvas.height - margin.bottom - (legY - 1-leg_space*2 - minY) * yScale;
 				ctx.beginPath();
 				ctx.arc(x2, y2, radius1, 0, 2 * Math.PI);
 				ctx.fill();
@@ -1214,7 +1232,7 @@
 				// Clear the canvas
 
 				// Set up chart properties
-				const margin = { top: 410, right: 10, bottom: 40, left: 50 };
+				const margin = { top: 420, right: 10, bottom: 40, left: 50 };
 				const chartWidth = canvas.width - margin.left - margin.right;
 				const chartHeight = canvas.height - margin.top - margin.bottom;
 
@@ -1370,7 +1388,7 @@
 				const canvas = document.getElementById("canvas_response");
 				const ctx = canvas.getContext("2d");
 				// Set up chart properties
-				const margin = { top: 10, right: 10, bottom: 390, left: 50 };
+				const margin = { top: 10, right: 10, bottom: 400, left: 50 };
 				const chartWidth = canvas.width - margin.left - margin.right;
 				const chartHeight = canvas.height - margin.top - margin.bottom;
 
@@ -1379,15 +1397,20 @@
 				const maxX = 30;
 				var MT_0=MT_estimator.pulses[0];
 				
-				var minY = 0;
-				if ( MT_0 < 30 ) {
+				var minY,maxY;
+				if (MT_estimator.adaptive) {
 					minY = 0;
-				} else if ( MT_0 > 70) {
-					minY = 40;
+					maxY = 100;
 				} else {
-					minY = Math.round(MT_0/5)*5-30;
+					if ( MT_0 < 30 ) {
+						minY = 0;
+					} else if ( MT_0 > 70) {
+						minY = 40;
+					} else {
+						minY = Math.round(MT_0/5)*5-30;
+					}
+					maxY = minY + 60;
 				}
-				var maxY = minY + 60;
 				
 				// Calculate scaling factors
 				const xScale = chartWidth / (maxX - minX);
@@ -1425,7 +1448,7 @@
 				const canvas = document.getElementById("canvas_response");
 				const ctx = canvas.getContext("2d");
 				// Set up chart properties
-				const margin = { top: 410, right: 10, bottom: 40, left: 50 };
+				const margin = { top: 420, right: 10, bottom: 40, left: 50 };
 				const chartWidth = canvas.width - margin.left - margin.right;
 				const chartHeight = canvas.height - margin.top - margin.bottom;
 
@@ -1552,7 +1575,7 @@
 		<div class="w3-container">
 			<font size="1">
 				<p>
-					version&nbsp;1.5.7,&nbsp;September&nbsp;14, 2023. 
+					version&nbsp;1.6.0,&nbsp;January&nbsp;11, 2024. 
 					©&nbsp;2022-2023, Boshuo Wang, Lari Koponen, Stefan Goetz, Angel Peterchev, at Duke University, the University of Birmingham. 
 					<a href="#header_copyright">All rights reserved.</a>
 				</p>
@@ -1560,7 +1583,7 @@
 			<p style="font-size:80%;">
 				Please read <a href="#header_instructions">instructions</a> and <a href="#header_information">descriptions of the method</a> provided below.
 				<br>
-				<a href="SAMT_v1.5.7W.html">SAMT version</a> with horizontal layout for desktop computers and tablets.</a>
+				<a href="SAMT_v1.6.0W.html">SAMT version</a> with horizontal layout for desktop computers and tablets.
 			</p>
 		</div>
 		
@@ -1574,6 +1597,30 @@
 						<div class="w3-container">
 							<table>
 								<tbody>
+									<tr>
+										<td>
+											<fieldset>
+												<legend>Enter final TMS intensity used for motor hot spot determination</legend>
+												<input type="number" id="input_MT_0" name="MT_0" max="100" min="1" placeholder=" " step="1" value=" " size="3" required="">
+												%&nbsp;MSO
+											</fieldset>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<fieldset>
+												<legend>Stepping method of control sequence</legend>
+												<div>
+													<input type="radio" id="radio_non_adapt" name="stepping_method" onclick="handleClick_A(this);" value="non_adapt" checked="">
+													<label for="non_adapt">Non-adaptive (default)</label>
+												</div>
+												<div>
+													<input type="radio" id="radio_adapt" name="stepping_method" onclick="handleClick_A(this);" value="adapt">
+													<label for="adapt">Adaptive (see <a href="#header_instructions">instructions</a>)</label>
+												</div>
+											</fieldset>
+										</td>
+									</tr>
 									<tr>
 										<td>
 											<fieldset hidden="">	<!-- Method selection -->
@@ -1593,18 +1640,6 @@
 													</div>
 												</fieldset>
 												<fieldset>
-													<legend>Stepping adaptiveness of control sequence</legend>
-													<div>
-														<input type="radio" id="radio_non_adapt" name="stepping_method" onclick="handleClick_A(this);" value="non_adapt" checked="">
-														<label for="non_adapt">Non-adaptive (default)</label>
-													</div>
-													<div>
-														<input type="radio" id="radio_adapt" name="stepping_method" onclick="handleClick_A(this);" value="adapt">
-														<label for="adapt">Adaptive</label>
-													</div>
-													
-												</fieldset>
-												<fieldset>
 													<legend>Initial step size of control sequence (<i>a</i><sub>0</sub>)</legend>
 													<div>
 														<input type="radio" id="radio_default_a0" name="a0" onclick="handleClick_a0(this);" value="default" checked="">
@@ -1617,15 +1652,6 @@
 														%&nbsp;MSO, [1, 20].
 													</div>
 												</fieldset>
-											</fieldset>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<fieldset>
-												<legend>Enter final TMS intensity used for motor hot spot determination</legend>
-												<input type="number" id="input_MT_0" name="MT_0" max="100" min="1" placeholder=" " step="1" value=" " size="3" required="">
-												%&nbsp;MSO
 											</fieldset>
 										</td>
 									</tr>
@@ -1643,7 +1669,7 @@
 							<h3>Motor threshold estimate</h3>
 						</div>
 						<div class="w3-container">
-							<p hidden="">		<!-- Method selection -->
+							<p>		<!-- Method selection -->
 								<output id="MT_method_msg"></output>
 							</p>
 							<p>
@@ -1706,7 +1732,7 @@
 							<p>
 								<button class="w3-green" onclick="downloadFile();" style="height:30px;width:100px"><u>D</u>ownload</button> or <button class="w3-green" onclick="copyToClipboard();" style="height:30px;width:60px"><u>c</u>opy</button> data
 							</p>
-							<textarea id="textarea_MT_pulseList" rows="37" style="font-size:80%;" readonly=""></textarea>
+							<textarea id="textarea_MT_pulseList" rows="38" style="font-size:80%;" readonly=""></textarea>
 							<font size="1">
 								<p>
 									<a href="#header_top">Back to top.</a>
@@ -1750,7 +1776,8 @@
 							<h3 id="header_instructions">Instructions</h3>
 						</div>
 						<div class="w3-container">
-							<p align="justify">For the method to work correctly, it is important to start from an intensity that is close to the likely motor threshold (MT) and preferably <i>suprathreshold </i> (i.e., an intensity that produces motor responses more often than not). The intensity used to locate the motor hot spot is a good starting point. </p>
+							<p align="justify">For the method to work correctly, it is important to start from an intensity that is close to the likely motor threshold (MT) and preferably <i>suprathreshold </i> (i.e., an intensity that produces motor responses more often than not). The intensity used to locate the motor hot spot is a good starting point.</p>
+							<p align="justify">Using adaptive stepping can provide faster convergence for certain cases, e.g., the starting amplitude is far from threshold or a non-conventional TMS pulse shape is used.</p>
 							<p> Known limitations and bugs:</p>
 							<ul>
 								<li>The tool is provided as is. In particular, the description of the quality of the MT estimation is based on an approximate algorithm which may prematurely declare the estimation “good”. The final judgement on the MT must always be made by the operator!</li>
@@ -1772,7 +1799,7 @@
 							<h3 id="header_information">Method description</h3>
 						</div>
 						<div class="w3-container">
-							<p align="justify">The MT is estimated using a stochastic approximation method with a digital control sequence (DCS-H) whose step size follows harmonic convergence without adaptive stepping. The initial step size of the control sequence, <i>a</i><sub>0</sub>, is 6.7%&nbsp;MSO. With a good initial intensity, the estimator takes on average 25&nbsp;pulses to determine the MT with median relative error |<i>δ</i>| of 1.3%.</p>
+							<p align="justify">The MT is estimated using a stochastic approximation method with a digital control sequence (DCS-H) whose step size follows harmonic convergence with or without adaptive stepping. The initial step size of the control sequence, <i>a</i><sub>0</sub>, is 6.7% and 4.2%&nbsp;MSO for non-adaptive and adaptive stepping, respectively. With adaptive stepping, the control sequence is adjusted only when the response changes from suprathreshold to subthreshold or vice versa. With a good initial intensity, the estimator takes on average 25&nbsp;pulses to determine the MT with median relative error |<i>δ</i>| of 1.3%.</p>
 							
 								<p align="justify">The stochastic approximation MT methods are described in the following manuscript, which explores the performance of different control sequences, stepping adaptiveness, and initial step size.</p>
 								<ul>
