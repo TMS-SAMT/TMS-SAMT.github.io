@@ -1,4 +1,8 @@
 Filename				Date		Version		Description
+SAMT_v1.6.0W.html & SAMT_v1.6.0N.html	2024.01.11	1.6.0		Updated version to 1.6.0 and date to 1.11.
+									Restored option for adaptive stepping, and included related information/instruction in display and log.
+									Fixed "f" shortcut disabling (shortcut only works at step 29 when threshold is likely inaccurate).
+									Fixed plot margin errors. Full y-axis range (0-100% MSO) for adaptive stepping.
 
 SAMT_v1.5.7W.html & SAMT_v1.5.7N.html	2023.09.14	1.5.7		Updated version to 1.5.7 and date to 9.14.
 									Provided two version, one wide layout for desktop or tablets and one vertical layout for mobile devices.
