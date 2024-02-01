@@ -267,7 +267,7 @@
 			 * In addition, the class implements a coarse estimate of the probable range of the MT estimation.
 			 * 
 			 * Author: Lari Koponen (initial version: DCS-H), Boshuo Wang (additional versions and parameter choices, other UI updates and improvements)
-			 * Version: 1.6.0W, 2024-01-11
+			 * Version: 1.6.1W, 2024-01-17
 			 */
 			// Tab is 4 spaces
 			var MT_estimator;
@@ -691,7 +691,7 @@
 						//var heading_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\t% stim\t% p10\n";
 						var heading_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\tCount\n";
 					}
-					var version_str = "SAMT version 1.6.0, January 11, 2024.\n";
+					var version_str = "SAMT version 1.6.1, January 17, 2024.\n";
 					var CS_str=(MT_estimator.digital)?"DCS-H":"ACS-H";
 					if (MT_estimator.adaptive) {
 						CS_str+="A";
@@ -986,6 +986,9 @@
 			function handleClick_A(radio) {
 				if (document.getElementById("radio_default_a0").checked){
 					document.getElementById("input_custom_a0").value=get_default_a0().toFixed(1);
+				}
+				if (radio.value=="adapt") {
+					alert("Caution! Switching to adaptive stepping.\nPlease read instructions and method descriptions")
 				}
 			}
 
@@ -1575,7 +1578,7 @@
 		<div class="w3-container">
 			<font size="1">
 				<p>
-					version&nbsp;1.6.0,&nbsp;January&nbsp;11, 2024. 
+					version&nbsp;1.6.1,&nbsp;January&nbsp;17, 2024. 
 					©&nbsp;2022-2023, Boshuo Wang, Lari Koponen, Stefan Goetz, Angel Peterchev, at Duke University, the University of Birmingham. 
 					<a href="#header_copyright">All rights reserved.</a>
 				</p>
@@ -1768,7 +1771,7 @@
 						</div>
 						<div class="w3-container">
 							<p align="justify">For the method to work correctly, it is important to start from an intensity that is close to the likely motor threshold (MT) and preferably <i>suprathreshold </i> (i.e., an intensity that produces motor responses more often than not). The intensity used to locate the motor hot spot is a good starting point.</p>
-							<p align="justify">Using adaptive stepping can provide faster convergence for certain cases, e.g., the starting amplitude is far from threshold or a non-conventional TMS pulse shape is used.</p>
+							<p align="justify">Using adaptive stepping may provide faster convergence for certain cases, e.g., the starting amplitude is far from threshold or a non-conventional TMS pulse shape is used.</p>
 							<p> Known limitations and bugs:</p>
 							<ul>
 								<li>The tool is provided as is. In particular, the description of the quality of the MT estimation is based on an approximate algorithm which may prematurely declare the estimation “good”. The final judgement on the MT must always be made by the operator!</li>
