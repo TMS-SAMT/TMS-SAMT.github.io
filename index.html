@@ -267,7 +267,7 @@
 			 * In addition, the class implements a coarse estimate of the probable range of the MT estimation.
 			 * 
 			 * Author: Lari Koponen (initial version: DCS-H), Boshuo Wang (additional versions and parameter choices, other UI updates and improvements)
-			 * Version: 1.6.1N, 2024-01-17
+			 * Version: 1.6.2N, 2024-03-27
 			 */
 			// Tab is 4 spaces
 			var MT_estimator;
@@ -691,7 +691,7 @@
 						//var heading_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\t% stim\t% p10\n";
 						var heading_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\tCount\n";
 					}
-					var version_str = "SAMT version 1.6.1, January 17, 2024.\n";
+					var version_str = "SAMT version 1.6.2, March 27, 2024.\n";
 					var CS_str=(MT_estimator.digital)?"DCS-H":"ACS-H";
 					if (MT_estimator.adaptive) {
 						CS_str+="A";
@@ -802,7 +802,7 @@
 				var button_name,button_color;
 				var flash_time=5;
 				if (!MT_estimator.digital) {			// Get EMG response for analog methods
-					button_name="button_Enter_Vpp";					
+					button_name="button_Enter_Vpp";
 					try {
 						var Vpp=document.getElementById("input_Vpp").value;
 						if (Vpp=="") {					// Check for a missing value
@@ -886,7 +886,7 @@
 				//document.getElementById("textarea_MT_pulseList").rows=MT_estimator.index+5;
 				if (MT_estimator.index==29) {
 					newout+="Procedure end time:\t"+getCurrentDateAndTime()+"\n";
-					newout+="Threshold estimate:\t"+MT_estimator.pulses[MT_estimator.index-1]+"% MSO, ";
+					newout+="Threshold estimate:\t"+MT_estimator.MT_estimate.toFixed(1)+"% MSO, ";
 					document.getElementById("Refine_msg").hidden=false;
 					document.getElementById("button_MT_refine").disabled=false;
 					if ((uu<2) || (uu>8)) {
@@ -1573,20 +1573,13 @@
 			<h1>TMS Motor Threshold (MT) Estimation App</h1>
 		</div>
 		<div class="w3-container w3-blue">
-			<h2>Stochastic Approximator of MT (SAMT)</h2>
+			<h2>Stochastic Approximator of MT (SAMT) <font size="2">v1.6.2</font></h2>
 		</div>
 		<div class="w3-container">
-			<font size="1">
-				<p>
-					version&nbsp;1.6.1,&nbsp;January&nbsp;17, 2024. 
-					©&nbsp;2022, Boshuo Wang, Lari Koponen, Stefan Goetz, Angel Peterchev, at Duke University, the University of Birmingham. 
-					<a href="#header_copyright">All rights reserved.</a>
-				</p>
-			</font>
 			<p style="font-size:80%;">
 				Please read <a href="#header_instructions">instructions</a> and <a href="#header_information">descriptions of the method</a> provided below.
 				<br>
-				<a href="SAMT_v1.6.1W.html">SAMT version</a> with horizontal layout for desktop computers and tablets.
+				<a href="SAMT_v1.6.2W.html">SAMT version</a> with horizontal layout for desktop computers and tablets.
 			</p>
 		</div>
 		
@@ -1836,6 +1829,13 @@
 						</div>
 						<div class="w3-container">
 							<p align="justify">
+								version&nbsp;1.6.2,&nbsp;March&nbsp;27, 2024. 
+							</p>
+							<p align="justify">
+								©&nbsp;2022, Boshuo Wang, Lari Koponen, Stefan Goetz, Angel Peterchev, at Duke University, the University of Birmingham. 
+								All rights reserved.
+							</p>
+							<p align="justify">
 								The copyrights of this software are owned by Duke University and the University of Birmingham. As such, two licenses for this software are offered:
 							</p>
 							<ol>
@@ -1856,7 +1856,7 @@
 							</font>
 						</div>
 						<hr>
-						<div>
+						<div class="w3-container">
 							Number of visits:
 							<!-- Default Statcounter code for TMS-SAMT https://tms-samt.github.io/ -->
 							<script type="text/javascript">
