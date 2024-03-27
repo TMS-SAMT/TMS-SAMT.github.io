@@ -1,4 +1,10 @@
 Filename				Date		Version		Description
+SAMT_v1.6.2W.html & SAMT_v1.6.2N.html	2024.03.27	1.6.2		Updated version to 1.6.2 and date to 3.27.
+									Fixed the threshold output in the output log (from pulse amplitude to MT).
+									Moved version and copyright info from top to copyright section.
+									Added version info in title.
+									Included method names of both DCS-H and DCS-HA.
+
 SAMT_v1.6.0W.html & SAMT_v1.6.0N.html	2024.01.11	1.6.0		Updated version to 1.6.0 and date to 1.11.
 									Restored option for adaptive stepping, and included related information/instruction in display and log.
 									Fixed "f" shortcut disabling (shortcut only works at step 29 when threshold is likely inaccurate).
