@@ -267,7 +267,7 @@
 			 * In addition, the class implements a coarse estimate of the probable range of the MT estimation.
 			 *
 			 * Author: Lari Koponen (initial version: DCS-H), Boshuo Wang (additional versions and parameter choices, other UI updates and improvements)
-			 * Version: 1.6.3W, 2024-03-29
+			 * Version: 1.6.3W, 2024-04-01
 			 */
 			// Tab is 4 spaces
 			var MT_estimator;
@@ -701,7 +701,7 @@
 						//var heading_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\t% stim\t% p10\n";
 						var heading_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\tCount\n";
 					}
-					var version_str = "SAMT version 1.6.3, March 29, 2024.\n";
+					var version_str = "SAMT version 1.6.3, April 1, 2024.\n";
 					var CS_str=(MT_estimator.digital)?"DCS-H":"ACS-H";
 					if (MT_estimator.adaptive) {
 						CS_str+="A";
@@ -997,9 +997,9 @@
 				if (document.getElementById("radio_default_a0").checked){
 					document.getElementById("input_custom_a0").value=get_default_a0().toFixed(1);
 				}
-				if (radio.value=="adapt") {
-					//alert("Caution! Switching to adaptive stepping.\nPlease read instructions and method descriptions.")
-				}
+				/*if (radio.value=="adapt") {
+					alert("Caution! Switching to adaptive stepping.\nPlease read instructions and method descriptions.")
+				}*/
 				localStorage.setItem("tms_samt_stepping_method",radio.value);
 			}
 
@@ -1829,7 +1829,7 @@
 						</div>
 						<div class="w3-container">
 							<p align="justify">
-								version&nbsp;1.6.3,&nbsp;March&nbsp;29, 2024.
+								version&nbsp;1.6.3,&nbsp;April&nbsp;1, 2024.
 							</p>
 							<p align="justify">
 								©&nbsp;2022, Boshuo Wang, Lari Koponen, Stefan Goetz, Angel Peterchev, at Duke University, the University of Birmingham. 
