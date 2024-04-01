@@ -45,7 +45,7 @@
 			.w3-table th:first-child,.w3-table td:first-child,.w3-table-all th:first-child,.w3-table-all td:first-child{padding-left:16px}
 			.w3-btn,.w3-button{border:none;display:inline-block;padding:8px 16px;vertical-align:middle;overflow:hidden;text-decoration:none;color:inherit;background-color:inherit;text-align:center;cursor:pointer;white-space:nowrap}
 			.w3-btn:hover{box-shadow:0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19)}
-			.w3-btn,.w3-button{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}   
+			.w3-btn,.w3-button{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
 			.w3-disabled,.w3-btn:disabled,.w3-button:disabled{cursor:not-allowed;opacity:0.3}.w3-disabled *,:disabled *{pointer-events:none}
 			.w3-btn.w3-disabled:hover,.w3-btn:disabled:hover{box-shadow:none}
 			.w3-badge,.w3-tag{background-color:#000;color:#fff;display:inline-block;padding-left:8px;padding-right:8px;text-align:center}.w3-badge{border-radius:50%}
@@ -93,7 +93,7 @@
 			.w3-hide{display:none!important}.w3-show-block,.w3-show{display:block!important}.w3-show-inline-block{display:inline-block!important}
 			@media (max-width:1205px){.w3-auto{max-width:95%}}
 			@media (max-width:600px){.w3-modal-content{margin:0 10px;width:auto!important}.w3-modal{padding-top:30px}
-			.w3-dropdown-hover.w3-mobile .w3-dropdown-content,.w3-dropdown-click.w3-mobile .w3-dropdown-content{position:relative}	
+			.w3-dropdown-hover.w3-mobile .w3-dropdown-content,.w3-dropdown-click.w3-mobile .w3-dropdown-content{position:relative}
 			.w3-hide-small{display:none!important}.w3-mobile{display:block;width:100%!important}.w3-bar-item.w3-mobile,.w3-dropdown-hover.w3-mobile,.w3-dropdown-click.w3-mobile{text-align:center}
 			.w3-dropdown-hover.w3-mobile,.w3-dropdown-hover.w3-mobile .w3-btn,.w3-dropdown-hover.w3-mobile .w3-button,.w3-dropdown-click.w3-mobile,.w3-dropdown-click.w3-mobile .w3-btn,.w3-dropdown-click.w3-mobile .w3-button{width:100%}}
 			@media (max-width:768px){.w3-modal-content{width:500px}.w3-modal{padding-top:50px}}
@@ -265,25 +265,25 @@
 			 *
 			 * This class implements DCS1-H, DCS1-HA, ACS1-H and ACS1-HA from the manuscript.
 			 * In addition, the class implements a coarse estimate of the probable range of the MT estimation.
-			 * 
+			 *
 			 * Author: Lari Koponen (initial version: DCS-H), Boshuo Wang (additional versions and parameter choices, other UI updates and improvements)
-			 * Version: 1.6.2W, 2024-03-27
+			 * Version: 1.6.3W, 2024-03-29
 			 */
 			// Tab is 4 spaces
 			var MT_estimator;
-			
+
 			class SA_MT_estimator {							// Stochastic approximation (SA). AKA stochastic root-finding
 				constructor(MT_0, Vpp_th, digital, adaptive, a_0) {
 					if (MT_0=="") {							// Initial intensity. Check for a missing value
 						throw "Please specify an initial intensity, a number between 0 and 100.";
 					}
 					MT_0=Number(MT_0);						// Convert to a number and check for a value in the desired range
-					
+
 					if (!(MT_0>0 && MT_0<=100)) {			// Important to check for the inverse of range to capture a NaN
 						throw "Initial intensity is not a positive number ≤100.";
-					} 
+					}
 					MT_0=Math.round(MT_0*10)/10;
-					
+
 					if (!digital) {							// Only check definition of threshold EMG Vpp for analog methods
 						if (Vpp_th=="") {					// Check for a missing value
 							throw "Please specify an EMG threshold.";
@@ -293,7 +293,7 @@
 							throw "EMG threshold is not a positive value within 1 mV.";
 						}
 					}
-					
+
 					if (a_0=="") {							// Initial intensity. Check for a missing value
 						throw "Please specify an initial step, a number between 1 and 20.";
 					}
@@ -301,13 +301,13 @@
 					if (!(a_0>=1 && a_0<=20)) {				// Important to check for the inverse of range to capture a NaN
 						throw "Initial intensity is not a number between 1 and 20.";
 					}
-					
+
 					// Initialize the class
 					this.Vpp_th=Vpp_th;						// μV
 					this.digital=digital;					// boolean
 					this.adaptive=adaptive;					// boolean
 					this.a_0=a_0;							// % MSO
-					
+
 					this.pulses=[];							// List of intensity of TMS pulses, % MSO
 					this.Vpps=[];							// List of Vpp EMG responses, one for each pulse. Only relevant for analog method, μV
 					this.MEPs=[];							// List of binary responses, one for each pulse, boolean
@@ -328,17 +328,17 @@
 						this.response_list.push(0);
 					}
 					this.per_stim=[];
-					
+
 					this.data_saved=true;					// No need to save if just started.
 					this.figure_saved=true;
-			
+
 				}
 
 				// Number of TMS pulses
 				get index() {
 					return this.pulses.length;
 				}
-				
+
 				// Description of the quality of current estimation, based on relative frequency of positive/negative responses during last 10 pulses
 				get description() {
 					if (this.index<15) {
@@ -362,7 +362,7 @@
 							var tmp_str2="Restart at a "+ tmp_str_1 +" initial TMS intensity, or ";
 							var tmp_str3="Evaluate the procedure, especially the last 10 pulses to determine whether to accept this estimate, restart at a "+ tmp_str_1 +" initial TMS intensity, or ";
 						}
-						
+
 						if (this.digital){
 							if (MEPs<2) {
 								return "<span class='red-warning'>Warning!</span> This estimate is <span class='red-warning'>likely inaccurate</span> because the last 10 pulses have too few responses ("+MEPs+"). " + tmp_str + tmp_str2;
@@ -397,7 +397,7 @@
 					var a_0=this.a_0;
 					var tmp=0;
 					var actualMEP,new_MEPs,deltaY,expected_deltaY;
-					
+
 					if (this.digital) {
 						actualMEP=MEP;
 						deltaY=actualMEP?1:-1;						// Step for updating the MT estimate based on binary MEP response (specific to DCS)
@@ -408,14 +408,14 @@
 					}
 					this.deltaYs.push(deltaY);							// Only utilized for analog methods
 					this.MEPs.push(actualMEP);							// Only utilized for adaptive stepping
-					
+
 					var offset=28+this.MT_nextPulse-this.pulses[0];
 					this.count_list[offset]+=1;
 					if (actualMEP){
 						this.response_list[offset]+=1;
 					}
 					this.per_stim.push(this.response_list[offset]/this.count_list[offset])
-					
+
 					if (index==1) {
 						new_MEPs=actualMEP?1:0;
 						this.countMEPs.push(new_MEPs);
@@ -430,7 +430,7 @@
 						}
 						this.countMEPs.push(this.countMEPs[index-2]+new_MEPs);
 					}
-					
+
 					if ((this.adaptive)&&(index>1)) {					// Adaptive stepping after step 1
 						if (actualMEP != this.MEPs[index-2]) {
 							this.sign_changes+=1;						// Number of sign changes
@@ -442,7 +442,7 @@
 					this.MT_estimate+=step;
 					this.MT_estimate=(this.MT_estimate>=0)?this.MT_estimate:0;		// MT estimate clamped to 0 on lower end
 					this.MT_estimate=(this.MT_estimate<=101)?this.MT_estimate:101;		// MT estimate clamped to 100 on higher end
-					
+
 					// Update the "confidence interval", probable range of threshold (naive method)
 					if (this.digital) {
 						expected_deltaY=1;
@@ -454,7 +454,7 @@
 						}
 						expected_deltaY=sum_deltaYs/(index-averaging_start);
 					}
-					
+
 					var LB,UB,additional_steps;
 					if (index<10) {
 						this.isCI.push(false);
@@ -466,7 +466,7 @@
 						tmp*=(a_0*expected_deltaY);			// scale by step size
 						LB=tmp;
 						UB=tmp;
-						
+
 					} else {
 						additional_steps=10;
 						LB = get_CI_range(10-this.countMEPs[index-1],index)*(a_0*expected_deltaY);
@@ -478,7 +478,7 @@
 						}
 					}
 					this.MT_estimate_CI=[this.MT_estimate-LB,this.MT_estimate+UB];
-					
+
 					// Update next pulse, clamped between 1 and 100
 					this.MT_nextPulse=(Math.round(this.MT_estimate)>0.5)?Math.round(this.MT_estimate):1;
 					this.MT_nextPulse=(this.MT_nextPulse<=100)?this.MT_nextPulse:100;
@@ -486,18 +486,28 @@
 			}
 
 			function MT_UI_start() {
+				if (localStorage.getItem("tms_samt_layout")=="vertical") {
+					window.location.href="SAMT_v1.6.3N.html";
+				}
+
 				document.getElementById("radio_digital").checked=true;
-				document.getElementById("radio_non_adapt").checked=true;
+
+				if (localStorage.getItem("tms_samt_stepping_method")=="adapt") {
+					document.getElementById("radio_adapt").checked=true;
+				} else {
+					document.getElementById("radio_non_adapt").checked=true;
+				}
+
 				document.getElementById("radio_default_a0").checked=true;
-				
+
 				document.getElementById("input_Vpp_th").disabled=true;
 				document.getElementById("input_Vpp_th").value=50;
 				document.getElementById("input_custom_a0").disabled=true;
 				document.getElementById("input_custom_a0").value=get_default_a0().toFixed(1);
-				
+
 				document.getElementById("input_MT_0").value="";
 				document.getElementById("input_Vpp").value="";
-				
+
 				document.getElementById("button_MT_reset").disabled=true;
 				document.addEventListener("keydown",MT_keyboard,true);
 				MT_UI();
@@ -528,7 +538,7 @@
 					var use_default_a0=document.getElementById("radio_default_a0").checked;
 					//var a0_str=(use_default_a0)?"default <i>a</i><sub>0</sub>. ":("custom <i>a</i><sub>0</sub>: "+a_0.toFixed(1)+"% MSO. ");
 					var a0_str=(", initial step size <i>a</i><sub>0</sub>: "+a_0.toFixed(1)+"% MSO.");
-					
+
 					// additional information for analog methods on defined EMG threshold
 					var add_str="";
 					if (!(MT_estimator.digital) && (MT_estimator.Vpp_th!=50)) {
@@ -537,11 +547,11 @@
 					//document.getElementById("MT_method_msg").innerHTML="<strong>"+CS_str+A_str+" stepping.</strong> Initial step size:"+MT_estimator.a_0.toFixed(1)+"% MSO. "+add_str;
 					document.getElementById("MT_method_msg").innerHTML="<strong>"+CS_str+"</strong>: "+method_str+a0_str+add_str;
 					document.getElementById("MT_nextPulse_msg").innerHTML="Give a TMS pulse at <span class='bigger'>"+MT_estimator.MT_nextPulse+"% MSO</span>.";
-					
+
 					var x=MT_estimator.MT_estimate.toFixed(1);
 					var y=MT_estimator.MT_estimate_CI[0].toFixed(1);
 					var z=MT_estimator.MT_estimate_CI[1].toFixed(1);
-					
+
 					var esti_str="Pulse No. "+MT_estimator.index+": Current estimate of MT is ";
 					var MEPs=MT_estimator.countMEPs[MT_estimator.index-1];
 					if ((MT_estimator.index<25) || (MEPs<2) || (MEPs>8)) {
@@ -560,8 +570,8 @@
 					} else {
 						esti_str+="which is outside of the probable range of ["+y+"%, "+z+"%) MSO.";
 					}*/
-					
-					
+
+
 					document.getElementById("MT_estimate_msg").innerHTML=esti_str;
 					document.getElementById("MT_estimateDescription_msg").innerHTML=MT_estimator.description;
 				} else {
@@ -578,7 +588,7 @@
 				if (event.defaultPrevented) {
 					return;
 				}
-				
+
 				if(!(event.ctrlKey || event.altKey || event.shiftKey || event.metaKey)){
 					switch (event.key) {
 						case "s":
@@ -641,10 +651,10 @@
 				var digital=(document.getElementById("radio_digital").checked)?true:false;
 				var adaptive=(document.getElementById("radio_adapt").checked)?true:false;
 				var a_0=document.getElementById("input_custom_a0").value;
-				
+
 				MT_start_proc(MT_0, Vpp_th, digital, adaptive, a_0);
 			}
-			
+
 			function MT_start_proc(MT_0, Vpp_th, digital, adaptive, a_0) {
 				try {
 					// Create MT estimator object
@@ -657,21 +667,21 @@
 					document.getElementById("radio_analog").disabled=true;
 					document.getElementById("radio_default_a0").disabled=true;
 					document.getElementById("radio_custom_a0").disabled=true;
-					
+
 					document.getElementById("input_Vpp_th").disabled=true;
 					document.getElementById("input_custom_a0").disabled=true;
 					document.getElementById("input_MT_0").disabled=true;
-					
+
 					document.getElementById("button_MT_start").disabled=true;
 					document.getElementById("Start_msg").hidden=true;
 					document.getElementById("button_MT_reset").disabled=false;
 					document.getElementById("Reset_msg").hidden=false;
 					document.getElementById("Refine_msg").hidden=true;
 					document.getElementById("button_MT_refine").disabled=true;
-					
+
 					// Reset pulse list, add header to it based on method
 					//document.getElementById("textarea_MT_pulseList").rows=MT_estimator.index+5;
-					
+
 					// Set states for buttons and inputs related to MT procedure
 					document.getElementById("table_response_input").hidden=false;
 					document.getElementById("MT_estimate_msg").hidden=false;
@@ -691,7 +701,7 @@
 						//var heading_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\t% stim\t% p10\n";
 						var heading_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\tCount\n";
 					}
-					var version_str = "SAMT version 1.6.2, March 27, 2024.\n";
+					var version_str = "SAMT version 1.6.3, March 29, 2024.\n";
 					var CS_str=(MT_estimator.digital)?"DCS-H":"ACS-H";
 					if (MT_estimator.adaptive) {
 						CS_str+="A";
@@ -699,7 +709,7 @@
 					var info_str = "Stepping method:\t"+CS_str+"\nStarting intensity:\t"+MT_0+"% MSO\n";
 					info_str += "Procedure start time:\t"+getCurrentDateAndTime()+"\n\n";
 					document.getElementById("textarea_MT_pulseList").innerHTML=version_str+info_str+heading_str;
-					
+
 					// Add event listener for keyboard
 					//window.addEventListener("keydown",MT_keyboard,true);
 				} catch (e) {
@@ -721,13 +731,13 @@
 					saveimageFile('canvas_response');
 				}
 				*/
-				
+
 				var digital=(document.getElementById("radio_digital").checked)?true:false;
 				var default_a0=(document.getElementById("radio_default_a0").checked)?true:false;
-				
+
 				// Remove MT estimator object
 				MT_estimator=null;
-				
+
 				// Reset button states
 				document.getElementById("radio_non_adapt").disabled=false;
 				document.getElementById("radio_adapt").disabled=false;
@@ -735,7 +745,7 @@
 				document.getElementById("radio_analog").disabled=false;
 				document.getElementById("radio_default_a0").disabled=false;
 				document.getElementById("radio_custom_a0").disabled=false;
-					
+
 				if (!digital) {		//Enable threshold definition only when analog is selected
 					document.getElementById("input_Vpp_th").disabled=false;
 					//document.getElementById("input_Vpp_th_box").hidden=false;
@@ -746,29 +756,29 @@
 					document.getElementById("input_custom_a0").disabled=false;
 				}
 				document.getElementById("input_MT_0").disabled=false;
-				
+
 				document.getElementById("button_MT_start").disabled=false;
 				document.getElementById("Start_msg").hidden=false;
 				document.getElementById("button_MT_reset").disabled=true;
 				document.getElementById("Reset_msg").hidden=true;
-				
+
 				document.getElementById("table_response_input").hidden=true;
 				document.getElementById("field_is_suprathreshold_bottoms").hidden=true;
 				document.getElementById("MT_estimate_msg").hidden=true;
 				document.getElementById("MT_estimateDescription_msg").hidden=true;
 				document.getElementById("button_MT_MEP").disabled=true;
 				document.getElementById("button_MT_noMEP").disabled=true;
-				
+
 				document.getElementById("field_response_Vpp_box").hidden=true;
 				document.getElementById("button_Enter_Vpp").disabled=true;
 				document.getElementById("input_Vpp").disabled=true;
 				document.getElementById("Refine_msg").hidden=true;
 				document.getElementById("button_MT_refine").disabled=true;
-				
+
 				document.getElementById("input_MT_0").value="";
 				// Remove event listener from keyboard
 				//window.removeEventListener("keydown",MT_keyboard,true);
-				
+
 				// Update user inferface
 				MT_UI();
 			}
@@ -826,10 +836,10 @@
 				}
 				button_color=document.getElementById(button_name).className;
 				document.getElementById(button_name).className="w3-black";
-				
+
 				// Update MT estimator
 				MT_estimator.stimulate(MEP,Vpp);
-				
+
 				MT_estimator.data_saved=false;
 				MT_estimator.figure_saved=false;
 				// Update pulse list
@@ -854,7 +864,7 @@
 				var offset=28+MT_estimator.pulses[MT_estimator.index-1]-MT_estimator.pulses[0];
 				var u2=MT_estimator.response_list[offset];
 				var v2=MT_estimator.count_list[offset];
-				
+
 				var str=MT_estimator.index+"\t"+u+"\t";
 				if (MT_estimator.digital){
 					var actualMEP=(MEP)?"Yes":"No";
@@ -880,7 +890,7 @@
 					str+="\t["+y+", "+z+")";
 				}*/
 				str+="\n";
-				
+
 				var lines = document.getElementById("textarea_MT_pulseList").innerHTML.split("\n");
 				var newout=lines[0]+"\n"+lines[1]+"\n"+lines[2]+"\n"+lines[3]+"\n";
 				//document.getElementById("textarea_MT_pulseList").rows=MT_estimator.index+5;
@@ -907,14 +917,14 @@
 				}
 				newout+=lines[i];
 				document.getElementById("textarea_MT_pulseList").innerHTML=newout;
-				
+
 				// Update user inferface
 				MT_UI();
 				draw_ResponsePoint();
 				draw_CountPoint();
-				
+
 				setTimeout(function(){document.getElementById(button_name).className=button_color;}, flash_time);
-				
+
 				if (MT_estimator.index==29) {
 					document.getElementById("table_response_input").hidden=true;
 					document.getElementById("MT_nextPulse_msg").innerHTML="<strong>Procedure terminated!</strong>";
@@ -927,7 +937,7 @@
 
 			function copyToClipboard() {
 				var element=document.getElementById("textarea_MT_pulseList");
-				
+
 				element.select();
 				element.setSelectionRange(0,9999);
 				navigator.clipboard.writeText(element.textContent).then(() => {alert("Copied pulse list to clipboard.")}).catch(() => {alert("Copy to clipboard failed, a known problem with Android phones.")});
@@ -988,8 +998,9 @@
 					document.getElementById("input_custom_a0").value=get_default_a0().toFixed(1);
 				}
 				if (radio.value=="adapt") {
-					alert("Caution! Switching to adaptive stepping.\nPlease read instructions and method descriptions.")
+					//alert("Caution! Switching to adaptive stepping.\nPlease read instructions and method descriptions.")
 				}
+				localStorage.setItem("tms_samt_stepping_method",radio.value);
 			}
 
 			function handleClick_a0(radio) {
@@ -1002,8 +1013,12 @@
 					document.getElementById("input_custom_a0").disabled=false;
 				}
 				if (document.getElementById("radio_default_a0").checked){
-					
+
 				}
+			}
+
+			function handleClick_Layout() {
+				localStorage.setItem("tms_samt_layout","vertical");
 			}
 
 			function get_default_a0() {
@@ -1061,7 +1076,7 @@
 				// Find minimum and maximum values
 				const minX = 0;
 				const maxX = 30;
-				if (MT_estimator) { 
+				if (MT_estimator) {
 					var MT_0=MT_estimator.MT_estimate;
 				} else {
 					var MT_0=Number(document.getElementById("input_MT_0").value);
@@ -1092,19 +1107,19 @@
 					}
 					maxY = minY + 60;
 				}
-				
+
 				// Calculate scaling factors
 				const xScale = chartWidth / (maxX - minX);
 				const yScale = chartHeight / (maxY - minY);
-				
+
 				//
 				ctx.fillStyle = "#ffffff";
 				ctx.fillRect(0, 0, canvas.width, canvas.height);
-				
+
 				// Draw x and y axis lines
 				ctx.strokeStyle = "#000000";
 				ctx.lineWidth = 2;
-				
+
 				ctx.beginPath();
 				ctx.moveTo(margin.left, margin.top);
 				ctx.lineTo(margin.left, canvas.height - margin.bottom);
@@ -1174,7 +1189,7 @@
 				ctx.rotate(-Math.PI / 2);
 				ctx.fillText("TMS intensity (% MSO)", 0, 0);
 				ctx.restore();
-				
+
 				// Legends
 				ctx.fillStyle = "#ffffff";
 				if (MT_estimator.adaptive) {
@@ -1188,12 +1203,12 @@
 				const radius2 = 3.5;
 				var x2 = margin.left + (1 - minX) * xScale;
 				var y2;
-				
+
 				ctx.strokeStyle = "#000000";
 				ctx.font = "11px Arial";
 				ctx.textAlign = "left";
 				ctx.textBaseline = "middle";
-				
+
 				ctx.fillStyle = "#7f7f7f";
 				y2 = canvas.height - margin.bottom - (legY - 1 - minY) * yScale;
 				ctx.beginPath();
@@ -1209,7 +1224,7 @@
 				ctx.fill();
 				ctx.fillStyle =  "#000000";
 				ctx.fillText("Suprathreshold response", x2 + 0.5*xScale, y2+0.25*yScale);
-				
+
 				ctx.fillStyle = "#f44336";
 				y2 = canvas.height - margin.bottom - (legY - 1-leg_space*2 - minY) * yScale;
 				ctx.beginPath();
@@ -1244,12 +1259,12 @@
 				const maxX = 30;
 				const minY = 0;
 				const maxY = 10;
-				
+
 				// Calculate scaling factors
 				const xScale = chartWidth / (maxX - minX);
 				const yScale = chartHeight / (maxY - minY);
-				
-				
+
+
 				// Create gradient
 				var grd = ctx.createLinearGradient(canvas.width/2, margin.top, canvas.width/2, canvas.height - margin.bottom);
 				grd.addColorStop(0.0, "#f443367f");
@@ -1263,7 +1278,7 @@
 				// Fill with gradient
 				ctx.fillStyle = grd;
 				ctx.fillRect(margin.left, margin.top, chartWidth, chartHeight);
-				
+
 				grd = ctx.createLinearGradient(margin.left, canvas.height/2, margin.left+chartWidth, canvas.height/2);
 				grd.addColorStop(0.0, "#ffffffff");
 				grd.addColorStop(9/30, "#ffffffff");
@@ -1272,11 +1287,11 @@
 				// Fill with gradient
 				ctx.fillStyle = grd;
 				ctx.fillRect(margin.left, margin.top, chartWidth, chartHeight);
-				
+
 				// Draw x and y axis lines
 				ctx.strokeStyle = "#000000";
 				ctx.lineWidth = 2;
-				
+
 				ctx.beginPath();
 				ctx.moveTo(margin.left, margin.top);
 				ctx.lineTo(margin.left, canvas.height - margin.bottom);
@@ -1345,17 +1360,17 @@
 				var legY=8.9;
 				ctx.fillStyle = "#ffffff";
 				ctx.fillRect(margin.left + (0.4 - minX) * xScale, canvas.height - margin.bottom - (legY+0.05 - minY) * yScale, 9.5 * xScale, 0.9 * yScale);
-				
+
 				const radius1 = 4;
 				const radius2 = 3.5;
 				var x2 = margin.left + (1 - minX) * xScale;
 				var y2;
-				
+
 				ctx.strokeStyle = "#000000";
 				ctx.font = "10px Arial";
 				ctx.textAlign = "left";
 				ctx.textBaseline = "middle";
-				
+
 				ctx.fillStyle = "#5171B9";
 				y2 = canvas.height - margin.bottom - (legY - 0.2 - minY) * yScale;
 				ctx.beginPath();
@@ -1363,7 +1378,7 @@
 				ctx.fill();
 				ctx.fillStyle =  "#000000";
 				ctx.fillText("% stim: at current intensity", x2 + 0.5*xScale, y2+0.025*yScale);
-				
+
 				ctx.fillStyle = "#000000";
 				y2 = canvas.height - margin.bottom - (legY - 0.6 - minY) * yScale;
 				ctx.beginPath();
@@ -1399,7 +1414,7 @@
 				const minX = 0;
 				const maxX = 30;
 				var MT_0=MT_estimator.pulses[0];
-				
+
 				var minY,maxY;
 				if (MT_estimator.adaptive) {
 					minY = 0;
@@ -1414,28 +1429,28 @@
 					}
 					maxY = minY + 60;
 				}
-				
+
 				// Calculate scaling factors
 				const xScale = chartWidth / (maxX - minX);
 				const yScale = chartHeight / (maxY - minY);
 				const radius1 = 5;
 				const radius2 = 3.5;
-				
+
 				var x2 = margin.left + (MT_estimator.index+1 - minX) * xScale;
 				var y2 = canvas.height - margin.bottom - (MT_estimator.MT_estimate - minY) * yScale;
-				
+
 				ctx.strokeStyle = "#000000";
 				//if (MT_estimator.index>1) {
 					// Draw lines connecting the points
 					var x1 = margin.left + (MT_estimator.index - minX) * xScale;
 					var y1 = canvas.height - margin.bottom - (MT_estimator.pulses[MT_estimator.index-1] - minY) * yScale;
-					
+
 					ctx.beginPath();
 					ctx.lineWidth = 2;
 					ctx.moveTo(x1, y1);
 					ctx.lineTo(x2, y2);
 					ctx.stroke();
-					
+
 					ctx.fillStyle = (MT_estimator.MEPs[MT_estimator.index-1])?"#4caf50":"#f44336";
 					ctx.beginPath();
 					ctx.arc(x1, y1, radius1, 0, 2 * Math.PI);
@@ -1460,16 +1475,16 @@
 				const maxX = 30;
 				const minY = 0;
 				const maxY = 10;
-				
+
 				// Calculate scaling factors
 				const xScale = chartWidth / (maxX - minX);
 				const yScale = chartHeight / (maxY - minY);
 				const radius = 5;
-				
+
 				// % p10
 				var x2 = margin.left + (MT_estimator.index - minX) * xScale;
 				var y2 = canvas.height - margin.bottom - (MT_estimator.countMEPs[MT_estimator.index-1] - minY) * yScale;
-				
+
 				if (MT_estimator.index<=10) {
 					ctx.fillStyle = "#7f7f7f";
 					ctx.strokeStyle = "#7f7f7f";
@@ -1481,13 +1496,13 @@
 					// Draw lines connecting the points
 					var x1 = margin.left + (MT_estimator.index-1 - minX) * xScale;
 					var y1 = canvas.height - margin.bottom - (MT_estimator.countMEPs[MT_estimator.index-2] - minY) * yScale;
-					
+
 					ctx.beginPath();
 					ctx.lineWidth = 2;
 					ctx.moveTo(x1, y1);
 					ctx.lineTo(x2, y2);
 					ctx.stroke();
-					
+
 					ctx.beginPath();
 					ctx.arc(x1, y1, radius, 0, 2 * Math.PI);
 					ctx.fill();
@@ -1502,33 +1517,33 @@
 				ctx.beginPath();
 				ctx.arc(x2, y2, radius, 0, 2 * Math.PI);
 				ctx.fill();
-				
+
 				/*
 				// % stim
 				const radius2 = 4;
 				var rate=MT_estimator.per_stim[MT_estimator.index-1]*10;
 				var y2 = canvas.height - margin.bottom - (rate - minY) * yScale;
-				
+
 				ctx.fillStyle = "#5171B9";
 				ctx.strokeStyle = "#5171B9";
 				ctx.beginPath();
 				ctx.arc(x2, y2, radius2, 0, 2 * Math.PI);
 				ctx.fill();
-				
+
 				if (MT_estimator.index>1) {
 					// Draw lines connecting the points
 					rate=MT_estimator.per_stim[MT_estimator.index-2]*10;
-					
+
 					x1 = margin.left + (MT_estimator.index-1 - minX) * xScale;
 					y1 = canvas.height - margin.bottom - (rate - minY) * yScale;
-					
+
 					ctx.beginPath();
 					ctx.arc(x1, y1, radius2, 0, 2 * Math.PI);
 					ctx.fill();
 				}
 				*/
 			}
-			
+
 			function saveimageFile(canvas_name) {
 				var canvas = document.getElementById(canvas_name);
 				var dateTime=new Date();
@@ -1542,7 +1557,7 @@
 				}
 				if (dateTime.getDate() < 10) {
 					d_str="0"+d_str;
-				} 
+				}
 				if (dateTime.getHours() < 10) {
 					h_str="0"+h_str;
 				}
@@ -1550,11 +1565,11 @@
 					m_str="0"+m_str;
 				}
 				var filename = "SAMT_"+dateTime.getFullYear()+M_str+d_str+"-"+h_str+m_str+"_subjectID.png";
-				
+
 				saveImage(filename, canvas);
 				MT_estimator.figure_saved=true;
 			}
-			
+
 			function saveImage(filename, canvas) {
 				let canvasUrl = canvas.toDataURL("image/png");
 				var element = document.createElement("a");
@@ -1564,25 +1579,25 @@
 				element.click();
 				document.body.removeChild(element);
 			}
-			
+
 		</script>
 	</head>
-	
+
 	<body onload="MT_UI_start()">
 		<div class="w3-container w3-indigo" id="header_top">
 			<h1>TMS Motor Threshold (MT) Estimation App</h1>
 		</div>
 		<div class="w3-container w3-blue">
-			<h2>Stochastic Approximator of MT (SAMT) <font size="2">v1.6.2</font></h2>
+			<h2>Stochastic Approximator of MT (SAMT) <font size="2">v1.6.3</font></h2>
 		</div>
 		<div class="w3-container">
 			<p style="font-size:80%;">
 				Please read <a href="#header_instructions">instructions and descriptions of the method</a> provided below.
 				<br>
-				<a href="index.html">SAMT version</a> with vertical layout for mobile devices.
+				<a href="SAMT_v1.6.3N.html" onclick="handleClick_Layout()">SAMT version</a> with vertical layout for mobile devices.
 			</p>
 		</div>
-		
+
 		<table style="width:100%">
 			<tbody>
 				<tr>
@@ -1607,13 +1622,16 @@
 											<fieldset>
 												<legend>Stepping method of control sequence</legend>
 												<div>
-													<input type="radio" id="radio_non_adapt" name="stepping_method" onclick="handleClick_A(this);" value="non_adapt" checked="">
-													<label for="non_adapt">Non-adaptive (DCS-H, default)</label>
+													<input type="radio" id="radio_non_adapt" name="stepping_method" onclick="handleClick_A(this);" value="non_adapt">
+													<label for="non_adapt">Non-adaptive (DCS-H)</label>
 												</div>
 												<div>
 													<input type="radio" id="radio_adapt" name="stepping_method" onclick="handleClick_A(this);" value="adapt">
-													<label for="adapt">Adaptive (DCS-HA, see <a href="#header_instructions">instructions and method descriptions</a>)</label>
+													<label for="adapt">Adaptive (DCS-HA)</label>
 												</div>
+												<div>
+													<font size="2">See <a href="#header_instructions">instructions and method descriptions</a>.</font>
+												<div>
 											</fieldset>
 										</td>
 									</tr>
@@ -1653,7 +1671,7 @@
 									</tr>
 								</tbody>
 							</table>
-							
+
 							<p id="Start_msg"><button class="w3-green" id="button_MT_start" onclick="MT_start();"style="height:35px;width:80px"><u>S</u>tart</button> and move to right section.<br><br></p>
 							<p id="Reset_msg" hidden=""><button class="w3-black" id="button_MT_reset" onclick="MT_reset();"style="height:35px;width:80px"><u>R</u>eset</button> to start a new procedure.<br>(Automatically triggers data download if not yet saved.)</p>
 							<br><br>
@@ -1706,7 +1724,7 @@
 				</tr>
 			</tbody>
 		</table>
-		
+
 		<table style="width:100%">
 			<tbody>
 				<tr>
@@ -1718,8 +1736,8 @@
 				</tr>
 			</tbody>
 		</table>
-		
-		<table style="vertical-align:top;width:100%"> 
+
+		<table style="vertical-align:top;width:100%">
 			<tbody>
 				<tr>
 					<td style="vertical-align:top;width:45%">
@@ -1736,7 +1754,7 @@
 						</div>
 					</td>
 					<td style="vertical-align:top;width:55%">
-						<div class="w3-container" id="graphing"> 
+						<div class="w3-container" id="graphing">
 							<p>
 								<button class="w3-green" onclick="saveimageFile('canvas_response');" style="height:30px;width:60px">Sa<u>v</u>e</button> image
 							</p>
@@ -1748,13 +1766,13 @@
 				</tr>
 			</tbody>
 		</table>
-		
-		
+
+
 		<!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 		<div class="w3-container w3-blue">
 			<h2>Information about this app</h2>
 		</div>
-		
+
 		<table style="width:100%">
 			<tbody>
 				<tr>
@@ -1784,8 +1802,8 @@
 							<h3 id="header_information">Method description</h3>
 						</div>
 						<div class="w3-container">
-							<p align="justify">The MT is estimated using a stochastic approximation method with a digital control sequence (DCS) whose step size follows harmonic convergence without (DCS-H) or with (DCS-HA) adaptive stepping. The initial step size of the control sequence, <i>a</i><sub>0</sub>, is 6.7% and 4.2%&nbsp;MSO for non-adaptive and adaptive stepping, respectively. With adaptive stepping, the control sequence is adjusted only when the response changes from suprathreshold to subthreshold or vice versa. With a good initial intensity, the estimator takes on average 25&nbsp;pulses to determine the MT with median relative error |<i>δ</i>| of 1.3%.</p>
-							
+							<p align="justify">The MT is estimated using a stochastic approximation method with a digital control sequence (DCS) whose step size follows harmonic convergence without (DCS-H) or with (DCS-HA) adaptive stepping. The initial step size of the control sequence, <i>a</i><sub>0</sub>, is 6.7% and 4.2%&nbsp;MSO for non-adaptive and adaptive stepping, respectively. With adaptive stepping, the control sequence is adjusted only when the response changes from suprathreshold to subthreshold or vice versa. With a good initial intensity, the estimator takes on average 25&nbsp;pulses to determine the MT with median relative error |&NoBreak;<i>δ</i>&NoBreak;| of 1.3%.</p>
+
 								<p align="justify">The stochastic approximation MT methods are described in the following manuscript, which explores the performance of different control sequences, stepping adaptiveness, and initial step size.</p>
 								<ul>
 									<li>B.&nbsp;Wang, A.&nbsp;V.&nbsp;Peterchev, and S.&nbsp;M.&nbsp;Goetz, “Three Novel Methods for Determining Motor Threshold with Transcranial Magnetic Stimulation Outperform Conventional Procedures”, <i>J. Neural Eng.</i>, vol.&nbsp;20, no.&nbsp;5, 056002, Oct.&nbsp;2023. DOI:&nbsp;<a href="https://doi.org/10.1088/1741-2552/acf1cc">10.1088/1741-2552/acf1cc</a>.</li>
@@ -1794,7 +1812,7 @@
 								<ul>
 									<li>L.&nbsp;M.&nbsp;Koponen and A.&nbsp;V.&nbsp;Peterchev, “Preventing misestimation of transcranial magnetic stimulation motor threshold with MTAT&nbsp;2.0”, <i>Brain Stim.</i>, vol.&nbsp;15, no.&nbsp;5, pp.&nbsp;1073–1076, Sep.&nbsp;2022. DOI:&nbsp;<a href="https://doi.org/10.1016/j.brs.2022.07.057">10.1016/j.brs.2022.07.057</a>.</li>
 								</ul>
-								<p>This HTML/JS application is written by Boshuo Wang and Lari M. Koponen. Shivum Vaishnavi contributed to the visualization.</p>
+								<p>This HTML/JS application is written by Boshuo Wang and Lari M. Koponen, with contribution from Vedarsh Shah and Shivum Vaishnavi.</p>
 								<p align="justify">All processing is done by the app locally. No data are shared online.</p>
 								<!--<p>Estimation of the MT's confidence interval will be implemented in future versions and described in a separate publication.</p>--->
 						</div>
@@ -1811,7 +1829,7 @@
 						</div>
 						<div class="w3-container">
 							<p align="justify">
-								version&nbsp;1.6.2,&nbsp;March&nbsp;27, 2024. 
+								version&nbsp;1.6.3,&nbsp;March&nbsp;29, 2024.
 							</p>
 							<p align="justify">
 								©&nbsp;2022, Boshuo Wang, Lari Koponen, Stefan Goetz, Angel Peterchev, at Duke University, the University of Birmingham. 
@@ -1840,11 +1858,11 @@
 						<hr>
 						<div class="w3-container">
 							Number of visits:
-							<!-- Default Statcounter code for TMS-SAMT https://tms-samt.github.io/ -->
+							<!-- Default Statcounter code for TMS-SAMT https://tms-samt.github.io/ - ->
 							<script type="text/javascript">
-								var sc_project=12909996; 
-								var sc_invisible=0; 
-								var sc_security="bdd0174f"; 
+								var sc_project=12909996;
+								var sc_invisible=0;
+								var sc_security="bdd0174f";
 								var scJsHost = "https://";
 								document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
 								"statcounter.com/counter/counter.js'></"+"script>");
