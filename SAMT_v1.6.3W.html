@@ -940,7 +940,7 @@
 
 				element.select();
 				element.setSelectionRange(0,9999);
-				navigator.clipboard.writeText(element.textContent).then(() => {alert("Copied pulse list to clipboard.")}).catch(() => {alert("Copy to clipboard failed, a known problem with Android phones.")});
+				navigator.clipboard.writeText(element.textContent).then(() => {alert("Copied pulse list to clipboard.");MT_estimator.data_saved=true;}).catch(() => {alert("Copy to clipboard failed, a known problem with Android phones.")});
 			}
 
 			function downloadFile() {
