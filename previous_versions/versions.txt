@@ -1,4 +1,9 @@
 Filename				Date		Version		Description
+SAMT_v1.6.3W.html & SAMT_v1.6.3N.html	2024.04.01	1.6.3		Updated version to 1.6.3 and date to 4.1.
+									Included mechanism to save choice of stepping adaptiveness and layout in local storage.
+									Removed warning for adaptive method.
+									Slight re-arrangement of text in method selection box.
+
 SAMT_v1.6.2W.html & SAMT_v1.6.2N.html	2024.03.27	1.6.2		Updated version to 1.6.2 and date to 3.27.
 									Fixed the threshold output in the output log (from pulse amplitude to MT).
 									Moved version and copyright info from top to copyright section.
