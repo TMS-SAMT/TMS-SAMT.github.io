@@ -940,7 +940,7 @@
 
 				element.select();
 				element.setSelectionRange(0,9999);
-				navigator.clipboard.writeText(element.textContent).then(() => {alert("Copied pulse list to clipboard.")}).catch(() => {alert("Copy to clipboard failed, a known problem with Android phones.")});
+				navigator.clipboard.writeText(element.textContent).then(() => {alert("Copied pulse list to clipboard.");MT_estimator.data_saved=true;}).catch(() => {alert("Copy to clipboard failed, a known problem with Android phones.")});
 			}
 
 			function downloadFile() {
@@ -1876,7 +1876,7 @@
 						<hr>
 						<div class="w3-container">
 							Number of visits:
-							<!-- Default Statcounter code for TMS-SAMT https://tms-samt.github.io/ - ->
+							<!-- Default Statcounter code for TMS-SAMT https://tms-samt.github.io/ -->
 							<script type="text/javascript">
 								var sc_project=12909996;
 								var sc_invisible=0;
