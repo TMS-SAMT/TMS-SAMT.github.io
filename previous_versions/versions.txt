@@ -3,6 +3,7 @@ SAMT_v1.6.4W.html & SAMT_v1.6.4N.html	2024.04.02	1.6.4		Updated version to 1.6.4
 									Change automatic download to not be the default when resetting the procedure.
 									Adding check box to enable automatic download when procedure ends or is reset.
 									Updated old references to methods in script, e.g., DCS1 -> DCS.
+									Changed description of accuracy for methods from "1.3%" (for optimized DCS-H will ideal starting points) to "less than 1.5%" (to account for DCS-HA and less ideal starting points).
 
 SAMT_v1.6.3W.html & SAMT_v1.6.3N.html	2024.04.01	1.6.3		Updated version to 1.6.3 and date to 4.1.
 									Included mechanism to save choice of stepping adaptiveness and layout in local storage.
