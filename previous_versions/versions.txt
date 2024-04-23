@@ -1,4 +1,12 @@
 Filename				Date		Version		Description
+SAMT_v1.6.5W.html & SAMT_v1.6.5N.html	2024.04.23	1.6.5		Updated version to 1.6.5 and date to 4.23.
+									Fixed canvas drawing at page load.
+									Disabled autosave checkbox and link for layout during procedure.
+									Moved info for instructions etc. from top to after start button.
+									Moved options for stepping, autosave, and layout link to a new Settings subsection in the app info section.
+									Updated website url for Duke OTC.
+									Display methods (DCS-H/DCS-HA) after start/reset button.
+
 SAMT_v1.6.4W.html & SAMT_v1.6.4N.html	2024.04.02	1.6.4		Updated version to 1.6.4 and date to 4.2.
 									Change automatic download to not be the default when resetting the procedure.
 									Adding check box to enable automatic download when procedure ends or is reset.
