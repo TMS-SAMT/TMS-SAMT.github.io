@@ -264,9 +264,18 @@
 
 			function MT_UI_start() {
 				if (localStorage.getItem("tms_samt_layout")=="horizontal") {
-					window.location.href="SAMT_v1.6.4W.html";
+					window.location.href="SAMT_v1.6.5W.html";
+				} else if (localStorage.getItem("tms_samt_layout")=="vertical") {
+					window.location.href="SAMT_v1.6.5N.html";
 				} else {
-					window.location.href="SAMT_v1.6.4N.html";
+					let width = screen.width;
+					if (width > 640) {
+						window.location.href="SAMT_v1.6.5W.html";
+						localStorage.setItem("tms_samt_layout","horizontal");
+					} else {
+						window.location.href="SAMT_v1.6.5N.html";
+						localStorage.setItem("tms_samt_layout","vertical");
+					}
 				}
 			}
 		</script>
