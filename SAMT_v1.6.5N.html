@@ -251,9 +251,18 @@
 				margin: auto;
 			}
 
+			ul.myUL {
+				text-align: justify;
+			}
+
+			ol.myOL {
+				text-align: justify;
+			}
+
 			* {
 				box-sizing: border-box;
 			}
+
 			#textarea_MT_pulseList {
 				width: 100%;
 				font-family: monospace;
@@ -495,10 +504,10 @@
 				if (localStorage.getItem("tms_samt_stepping_method")=="adapt") {
 					document.getElementById("radio_adapt").checked=true;
 					document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-HA</strong>: digital control sequence, adaptive stepping.";
-					} else {
+				} else {
 					document.getElementById("radio_non_adapt").checked=true;
 					document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-H</strong>: digital control sequence, non-adaptive stepping.";
-					}
+				}
 
 				if (localStorage.getItem("tms_samt_autosave")=="autosave_checked") {
 					document.getElementById("autosave").checked=true;
@@ -1836,7 +1845,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td>
+										<td align="justify">
 											<input type="checkbox" id="autosave" name="autosave" value="autosave_checked" onclick="auto_save_status()"> 
 											<label for="autosave">Automatically trigger download of estimation history when procedure ends after pulse No.&nbsp;29 or is reset earlier and not saved (downloaded or copied).</label>
 										</td>
@@ -1866,7 +1875,7 @@
 							<p align="justify">For the method to work correctly, it is important to start from an intensity that is close to the likely motor threshold (MT) and preferably <i>suprathreshold </i> (i.e., an intensity that produces motor responses more often than not). The intensity used to locate the motor hot spot is a good starting point.</p>
 							<p align="justify">Using adaptive stepping may provide faster convergence for certain cases, e.g., the starting amplitude is far from threshold or a non-conventional TMS pulse shape is used.</p>
 							<p> Known limitations and bugs:</p>
-							<ul>
+							<ul class="myUL">
 								<li>The tool is provided as is. In particular, the description of the quality of the MT estimation is based on an approximate algorithm which may prematurely declare the estimation “good”. The final judgement on the MT must always be made by the operator!</li>
 								<li>The stochastic approximation algorithm may attempt to step to impossible intensities for the MT estimate (below 0% or above 100%&nbsp;MSO). The implementation in this app limits the next intensity between 1% and 100%&nbsp;MSO and the MT estimate between 0% and 101%&nbsp;MSO.</li>
 								<li>The copy button does not work on some mobile devices. Please copy the text manually if the copy button fails.</li>
@@ -1889,12 +1898,12 @@
 							<p align="justify">The MT is estimated using a stochastic approximation method with a digital control sequence (DCS) whose step size follows harmonic convergence without (DCS-H) or with (DCS-HA) adaptive stepping. The initial step size of the control sequence, <i>a</i><sub>0</sub>, is 6.7% and 4.2%&nbsp;MSO for non-adaptive and adaptive stepping, respectively. With adaptive stepping, the control sequence is adjusted only when the response changes from suprathreshold to subthreshold or vice versa. With a good initial intensity, the estimator takes on average 25&nbsp;pulses to determine the MT with median relative error |&NoBreak;<i>δ</i>&NoBreak;| of less than 1.5%.</p>
 
 								<p align="justify">The stochastic approximation MT methods are described in the following manuscript, which explores the performance of different control sequences, stepping adaptiveness, and initial step size.</p>
-								<ul>
-									<li>B.&nbsp;Wang, A.&nbsp;V.&nbsp;Peterchev, and S.&nbsp;M.&nbsp;Goetz, “Three Novel Methods for Determining Motor Threshold with Transcranial Magnetic Stimulation Outperform Conventional Procedures”, <i>J. Neural Eng.</i>, vol.&nbsp;20, no.&nbsp;5, 056002, Oct.&nbsp;2023. DOI:&nbsp;<a href="https://doi.org/10.1088/1741-2552/acf1cc">10.1088/1741-2552/acf1cc</a>.</li>
+								<ul class="myUL">
+									<li>B.&nbsp;Wang, A.&nbsp;V.&nbsp;Peterchev, and S.&nbsp;M.&nbsp;Goetz, “Three Novel Methods for Determining Motor Threshold with Transcranial Magnetic Stimulation Outperform Conventional Procedures”, <i>J.&nbsp;Neural&nbsp;Eng.</i>, vol.&nbsp;20, no.&nbsp;5, 056002, Oct.&nbsp;2023.<br>DOI:&nbsp;<a href="https://doi.org/10.1088/1741-2552/acf1cc">10.1088/1741-2552/acf1cc</a>.</li>
 								</ul>
 								<p align="justify">The choice of initial stimulation intensity close to the MT and the description of the quality of the current estimation follow suggestions in:</p>
-								<ul>
-									<li>L.&nbsp;M.&nbsp;Koponen and A.&nbsp;V.&nbsp;Peterchev, “Preventing misestimation of transcranial magnetic stimulation motor threshold with MTAT&nbsp;2.0”, <i>Brain Stim.</i>, vol.&nbsp;15, no.&nbsp;5, pp.&nbsp;1073–1076, Sep.&nbsp;2022. DOI:&nbsp;<a href="https://doi.org/10.1016/j.brs.2022.07.057">10.1016/j.brs.2022.07.057</a>.</li>
+								<ul class="myUL">
+									<li>L.&nbsp;M.&nbsp;Koponen and A.&nbsp;V.&nbsp;Peterchev, “Preventing misestimation of transcranial magnetic stimulation motor threshold with MTAT&nbsp;2.0”, <i>Brain&nbsp;Stim.</i>, vol.&nbsp;15, no.&nbsp;5, pp.&nbsp;1073–1076, Sep.&nbsp;2022.<br>DOI:&nbsp;<a href="https://doi.org/10.1016/j.brs.2022.07.057">10.1016/j.brs.2022.07.057</a>.</li>
 								</ul>
 								<p>This HTML/JS application is written by Boshuo Wang and Lari M. Koponen, with contribution from Vedarsh Shah and Shivum Vaishnavi.</p>
 								<p align="justify">All processing is done by the app locally. No data are shared online.</p>
@@ -1921,13 +1930,13 @@
 								version&nbsp;1.6.5,&nbsp;April&nbsp;23, 2024.
 							</p>
 							<p align="justify">
-								©&nbsp;2022, Boshuo Wang, Lari Koponen, Stefan Goetz, Angel Peterchev, at Duke University, the University of Birmingham. 
+								©&nbsp;2022, Boshuo Wang, Lari M. Koponen, Stefan M. Goetz, Angel V. Peterchev, at Duke University, the University of Birmingham. 
 								All rights reserved.
 							</p>
 							<p align="justify">
 								The copyrights of this software are owned by Duke University and the University of Birmingham. As such, two licenses for this software are offered:
 							</p>
-							<ol>
+							<ol class="myOL">
 								<li>An open-source license under the <a href="https://opensource.org/license/gpl-2-0/">GPLv2 license</a> for non-commercial use.</li>
 								<li>A custom license with Duke University, for commercial use without the GPLv2 license restrictions. </li>
 							</ol>
