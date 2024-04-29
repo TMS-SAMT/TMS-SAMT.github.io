@@ -264,16 +264,16 @@
 
 			function MT_UI_start() {
 				if (localStorage.getItem("tms_samt_layout")=="horizontal") {
-					window.location.href="SAMT_v1.6.5W.html";
+					window.location.href="SAMT_v1.6.6W.html";
 				} else if (localStorage.getItem("tms_samt_layout")=="vertical") {
-					window.location.href="SAMT_v1.6.5N.html";
+					window.location.href="SAMT_v1.6.6N.html";
 				} else {
 					let width = screen.width;
 					if (width > 640) {
-						window.location.href="SAMT_v1.6.5W.html";
+						window.location.href="SAMT_v1.6.6W.html";
 						localStorage.setItem("tms_samt_layout","horizontal");
 					} else {
-						window.location.href="SAMT_v1.6.5N.html";
+						window.location.href="SAMT_v1.6.6N.html";
 						localStorage.setItem("tms_samt_layout","vertical");
 					}
 				}

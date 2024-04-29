@@ -1,4 +1,7 @@
 Filename				Date		Version		Description
+SAMT_v1.6.6W.html & SAMT_v1.6.6N.html	2024.04.29	1.6.6		Updated version to 1.6.6 and date to 4.29.
+									Included automatic download trigger for page closing/refreshing, if autosave check box selected.
+
 SAMT_v1.6.5W.html & SAMT_v1.6.5N.html	2024.04.23	1.6.5		Updated version to 1.6.5 and date to 4.23.
 									Fixed canvas drawing at page load.
 									Disabled autosave checkbox and link for layout during procedure.
