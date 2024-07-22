@@ -1,4 +1,11 @@
 Filename				Date		Version		Description
+SAMT_v1.7.1				2024.07.22	1.7.1		Updated version to 1.7.1 and date to 7.22.
+									One file with dynamic rearrangement of the layout with media query. Removed index page and local storage for layout.
+									MT_estimate field of estimator class converted from single number to list.
+									Allow only integer input for initial amplitude (vs. any positive number <= 100).
+									Disabled download, save, and copy buttons before the first trials is started (i.e., when text box and figures are empty).
+									Simplified downloadFile and saveimageFile functions.
+
 SAMT_v1.7.0W.html & SAMT_v1.7.0N.html	2024.06.24	1.7.0		Updated version to 1.7.0 and date to 6.24.
 									Changed "non-adaptive stepping" to "fixed stepping".
 									Included CI for SA method based on asymptotic variance.
