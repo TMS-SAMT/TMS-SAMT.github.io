@@ -31,7 +31,7 @@
 			[type=search]::-webkit-search-decoration{-webkit-appearance:none}
 			::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}
 			/* End extract */
-			html,body{font-family:Verdana,sans-serif;font-size:15px;line-height:1.5}html{overflow-x:hidden}
+			html,body{font-family:Verdana,sans-serif;font-size:15px;line-height:1.5}html{overflow-x:auto}
 			h1{font-size:36px}h2{font-size:30px}h3{font-size:24px}h4{font-size:20px}h5{font-size:18px}h6{font-size:16px}
 			.w3-serif{font-family:serif}.w3-sans-serif{font-family:sans-serif}.w3-cursive{font-family:cursive}.w3-monospace{font-family:monospace}
 			h1,h2,h3,h4,h5,h6{font-family:"Segoe UI",Arial,sans-serif;font-weight:400;margin:10px 0}.w3-wide{letter-spacing:4px}
@@ -240,6 +240,7 @@
 			.w3-border-dark-grey,.w3-hover-border-dark-grey:hover,.w3-border-dark-gray,.w3-hover-border-dark-gray:hover{border-color:#616161!important}
 			.w3-border-pale-red,.w3-hover-border-pale-red:hover{border-color:#ffe7e7!important}.w3-border-pale-green,.w3-hover-border-pale-green:hover{border-color:#e7ffe7!important}
 			.w3-border-pale-yellow,.w3-hover-border-pale-yellow:hover{border-color:#ffffcc!important}.w3-border-pale-blue,.w3-hover-border-pale-blue:hover{border-color:#e7ffff!important}
+			
 			.bigger {font-size:135%;color:#4caf50;font-weight: bold;}
 			.red-warning {color:#f44336;font-weight: bold;}
 			.orange-caution {color:#ff9800;font-weight: bold;}
@@ -274,63 +275,70 @@
 				display: none;
 			}
 
-			.left {
-				width: 45%;
+			.both {
+				display: flex;
+				gap: 0.2%;
 			}
 
-			@media (max-width: 1279px) {
+			.left_column {
+				vertical-align:top;
+				width: 44.9%;
+			}
+
+			.right_column {
+				vertical-align:top;
+				width: 54.9%;
+			}
+
+			.equal_column {
+				vertical-align:top;
+				width: 49.9%;
+			}
+
+			@media screen and (max-width: 1280px) {
 				* {
 					box-sizing: border-box;
 				}
 
 				body {
-					border: none;
 					max-width: 640px;
 					min-width: 640px;  
 					border: 1px solid black;
 					margin: auto;
 				}
 				
-				table, tbody, tr, td {
+				.both {
 					display: block;
-					width: 100%;
+					gap: 0%;
 				}
 
-				.left {
+				.left_column, .right_column, .equal_column {
+					display: block;
 					width: 100%;
-				}
-				
-				.space {
-					display: none;
-				}
-				
-				.column1-hide {
-					display: none;
 				}
 
 				.column2-hide {
 					display: block;
 				}
 
-				h1 {
-					font-size:32px
-				}
+				h1 {font-size:32px}
 				
-				h2 {
-					font-size:28px
-				}
+				h2{font-size:26px}
+				
+				h3{font-size:20px}
+				
+				h4{font-size:18px}
+				
+				h5{font-size:16px}
+				
+				h6{font-size:14px}
 			}
 		</style>
 		<script type="text/javascript">
-			/** An example implementation of a TMS motor threshold (MT) estimator class
-			 *
-			 * This class implements DCS-H, DCS-HA, ACS-H and ACS-HA from the manuscript.
-			 * In addition, the class implements a coarse estimate of the probable range of the MT estimation.
-			 *
-			 * Author: Lari Koponen (initial version: DCS-H), Boshuo Wang (additional versions and parameter choices, other UI updates and improvements)
-			 * Version: 1.7.1, 2024-07-22
-			 */
-			// Tab is 4 spaces
+			// An example implementation of a TMS motor threshold (MT) estimator class
+			const versionStr = '1.7.2';
+			const versionDate = 'August&nbsp;12,&nbsp;2024';
+			
 			var MT_estimator;
 
 			class SA_MT_estimator {							// Stochastic approximation (SA). AKA stochastic root-finding
@@ -592,6 +600,29 @@
 				document.getElementById("button_MT_reset").disabled=true;
 
 				document.addEventListener("keydown",MT_keyboard,true);
+				
+				document.getElementById('button_MT_start').addEventListener('click', function() {MT_start();});
+				document.getElementById('button_MT_reset').addEventListener('click', function() {MT_reset();});
+				document.getElementById('button_MT_MEP').addEventListener('click', function() {MT_stimulate(true);});
+				document.getElementById('button_MT_noMEP').addEventListener('click', function() {MT_stimulate(false);});
+				document.getElementById('button_Enter_Vpp').addEventListener('click', function() {MT_stimulate(false);});
+				document.getElementById('button_MT_refine').addEventListener('click', function() {MT_refine();});
+				
+				document.getElementById('DownloadFile_botton').addEventListener('click', function() {downloadFile();});
+				document.getElementById('CopyClipboard_botton').addEventListener('click', function() {copyToClipboard();});
+				document.getElementById('SaveImage_botton').addEventListener('click', function() {saveimageFile('canvas_response');});
+				
+				document.getElementById('radio_non_adapt').addEventListener('click', function() {handleClick_A(this);});
+				document.getElementById('radio_adapt').addEventListener('click', function() {handleClick_A(this);});
+				document.getElementById('radio_digital').addEventListener('click', function() {handleClick_CS(this);});
+				document.getElementById('radio_analog').addEventListener('click', function() {handleClick_CS(this);});
+				document.getElementById('radio_default_a0').addEventListener('click', function() {handleClick_a0(this);});
+				document.getElementById('radio_custom_a0').addEventListener('click', function() {handleClick_a0(this);});
+				
+				document.getElementById('autosave').addEventListener('click', function() {auto_save_status();});
+				
+				document.getElementById("version_info").innerHTML = `version&nbsp;${versionStr},&nbsp;${versionDate}`;
+			
 				MT_UI();
 				drawResponseChart();
 				drawCountChart();
@@ -779,7 +810,7 @@
 					document.getElementById("DownloadFile_botton").disabled=false;
 					document.getElementById("CopyClipboard_botton").disabled=false;
 					document.getElementById("SaveImage_botton").disabled=false;
-
+					
 					// Reset pulse list, add header to it based on method
 					//document.getElementById("textarea_MT_pulseList").rows=MT_estimator.index+5;
 
@@ -804,14 +835,14 @@
 						//var heading_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\tCount\n";
 						var heading_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\tMT CI\t\tCount\n";
 					}
-					var version_str = "SAMT version 1.7.1, July 22, 2024.\n";
+					const version_info = `SAMT version ${versionStr}, ${versionDate}.\n`;
 					var CS_str=(MT_estimator.digital)?"DCS-H":"ACS-H";
 					if (MT_estimator.adaptive) {
 						CS_str+="A";
 					}
 					var info_str = "Stepping method:\t"+CS_str+"\nStarting intensity:\t"+MT_0+"% MSO\n";
 					info_str += "Procedure start time:\t"+getCurrentDateAndTime()+"\n\n";
-					document.getElementById("textarea_MT_pulseList").innerHTML=version_str+info_str+heading_str;
+					document.getElementById("textarea_MT_pulseList").innerHTML=version_info+info_str+heading_str;
 
 					// Add event listener for keyboard
 					//window.addEventListener("keydown",MT_keyboard,true);
@@ -1715,6 +1746,7 @@
 				//event.preventDefault();
 			});
 
+			
 		</script>
 	</head>
 
@@ -1722,351 +1754,260 @@
 		<div class="w3-container w3-indigo" id="header_top">
 			<h1>TMS Motor Threshold (MT) Estimation App</h1>
 		</div>
+
 		<div class="w3-container w3-blue">
-			<h2>Stochastic Approximator of MT (SAMT) <font size="2"><a href="#header_copyright">v1.7.1</a></font></h2>
+			<h2>Stochastic Approximator of MT (SAMT) <font size="2"><a href="#header_copyright">v1.7.2</a></font></h2>
 		</div>
-		<table style="width:100%">
-			<tbody>
-				<tr>
-					<td style="vertical-align:top" class="left">
-						<div class="w3-container w3-light-blue">
-							<h3>Initialize procedure</h3>
-						</div>
-						<div class="w3-container">
-							<table>
-								<tbody>
-									<tr>
-										<td>
-											<fieldset>
-												<legend>Enter final TMS intensity for motor hot spot determination</legend>
-												<input type="number" id="input_MT_0" name="MT_0" max="100" min="1" placeholder=" " step="1" value=" " size="3" required="">
-												%&nbsp;MSO
-											</fieldset>
-										</td>
-									</tr>
-								</tbody>
-							</table>
 
-							<p id="Start_msg"><button class="w3-green" id="button_MT_start" onclick="MT_start();"style="height:35px;width:80px"><u>S</u>tart</button> and move to right section.</p>
-							<p id="Reset_msg" hidden=""><button class="w3-black" id="button_MT_reset" onclick="MT_reset();"style="height:35px;width:80px"><u>R</u>eset</button> to start a new procedure and change settings.</p>
-							<p>		<!-- Method selection -->
-								<output id="Method_selection_msg"></output>
-							</p>
-							<p style="font-size:80%;">
-								<a href="#header_settings">Settings, instructions, and method descriptions</a>.
-							</p>
-							<br class="space"><br class="space"><br class="space">
-						</div>
-					</td>
-					<td style="vertical-align:top;" height="352">
-						<div class="w3-container w3-light-blue">
-							<h3>Motor threshold estimate</h3>
-						</div>
-						<div class="w3-container">
-							<p>		<!-- Method selection -->
-								<output id="MT_method_msg" hidden=""></output>
-							</p>
-							<p>
-								<output id="MT_nextPulse_msg">Start procedure first.</output>
-							</p>
-							<table id="table_response_input" hidden="">
-								<tbody>
-									<tr>
-										<td>
-											<fieldset id="field_is_suprathreshold_bottoms" hidden="">
-												<legend>TMS response present / MEP suprathreshold?</legend>
-												<button class="w3-green" id="button_MT_MEP" onclick="MT_stimulate(true);" disabled="" style="height:50px;width:250px"><u>Y</u>es: present / suprathreshold</button>
-												<button class="w3-red" id="button_MT_noMEP" onclick="MT_stimulate(false);" disabled="" style="height:50px;width:250px"><u>N</u>o: absent / subthreshold</button>
-											</fieldset>
-											<fieldset id="field_response_Vpp_box" hidden="">
-												<legend>TMS response</legend>
-												<div>
-													<label>EMG:</label>
-													<input type="number" id="input_Vpp" name="Vpp" max="1000000" min="0" placeholder="50" step="1" value="50" size="6" required="">
-													μV<sub>pp</sub>, (0 to 10<sup>6</sup>].
-												</div>
-												<div>
-													<button class="w3-green" id="button_Enter_Vpp" onclick="MT_stimulate(false);" disabled="" style="height:50px;width:300px"><u>Enter</u></button>	<!--Dummy input for analog methods-->
-												</div>
-											</fieldset>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-							<p align="justify">
-								<output id="MT_estimate_msg" hidden=""></output>
-								<br>
-								<output id="MT_estimateDescription_msg" hidden=""></output>
-								<output id="Refine_msg" hidden=""><button class="w3-gray" id="button_MT_refine" onclick="MT_refine();" disabled="" style="height:35px;width:80px">re<u>f</u>ine</button> threshold estimate starting from current intensity.</output>
-							</p>
-						</div>
+		<div class="both">
+			<div class="left_column">
+				<div class="w3-container w3-light-blue">
+					<h3>Initialize procedure</h3>
+				</div>
+				<div class="w3-container">
+					<fieldset>
+						<legend>Enter final TMS intensity for motor hot spot determination</legend>
+						<input type="number" id="input_MT_0" name="MT_0" max="100" min="1" placeholder=" " step="1" value=" " size="3" required="">
+						%&nbsp;MSO
+					</fieldset>
+					<p id="Start_msg"><button class="w3-green" id="button_MT_start" style="height:35px;width:80px"><u>S</u>tart</button> and move to next section.</p>
+					<p id="Reset_msg" hidden=""><button class="w3-black" id="button_MT_reset" style="height:35px;width:80px"><u>R</u>eset</button> to start a new procedure and change settings.</p>
+					<p>		<!-- Method selection -->
+						<output id="Method_selection_msg"></output>
+					</p>
+					<p style="font-size:80%;">
+						<a href="#header_settings">Settings</a>, <a href="#header_instructions">instructions</a>, and <a href="#header_information">method descriptions</a>.
+					</p>
+				</div>
+			</div>
+			<div class="right_column">
+				<div class="w3-container w3-light-blue" >
+					<h3>Motor threshold estimate</h3>
+				</div>
+				<div class="w3-container" style="height:275px">
+					<p>		<!-- Method selection -->
+						<output id="MT_method_msg" hidden=""></output>
+					</p>
+					<p>
+						<output id="MT_nextPulse_msg">Start procedure first.</output>
+					</p>
+					<div id="table_response_input" hidden="">
+						<fieldset id="field_is_suprathreshold_bottoms" hidden="">
+							<legend>TMS response present / MEP suprathreshold?</legend>
+							<button class="w3-green" id="button_MT_MEP" disabled="" style="height:50px;width:250px"><u>Y</u>es: present / suprathreshold</button>
+							<button class="w3-red" id="button_MT_noMEP" disabled="" style="height:50px;width:250px"><u>N</u>o: absent / subthreshold</button>
+						</fieldset>
+						<fieldset id="field_response_Vpp_box" hidden="">
+							<legend>TMS response</legend>
+							<div>
+								<label>EMG:</label>
+								<input type="number" id="input_Vpp" name="Vpp" max="1000000" min="0" placeholder="50" step="1" value="50" size="6" required="">
+								μV<sub>pp</sub>, (0 to 10<sup>6</sup>].
+							</div>
+							<div>
+								<button class="w3-green" id="button_Enter_Vpp" disabled="" style="height:50px;width:300px"><u>Enter</u></button>	<!--Dummy input for analog methods-->
+							</div>
+						</fieldset>
+					</div>
+					<p align="justify">
+						<output id="MT_estimate_msg" hidden=""></output>
+						<br>
+						<output id="MT_estimateDescription_msg" hidden=""></output>
+						<output id="Refine_msg" hidden=""><button class="w3-gray" id="button_MT_refine" disabled="" style="height:35px;width:80px">re<u>f</u>ine</button> threshold estimate starting from current intensity.</output>
+					</p>
+				</div>
+			</div>
+		</div>
 
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		<div class="w3-container w3-light-blue">
+			<h3>Estimation history</h3>
+		</div>
 
-		<table style="width:100%">
-			<tbody>
-				<tr>
-					<td style="width:100%">
-						<div class="w3-container w3-light-blue">
-							<h3>Estimation history</h3>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-
-		<table style="vertical-align:top;width:100%">
-			<tbody>
-				<tr>
-					<td style="vertical-align:top" class="left">
-						<div class="w3-container">
-							<p>
-								<button id="DownloadFile_botton" class="w3-green" onclick="downloadFile();" disabled="true" style="height:30px;width:100px"><u>D</u>ownload</button> or 
-								<button id="CopyClipboard_botton" class="w3-green" onclick="copyToClipboard();" disabled="true" style="height:30px;width:60px"><u>c</u>opy</button> data
-							</p>
-							<textarea id="textarea_MT_pulseList" rows="38" style="font-size:85%;" readonly=""></textarea>
-							<font size="1">
-								<p>
-									<a href="#header_top">Back to top.</a>
-								</p>
-							</font>
-						</div>
-					</td>
-					<td style="vertical-align:top">
-						<div class="w3-container" id="graphing">
-							<p>
-								<button id="SaveImage_botton" class="w3-green" onclick="saveimageFile('canvas_response');" disabled="true" style="height:30px;width:60px">Sa<u>v</u>e</button> image
-							</p>
-							<canvas id="canvas_response" width="600" height="750"></canvas>
-							<!-- <button class="w3-green" onclick="saveimageFile('canvas_count');" style="height:35px;width:100px">Save image</button>
-							<canvas id="canvas_count" width="520" height="420"></canvas> -->
-							<font size="1" class="column2-hide">
-								<p>
-									<a href="#header_top">Back to top.</a>
-								</p>
-							</font>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-
+		<div class="both">		
+			<div class="equal_column">
+				<div class="w3-container">
+					<p>
+						<button id="DownloadFile_botton" class="w3-green" disabled="true" style="height:30px;width:100px"><u>D</u>ownload</button> or 
+						<button id="CopyClipboard_botton" class="w3-green" disabled="true" style="height:30px;width:60px"><u>c</u>opy</button> data
+					</p>
+					<textarea id="textarea_MT_pulseList" rows="38" style="font-size:85%;" readonly=""></textarea>
+					<font size="1">
+						<p><a href="#header_top">Back to top.</a></p>
+					</font>
+				</div>
+			</div>
+			<div class="equal_column">
+				<div class="w3-container" id="graphing">
+					<p>
+						<button id="SaveImage_botton" class="w3-green" disabled="true" style="height:30px;width:60px">Sa<u>v</u>e</button> image
+					</p>
+					<canvas id="canvas_response" width="600" height="750"></canvas>
+					<font size="1" class="column2-hide">
+						<p><a href="#header_top">Back to top.</a></p>
+					</font>
+				</div>
+			</div>
+				
+		</div>
 
 		<!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 		<div class="w3-container w3-blue">
 			<h2>Information about this app</h2>
 		</div>
-		<table style="width:100%">
-			<tbody>
-				<tr>
-					<td style="vertical-align:top" class="left">
-						<div class="w3-container w3-light-blue">
-							<h3 id="header_settings">Settings</h3>
-						</div>
-						<div class="w3-container">
-							<table style="width:100%">
-								<tbody>
-									<tr>
-										<td>
-											<fieldset>
-												<legend>Stepping method of control sequence</legend>
-												<div>
-													<input type="radio" id="radio_non_adapt" name="stepping_method" onclick="handleClick_A(this);" value="non_adapt">
-													<label for="radio_non_adapt">Fixed (DCS-H)</label>
-												</div>
-												<div>
-													<input type="radio" id="radio_adapt" name="stepping_method" onclick="handleClick_A(this);" value="adapt">
-													<label for="radio_adapt">Adaptive (DCS-HA)</label>
-												</div>
-											</fieldset>
-											<fieldset hidden="">	<!-- Method selection -->
-												<legend>Estimation method</legend>
-												<fieldset>
-													<legend>Control sequence</legend>
-													<div>
-														<input type="radio" id="radio_digital" name="control_sequence" onclick="handleClick_CS(this);" value="DCS" checked="">
-														<label for="radio_digital">Digital (default)</label>
-													</div>
-													<div>
-														<input type="radio" id="radio_analog" name="control_sequence" onclick="handleClick_CS(this);" value="ACS">
-														<!--<div id="input_Vpp_th_box">-->
-														<label for="radio_analog">Analog. MEP threshold:</label>
-														<input type="number" id="input_Vpp_th" name="Vpp_th" max="1000" min="10" placeholder="50" step="1" value="50" size="4" disabled="" required="">
-														μV<sub>pp</sub>, [10,1000].
-													</div>
-												</fieldset>
-												<fieldset>
-													<legend>Initial step size of control sequence (<i>a</i><sub>0</sub>)</legend>
-													<div>
-														<input type="radio" id="radio_default_a0" name="a0" onclick="handleClick_a0(this);" value="default" checked="">
-														<label for="radio_default_a0">Optimal (default)</label>
-													</div>
-													<div>
-														<input type="radio" id="radio_custom_a0" name="a0" onclick="handleClick_a0(this);" value="custom">
-														<label for="radio_custom_a0">Custom:</label>
-														<input type="number" id="input_custom_a0" name="a0_custom" max="20" min="1" placeholder="6.7" step="0.1" value="6.7" size="4" disabled="" required="">
-														%&nbsp;MSO, [1, 20].
-													</div>
-												</fieldset>
-											</fieldset>
-										</td>
-									</tr>
-									<tr>
-										<td align="justify">
-											<input type="checkbox" id="autosave" name="autosave" value="autosave_checked" onclick="auto_save_status()"> 
-											<label for="autosave">Automatically trigger download of estimation history if not saved (downloaded or copied): (1) when procedure ends after pulse No.&nbsp;29 or is reset earlier; (2) when page is closed or refreshed.</label>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<font size="1">
-												<p>
-													<a href="#header_top">Back to top.</a>
-												</p>
-											</font>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<div class="w3-container w3-light-blue">
-							<h3 id="header_instructions">Instructions</h3>
-						</div>
-						<div class="w3-container">
-							<p align="justify">For the method to work correctly, it is important to start from an intensity that is close to the likely motor threshold (MT) and preferably <i>suprathreshold </i> (i.e., an intensity that produces motor responses more often than not). The intensity used to locate the motor hot spot is a good starting point.</p>
-							<p align="justify">Using adaptive stepping may provide faster convergence for certain cases, e.g., the starting amplitude is far from threshold or a non-conventional TMS pulse shape is used.</p>
-							<p> Known limitations and bugs:</p>
-							<ul class="myUL">
-								<li>The tool is provided as is. In particular, the description of the quality of the MT estimation is based on an approximate algorithm which may prematurely declare the estimation “good”. The final judgement on the MT must always be made by the operator!</li>
-								<li>The stochastic approximation algorithm may attempt to step to impossible intensities for the MT estimate (below 0% or above 100%&nbsp;MSO). The implementation in this app limits the next intensity between 1% and 100%&nbsp;MSO and the MT estimate between 0% and 101%&nbsp;MSO.</li>
-								<li>The copy button does not work on some mobile devices. Please copy the text manually if the copy button fails.</li>
-							</ul>
-							<p align="justify">If you have questions or feedback, please email Boshuo Wang at <a href="mailto:boshuo.wang@duke.edu">boshuo.wang@duke.edu</a>.</p>
-						</div>
-						<hr class="space">
-						<div class="w3-container">
-							<div class="column1-hide">
-								Number of visits:
-								<!-- Default Statcounter code for TMS-SAMT https://tms-samt.github.io/ -->
-								<script type="text/javascript">
-									var sc_project=12909996;
-									var sc_invisible=0;
-									var sc_security="bdd0174f";
-									var scJsHost = "https://";
-									document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
-									"statcounter.com/counter/counter.js'></"+"script>");
-								</script>
-								<noscript>
-									<div class="statcounter">
-										<a title="Web Analytics"
-										href="https://statcounter.com/" target="_blank"><img class="statcounter"
-										src="https://c.statcounter.com/12909996/0/bdd0174f/0/" alt="Web Analytics"
-										referrerPolicy="no-referrer-when-downgrade">
-										</a>
-									</div>
-								</noscript>
-							</div>
-							<!-- End of Statcounter Code -->
-							<font size="1">
-								<p>
-									<a href="#header_top">Back to top.</a>
-								</p>
-							</font>
-						</div>
-					</td>
-					<td style="vertical-align:top">
-						<div class="w3-container w3-light-blue">
-							<h3 id="header_information">Method description</h3>
-						</div>
-						<div class="w3-container">
-							<p align="justify">The MT is estimated using a stochastic approximation method with a digital control sequence (DCS) whose step size follows harmonic convergence with fixed (DCS-H) or adaptive (DCS-HA) stepping. The initial step size of the control sequence, <i>a</i><sub>0</sub>, is 6.7% and 4.2%&nbsp;MSO for fixed and adaptive stepping, respectively. With adaptive stepping, the control sequence is adjusted only when the response changes from suprathreshold to subthreshold or vice versa. With a good initial intensity, the estimator takes on average 25&nbsp;pulses to determine the MT with median relative error |&NoBreak;<i>δ</i>&NoBreak;| of less than 1.5%.</p>
 
-								<p align="justify">The stochastic approximation MT methods are described in the following manuscript, which explores the performance of different control sequences, stepping adaptiveness, and initial step size.</p>
-								<ul class="myUL">
-									<li>B.&nbsp;Wang, A.&nbsp;V.&nbsp;Peterchev, and S.&nbsp;M.&nbsp;Goetz, “Three Novel Methods for Determining Motor Threshold with Transcranial Magnetic Stimulation Outperform Conventional Procedures”, <i>J.&nbsp;Neural&nbsp;Eng.</i>, vol.&nbsp;20, no.&nbsp;5, 056002, Oct.&nbsp;2023.<br>DOI:&nbsp;<a href="https://doi.org/10.1088/1741-2552/acf1cc">10.1088/1741-2552/acf1cc</a>.</li>
-								</ul>
-								<p align="justify">The choice of initial stimulation intensity close to the MT and the description of the quality of the current estimation follow suggestions in:</p>
-								<ul class="myUL">
-									<li>L.&nbsp;M.&nbsp;Koponen and A.&nbsp;V.&nbsp;Peterchev, “Preventing misestimation of transcranial magnetic stimulation motor threshold with MTAT&nbsp;2.0”, <i>Brain&nbsp;Stim.</i>, vol.&nbsp;15, no.&nbsp;5, pp.&nbsp;1073–1076, Sep.&nbsp;2022.<br>DOI:&nbsp;<a href="https://doi.org/10.1016/j.brs.2022.07.057">10.1016/j.brs.2022.07.057</a>.</li>
-								</ul>
-								<p align="justify">This HTML/JS application is written by Boshuo Wang and Lari M. Koponen, with contribution from Vedarsh Shah, Shivum Vaishnavi, and Yiwen Zhang.</p>
-								<p align="justify">All processing is done by the app locally. No data are shared online.</p>
-								<!--<p>Estimation of the MT's confidence interval will be implemented in future versions and described in a separate publication.</p>--->
-								<font size="1" class="column2-hide">
-									<p>
-										<a href="#header_top">Back to top.</a>
-									</p>
-								</font>
+		<div class="both">
+			<div class="left_column">
+				<div class="w3-container w3-light-blue">
+					<h3 id="header_settings">Settings</h3>
+				</div>
+				<div class="w3-container">
+					<fieldset>
+						<legend>Stepping method of control sequence</legend>
+						<div>
+							<input type="radio" id="radio_non_adapt" name="stepping_method" value="non_adapt">
+							<label for="radio_non_adapt">Fixed (DCS-H)</label>
 						</div>
-					<!--</td>
-				</tr>
-			</tbody>
-		</table>
-		<table style="width:100%">
-			<tbody>
-				<tr>
-					<td style="vertical-align:top">-->
-						<div class="w3-container w3-light-blue">
-							<h3 id="header_copyright">Copyright, licensing, and no warranty</h3>
+						<div>
+							<input type="radio" id="radio_adapt" name="stepping_method" value="adapt">
+							<label for="radio_adapt">Adaptive (DCS-HA)</label>
 						</div>
-						<div class="w3-container">
-							<font size="1">
-								<p align="justify">
-									version&nbsp;1.7.1,&nbsp;July&nbsp;22, 2024.
-								</p>
-								<p align="justify">
-									©&nbsp;2022, Boshuo Wang, Lari M. Koponen, Stefan M. Goetz, Angel V. Peterchev, at Duke University, the University of Birmingham. 
-									All rights reserved.
-								</p>
-								<p align="justify">
-									The copyrights of this software are owned by Duke University and the University of Birmingham. As such, two licenses for this software are offered:
-								</p>
-								<ol class="myOL">
-									<li>An open-source license under the <a href="https://opensource.org/license/gpl-2-0/">GPLv2 license</a> for non-commercial use.</li>
-									<li>A custom license with Duke University, for commercial use without the GPLv2 license restrictions. </li>
-								</ol>
-								<p align="justify">
-									As a recipient of this software, you may choose which license to receive the code under. Outside contributions to the Duke-owned code base cannot be accepted unless the contributor transfers the copyright to those changes over to Duke University.
-									To enter a custom license agreement without the GPLv2 license restrictions, please contact the Digital Innovations Department at the Duke University Office for Translation & Commercialization (OTC) (<a href="https://otc.duke.edu/digital-innovations">https://otc.duke.edu/digital-innovations</a>) at <a href="mailto:otcquestions@duke.edu">otcquestions@duke.edu</a> with reference to “OTC File No.&nbsp;8063” in your email.
-								</p>
-								<p align="justify">
-									Please note that this software is distributed AS IS, WITHOUT ANY WARRANTY; and without the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-								</p>
-							</font>
-							<div class="column2-hide">
-								Number of visits:
-								<!-- Default Statcounter code for TMS-SAMT https://tms-samt.github.io/ -->
-								<script type="text/javascript">
-									var sc_project=12909996;
-									var sc_invisible=0;
-									var sc_security="bdd0174f";
-									var scJsHost = "https://";
-									document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
-									"statcounter.com/counter/counter.js'></"+"script>");
-								</script>
-								<noscript>
-									<div class="statcounter">
-										<a title="Web Analytics"
-										href="https://statcounter.com/" target="_blank"><img class="statcounter"
-										src="https://c.statcounter.com/12909996/0/bdd0174f/0/" alt="Web Analytics"
-										referrerPolicy="no-referrer-when-downgrade">
-										</a>
-									</div>
-								</noscript>
-								<!-- End of Statcounter Code -->
+					</fieldset>
+					<fieldset hidden="">	<!-- Method selection -->
+						<legend>Estimation method</legend>
+						<fieldset>
+							<legend>Control sequence</legend>
+							<div>
+								<input type="radio" id="radio_digital" name="control_sequence" value="DCS" checked="">
+								<label for="radio_digital">Digital (default)</label>
 							</div>
-							<font size="1" class="column2-hide">
-								<p>
-									<a href="#header_top">Back to top.</a>
-								</p>
-							</font>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+							<div>
+								<input type="radio" id="radio_analog" name="control_sequence" value="ACS">
+								<!--<div id="input_Vpp_th_box">-->
+								<label for="radio_analog">Analog. MEP threshold:</label>
+								<input type="number" id="input_Vpp_th" name="Vpp_th" max="1000" min="10" placeholder="50" step="1" value="50" size="4" disabled="" required="">
+								μV<sub>pp</sub>, [10,1000].
+							</div>
+						</fieldset>
+						<fieldset>
+							<legend>Initial step size of control sequence (<i>a</i><sub>0</sub>)</legend>
+							<div>
+								<input type="radio" id="radio_default_a0" name="a0" value="default" checked="">
+								<label for="radio_default_a0">Optimal (default)</label>
+							</div>
+							<div>
+								<input type="radio" id="radio_custom_a0" name="a0" value="custom">
+								<label for="radio_custom_a0">Custom:</label>
+								<input type="number" id="input_custom_a0" name="a0_custom" max="20" min="1" placeholder="6.7" step="0.1" value="6.7" size="4" disabled="" required="">
+								%&nbsp;MSO, [1, 20].
+							</div>
+						</fieldset>
+					</fieldset>
+					
+					<div style="text-align: justify;">
+						<input type="checkbox" id="autosave" name="autosave" value="autosave_checked"> 
+						<label for="autosave">Automatically trigger download of estimation history if not saved (downloaded or copied): (1) when procedure ends after pulse No.&nbsp;29 or is reset earlier; (2) when page is closed or refreshed.</label>
+					</div>
+					<font size="1">
+						<p><a href="#header_top">Back to top.</a></p>
+					</font>
+				</div>
+
+				<div class="w3-container w3-light-blue">
+					<h3 id="header_instructions">Instructions</h3>
+				</div>
+				<div class="w3-container">
+					<p align="justify">For the method to work correctly, it is important to start from an intensity that is close to the likely motor threshold (MT) and preferably <i>suprathreshold </i> (i.e., an intensity that produces motor responses more often than not). The intensity used to locate the motor hot spot is a good starting point.</p>
+					<p align="justify">Using adaptive stepping may provide faster convergence for certain cases, e.g., the starting amplitude is far from threshold or a non-conventional TMS pulse shape is used.</p>
+					<p> Known limitations and bugs:</p>
+					<ul class="myUL">
+						<li>The tool is provided as is. In particular, the description of the quality of the MT estimation is based on an approximate algorithm which may prematurely declare the estimation “good”. The final judgement on the MT must always be made by the operator!</li>
+						<li>The stochastic approximation algorithm may attempt to step to impossible intensities for the MT estimate (below 0% or above 100%&nbsp;MSO). The implementation in this app limits the next intensity between 1% and 100%&nbsp;MSO and the MT estimate between 0% and 101%&nbsp;MSO.</li>
+						<li>The copy button does not work on some mobile devices. Please copy the text manually if the copy button fails.</li>
+					</ul>
+					<p align="justify">If you have questions or feedback, please email Boshuo Wang at <a href="mailto:boshuo.wang@duke.edu">boshuo.wang@duke.edu</a>.</p>
+				
+					<font size="1">
+						<p><a href="#header_top">Back to top.</a></p>
+					</font>
+				</div>
+
+			</div>
+			<div class="right_column">
+				<div class="w3-container w3-light-blue">
+					<h3 id="header_information">Method description</h3>
+				</div>
+				<div class="w3-container">
+					<p align="justify">The MT is estimated using a stochastic approximation method with a digital control sequence (DCS) whose step size follows harmonic convergence with fixed (DCS-H) or adaptive (DCS-HA) stepping. The initial step size of the control sequence, <i>a</i><sub>0</sub>, is 6.7% and 4.2%&nbsp;MSO for fixed and adaptive stepping, respectively. With adaptive stepping, the control sequence is adjusted only when the response changes from suprathreshold to subthreshold or vice versa. With a good initial intensity, the estimator takes on average 25&nbsp;pulses to determine the MT with median relative error |&NoBreak;<i>δ</i>&NoBreak;| of less than 1.5%.</p>
+					<p align="justify">The stochastic approximation MT methods are described in the following manuscript, which explores the performance of different control sequences, stepping adaptiveness, and initial step size.</p>
+					<ul class="myUL">
+						<li>B.&nbsp;Wang, A.&nbsp;V.&nbsp;Peterchev, and S.&nbsp;M.&nbsp;Goetz, “Three Novel Methods for Determining Motor Threshold with Transcranial Magnetic Stimulation Outperform Conventional Procedures”, <i>J.&nbsp;Neural&nbsp;Eng.</i>, vol.&nbsp;20, no.&nbsp;5, 056002, Oct.&nbsp;2023.<br>DOI:&nbsp;<a href="https://doi.org/10.1088/1741-2552/acf1cc">10.1088/1741-2552/acf1cc</a>.</li>
+					</ul>
+					<p align="justify">The choice of initial stimulation intensity close to the MT and the description of the quality of the current estimation follow suggestions in:</p>
+					<ul class="myUL">
+						<li>L.&nbsp;M.&nbsp;Koponen and A.&nbsp;V.&nbsp;Peterchev, “Preventing misestimation of transcranial magnetic stimulation motor threshold with MTAT&nbsp;2.0”, <i>Brain&nbsp;Stim.</i>, vol.&nbsp;15, no.&nbsp;5, pp.&nbsp;1073–1076, Sep.&nbsp;2022.<br>DOI:&nbsp;<a href="https://doi.org/10.1016/j.brs.2022.07.057">10.1016/j.brs.2022.07.057</a>.</li>
+					</ul>
+					<p align="justify">This HTML/JS application is written by Boshuo Wang and Lari M. Koponen, with contribution from Vedarsh Shah, Shivum Vaishnavi, and Yiwen Zhang.</p>
+					<p align="justify">All processing is done by the app locally. No data are shared online.</p>
+					<!--<p>Estimation of the MT's confidence interval will be implemented in future versions and described in a separate publication.</p>--->
+					<font size="1" class="column2-hide">
+						<p><a href="#header_top">Back to top.</a></p>
+					</font>
+				</div>
+				<div class="w3-container w3-light-blue">
+					<h3 id="header_copyright">Copyright, licensing, and no warranty</h3>
+				</div>
+				<div class="w3-container">
+					<font size="1">
+						<p id="version_info" align="justify"></p>
+						<p align="justify">
+							©&nbsp;2022, Boshuo Wang, Lari M. Koponen, Stefan M. Goetz, Angel V. Peterchev, at Duke University, the University of Birmingham. 
+							All rights reserved.
+						</p>
+						<p align="justify">
+							The copyrights of this software are owned by Duke University and the University of Birmingham. As such, two licenses for this software are offered:
+						</p>
+						<ol class="myOL">
+							<li>An open-source license under the <a href="https://opensource.org/license/gpl-2-0/">GPLv2 license</a> for non-commercial use.</li>
+							<li>A custom license with Duke University, for commercial use without the GPLv2 license restrictions. </li>
+						</ol>
+						<p align="justify">
+							As a recipient of this software, you may choose which license to receive the code under. Outside contributions to the Duke-owned code base cannot be accepted unless the contributor transfers the copyright to those changes over to Duke University.
+							To enter a custom license agreement without the GPLv2 license restrictions, please contact the Digital Innovations Department at the Duke University Office for Translation & Commercialization (OTC) (<a href="https://otc.duke.edu/digital-innovations">https://otc.duke.edu/digital-innovations</a>) at <a href="mailto:otcquestions@duke.edu">otcquestions@duke.edu</a> with reference to “OTC File No.&nbsp;8063” in your email.
+						</p>
+						<p align="justify">
+							Please note that this software is distributed AS IS, WITHOUT ANY WARRANTY; and without the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+						</p>
+					</font>
+					<font size="1" class="column2-hide">
+						<p><a href="#header_top">Back to top.</a></p>
+					</font>
+				</div>
+			</div>
+			
+		</div>
+		<div  class="w3-container" style="width: 100%;">
+			<hr>
+			Number of visits:
+			<!-- Default Statcounter code for TMS-SAMT https://tms-samt.github.io/ -->
+			<script type="text/javascript">
+				var sc_project=12909996;
+				var sc_invisible=0;
+				var sc_security="bdd0174f";
+				var scJsHost = "https://";
+				document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
+				"statcounter.com/counter/counter.js'></"+"script>");
+			</script>
+			<noscript>
+				<div class="statcounter">
+					<a title="Web Analytics"
+					href="https://statcounter.com/" target="_blank"><img class="statcounter"
+					src="https://c.statcounter.com/12909996/0/bdd0174f/0/" alt="Web Analytics"
+					referrerPolicy="no-referrer-when-downgrade">
+					</a>
+				</div>
+			</noscript>
+			<!-- End of Statcounter Code -->
+		</div>
+
 	</body>
 </html>
