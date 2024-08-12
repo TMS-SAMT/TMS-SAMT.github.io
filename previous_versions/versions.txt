@@ -1,4 +1,9 @@
 Filename				Date		Version		Description
+SAMT_v1.7.2								2024.08.12	1.7.2		Updated version to 1.7.2 and date to 8.12.
+									Improvement to layout after introducing dynamic layout.
+									Fix missing horizontal scroll bar.
+									Removed table elements and changed to div.
+
 SAMT_v1.7.1				2024.07.22	1.7.1		Updated version to 1.7.1 and date to 7.22.
 									One file with dynamic rearrangement of the layout with media query. Removed index page and local storage for layout.
 									MT_estimate field of estimator class converted from single number to list.
