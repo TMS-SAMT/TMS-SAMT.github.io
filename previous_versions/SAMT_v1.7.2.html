@@ -336,8 +336,8 @@
 		</style>
 		<script type="text/javascript">
 			// An example implementation of a TMS motor threshold (MT) estimator class
-			const versionStr = '1.7.3';
-			const versionDate = 'September 23, 2024';
+			const versionStr = '1.7.2';
+			const versionDate = 'August 12, 2024';
 			
 			var MT_estimator;
 
@@ -824,16 +824,16 @@
 						document.getElementById("button_MT_noMEP").disabled=false;
 						//var heading_str = "No.\tIntensity\tResponse\tStep\tNext\tMT\tMT range/CI\n";
 						//var heading_str = "No.\tStim.\tResp.\tStep\tNext\tMT\t% stim\t% p10\n";
-						var heading_str = "No.\tStim.\tResp.\tStep\tNext\tMT\tCount\n";
-						//var heading_str = "No.\tStim.\tResp.\tStep\tNext\tMT\tMT CI\t\tCount\n";
+						//var heading_str = "No.\tStim.\tResp.\tStep\tNext\tMT\tCount\n";
+						var heading_str = "No.\tStim.\tResp.\tStep\tNext\tMT\tMT CI\t\tCount\n";
 					} else {								// Enable and display buttons related to analog method
 						document.getElementById("field_response_Vpp_box").hidden=false;
 						document.getElementById("input_Vpp").disabled=false;
 						document.getElementById("button_Enter_Vpp").disabled=false;
 						//var heading_str = "No.\tIntensity\tEMG\tResponse\tStep\tNext\tMT\tMT range/CI\n";
 						//var heading_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\t% stim\t% p10\n";
-						var heading_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\tCount\n";
-						//var heading_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\tMT CI\t\tCount\n";
+						//var heading_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\tCount\n";
+						var heading_str = "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\tMT CI\t\tCount\n";
 					}
 					const version_info = `SAMT version ${versionStr}, ${versionDate}.\n`;
 					var CS_str=(MT_estimator.digital)?"DCS-H":"ACS-H";
@@ -1008,8 +1008,8 @@
 					str+=w;
 				}
 				//str+="\t"+x+"\t"+u2+"/"+v2+"\t"+uu+"/"+vv;
-				str+="\t"+x+"\t"+uu+"/"+vv;
-				//str+="\t"+x+"\t["+y+", "+z+"]"+"\t"+uu+"/"+vv;
+				//str+="\t"+x+"\t"+uu+"/"+vv;
+				str+="\t"+x+"\t["+y+", "+z+"]"+"\t"+uu+"/"+vv;
 				/*
 				if (MT_estimator.index<10) {
 					str+="\t("+y+", "+z+")";
@@ -1604,15 +1604,13 @@
 				ctx.arc(x1, y1, radius1, 0, 2 * Math.PI);
 				ctx.fill();
 				
-				/*
-                ctx.strokeStyle = "#000000";
+				ctx.strokeStyle = "#000000";
 				ctx.beginPath();
 				ctx.lineWidth = 2;
 				ctx.moveTo(x2, y3);
 				ctx.lineTo(x2, y4);
 				ctx.stroke();
-				*/
-                
+				
 				ctx.fillStyle = "#000000";//(MT_estimator.MEPs[MT_estimator.index-1])?"#4caf50":"#f44336";
 				ctx.beginPath();
 				ctx.arc(x2, y2, radius2, 0, 2 * Math.PI);
