@@ -623,7 +623,7 @@
 				
 				document.getElementById("version_info").innerHTML = `version&nbsp;${versionStr},&nbsp;${versionDate}`;
 				document.getElementById("header_ver").innerHTML = `v${versionStr}`;
-				
+
 				MT_UI();
 				drawResponseChart();
 				drawCountChart();
@@ -670,18 +670,18 @@
 					var esti_str="Pulse No. "+MT_estimator.index+": Current estimate of MT is ";
 					var MEPs=MT_estimator.countMEPs[MT_estimator.index-1];
 					if ((MT_estimator.index<25) || (MEPs<2) || (MEPs>8)) {
-						esti_str += "<span class='red-warning'>"+x+"% MSO</span>";
+						esti_str += "<span class='red-warning'>"+x+"% MSO</span>.";
 					} else if ((MEPs==2) || (MEPs==8)){
-						esti_str += "<span class='orange-caution'>"+x+"% MSO</span>";
+						esti_str += "<span class='orange-caution'>"+x+"% MSO</span>.";
 					} else {
-						esti_str += "<span class='green-ok'>"+x+"% MSO</span>";
+						esti_str += "<span class='green-ok'>"+x+"% MSO</span>.";
 					}
 					//esti_str+="with a 95% confidence interval of ["+y+"%, "+z+"%] MSO.";
-					if (MT_estimator.index>=1) {
+					/*if (MT_estimator.index>=1) {
 						esti_str+=", with a 95% confidence interval of +/-"+CIx+"% MSO.";
 					} else {
 						esti_str+=".";
-					}
+					}*/
 
 					/*if (MT_estimator.index<10) {
 						esti_str+="with a probable range of ("+y+"%, "+z+"%) MSO.";
