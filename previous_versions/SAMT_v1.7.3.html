@@ -336,8 +336,8 @@
 		</style>
 		<script type="text/javascript">
 			// An example implementation of a TMS motor threshold (MT) estimator class
-			const versionStr = '1.7.4';
-			const versionDate = 'January 10, 2025';
+			const versionStr = '1.7.3';
+			const versionDate = 'September 23, 2024';
 			
 			var MT_estimator;
 
@@ -573,12 +573,12 @@
 			function MT_UI_start() {
 				document.getElementById("radio_digital").checked=true;
 
-				if (localStorage.getItem("tms_samt_stepping_method")=="non_adapt") {
-					document.getElementById("radio_non_adapt").checked=true;
-					document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-H</strong>: digital control sequence, fixed stepping.";
-				} else {
+				if (localStorage.getItem("tms_samt_stepping_method")=="adapt") {
 					document.getElementById("radio_adapt").checked=true;
 					document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-HA</strong>: digital control sequence, adaptive stepping.";
+				} else {
+					document.getElementById("radio_non_adapt").checked=true;
+					document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-H</strong>: digital control sequence, fixed stepping.";
 				}
 
 				if (localStorage.getItem("tms_samt_autosave")=="autosave_checked") {
@@ -1867,12 +1867,12 @@
 					<fieldset>
 						<legend>Stepping method of control sequence</legend>
 						<div>
-							<input type="radio" id="radio_adapt" name="stepping_method" value="adapt">
-							<label for="radio_adapt">Adaptive (DCS-HA)</label>
-						</div>
-                        <div>
 							<input type="radio" id="radio_non_adapt" name="stepping_method" value="non_adapt">
 							<label for="radio_non_adapt">Fixed (DCS-H)</label>
+						</div>
+						<div>
+							<input type="radio" id="radio_adapt" name="stepping_method" value="adapt">
+							<label for="radio_adapt">Adaptive (DCS-HA)</label>
 						</div>
 					</fieldset>
 					<fieldset hidden="">	<!-- Method selection -->

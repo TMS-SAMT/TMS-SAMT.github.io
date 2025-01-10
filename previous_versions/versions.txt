@@ -1,4 +1,7 @@
 Filename				Date		Version		Description
+SAMT_v1.7.4								2025.01.10	1.7.4		Updated version to 1.7.4 and date to 2025.1.10.
+									Changed default stepping method to adaptive.
+
 SAMT_v1.7.3								2024.09.23	1.7.3		Updated version to 1.7.3 and date to 9.23.
 									Removed display of CI for SA method in log and plot.
 
