@@ -189,7 +189,7 @@ SAMT_v20230414.html			2023.04.14	1.3.4		MAJOR UPDATE: repository.
 
 SAMT_v20230412.html			2023.04.12	1.3.3		Reduced font size of text on version and copyright at top of page.
 									Added description about range for initial amplitude to be considered close to threshold. 
-									Changed description on number of steps for accurate estimation from 15 to a range of 15-18 with comparison to both IFCN 5/10 and adapative ML-PEST.
+									Changed description on number of steps for accurate estimation from 15 to a range of 15-18 with comparison to both IFCN 5/10 and adaptive ML-PEST.
 									Updated description on copy button behavior.
 									Added email for comments and questions.
 									Added date 4.12 for update of app information (for update that is only on the app's description and appearance (mostly HTML) and not on the app's algorithm implementation (JavaScript)).
