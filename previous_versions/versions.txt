@@ -1,11 +1,11 @@
 Filename				Date		Version		Description
-SAMT_v1.7.4								2025.01.10	1.7.4		Updated version to 1.7.4 and date to 2025.1.10.
+SAMT_v1.7.4				2025.01.10	1.7.4		Updated version to 1.7.4 and date to 2025.1.10.
 									Changed default stepping method to adaptive.
 
-SAMT_v1.7.3								2024.09.23	1.7.3		Updated version to 1.7.3 and date to 9.23.
+SAMT_v1.7.3				2024.09.23	1.7.3		Updated version to 1.7.3 and date to 9.23.
 									Removed display of CI for SA method in log and plot.
 
-SAMT_v1.7.2								2024.08.12	1.7.2		Updated version to 1.7.2 and date to 8.12.
+SAMT_v1.7.2				2024.08.12	1.7.2		Updated version to 1.7.2 and date to 8.12.
 									Improvement to layout after introducing dynamic layout.
 									Fix missing horizontal scroll bar.
 									Removed table elements and changed to div.
@@ -233,7 +233,7 @@ SAMTE_v20230116.html			2023.01.16	1.1.1		Added version number and date for displ
 									Updates on display text for table.
 									Revised text for display ranges of inputs.
 
-SAMTE_v20230115.html		2023.01.15		1.1.0		MAJOR UPDATE: customizable a_0 (version 1.1, retro).
+SAMTE_v20230115.html			2023.01.15	1.1.0		MAJOR UPDATE: customizable a_0 (version 1.1, retro).
 									Updated the version date to 1.15.
 									Added customizable a_0.
 
