@@ -1,6 +1,11 @@
 Access old versions using: https://tms-samt.github.io/previous_versions/FILENAME
 
 Filename				Date		Version		Description
+SAMT_v1.7.5.html			2025.03.20	1.7.5		Updated version to 1.7.5 and date to 2025.3.20.
+									Deprecated fixed stepping method. Added note. Removed relevant stored settings.
+									Reordered information layout. 
+									Added NYC Neuromod Conf abstract for reference of clinical validation.
+									
 SAMT_v1.7.4.html			2025.01.10	1.7.4		Updated version to 1.7.4 and date to 2025.1.10.
 									Changed default stepping method to adaptive.
 
