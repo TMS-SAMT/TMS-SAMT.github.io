@@ -15,7 +15,7 @@
 			a{background-color:transparent}a:active,a:hover{outline-width:0}
 			abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}
 			b,strong{font-weight:bolder}dfn{font-style:italic}mark{background:#ff0;color:#000}
-			small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+			small{font-size:85%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
 			sub{bottom:-0.25em}sup{top:-0.5em}figure{margin:1em 40px}img{border-style:none}
 			code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}hr{box-sizing:content-box;height:0;overflow:visible}
 			button,input,select,textarea,optgroup{font:inherit;margin:0}optgroup{font-weight:bold}
@@ -320,10 +320,9 @@
 				.column2-hide {
 					display: block;
 				}
-
-				h1 {font-size:32px}
+				h1{font-size:30px}
 				
-				h2{font-size:26px}
+				h2{font-size:24px}
 				
 				h3{font-size:20px}
 				
@@ -336,8 +335,8 @@
 		</style>
 		<script type="text/javascript">
 			// An example implementation of a TMS motor threshold (MT) estimator class
-			const versionStr = '1.7.4';
-			const versionDate = 'January 10, 2025';
+			const versionStr = '1.7.5';
+			const versionDate = 'March 20, 2025';
 			
 			var MT_estimator;
 
@@ -573,13 +572,15 @@
 			function MT_UI_start() {
 				document.getElementById("radio_digital").checked=true;
 
-				if (localStorage.getItem("tms_samt_stepping_method")=="non_adapt") {
-					document.getElementById("radio_non_adapt").checked=true;
-					document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-H</strong>: digital control sequence, fixed stepping.";
-				} else {
-					document.getElementById("radio_adapt").checked=true;
-					document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-HA</strong>: digital control sequence, adaptive stepping.";
-				}
+				// if (localStorage.getItem("tms_samt_stepping_method")=="non_adapt") {
+				// 	document.getElementById("radio_non_adapt").checked=true;
+				// 	document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-H</strong>: digital control sequence, fixed stepping.";
+				// } else {
+				document.getElementById("radio_adapt").checked=true;
+				document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-HA</strong>: digital control sequence, harmonic convergence, adaptive stepping.";
+				
+				localStorage.setItem("tms_samt_stepping_method", "adapt"); // fix to adapt in version 1.7.5
+				// }
 
 				if (localStorage.getItem("tms_samt_autosave")=="autosave_checked") {
 					document.getElementById("autosave").checked=true;
@@ -1127,11 +1128,11 @@
 					alert("Caution! Switching to adaptive stepping.\nPlease read instructions and method descriptions.")
 				}*/
 				localStorage.setItem("tms_samt_stepping_method",radio.value);
-				if (radio.value=="non_adapt") {
-					document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-H</strong>: digital control sequence, fixed stepping.";
-				} else {
-					document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-HA</strong>: digital control sequence, adaptive stepping.";
-				}
+				// if (radio.value=="non_adapt") {
+				// 	document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-H</strong>: digital control sequence, harmonic convergence, fixed stepping.";
+				// } else {
+					document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-HA</strong>: digital control sequence, harmonic convergence, adaptive stepping.";
+				// }
 			}
 
 			function handleClick_a0(radio) {
@@ -1606,14 +1607,14 @@
 				ctx.fill();
 				
 				/*
-                ctx.strokeStyle = "#000000";
+				ctx.strokeStyle = "#000000";
 				ctx.beginPath();
 				ctx.lineWidth = 2;
 				ctx.moveTo(x2, y3);
 				ctx.lineTo(x2, y4);
 				ctx.stroke();
 				*/
-                
+				
 				ctx.fillStyle = "#000000";//(MT_estimator.MEPs[MT_estimator.index-1])?"#4caf50":"#f44336";
 				ctx.beginPath();
 				ctx.arc(x2, y2, radius2, 0, 2 * Math.PI);
@@ -1775,11 +1776,11 @@
 					</fieldset>
 					<p id="Start_msg"><button class="w3-green" id="button_MT_start" style="height:35px;width:80px"><u>S</u>tart</button> and move to next section.</p>
 					<p id="Reset_msg" hidden=""><button class="w3-black" id="button_MT_reset" style="height:35px;width:80px"><u>R</u>eset</button> to start a new procedure and change settings.</p>
-					<p>		<!-- Method selection -->
+					<p align="justify" style="font-size: small;">		<!-- Method selection -->
 						<output id="Method_selection_msg"></output>
 					</p>
-					<p style="font-size:80%;">
-						<a href="#header_settings">Settings</a>, <a href="#header_instructions">instructions</a>, and <a href="#header_information">method descriptions</a>.
+					<p style="font-size: small;">
+						<a href="#header_information">Method descriptions, instructions</a>, and <a href="#header_settings">settings</a>.
 					</p>
 				</div>
 			</div>
@@ -1787,7 +1788,7 @@
 				<div class="w3-container w3-light-blue" >
 					<h3>Motor threshold estimate</h3>
 				</div>
-				<div class="w3-container" style="height:275px">
+				<div class="w3-container" style="height:250px">
 					<p>		<!-- Method selection -->
 						<output id="MT_method_msg" hidden=""></output>
 					</p>
@@ -1833,9 +1834,9 @@
 						<button id="DownloadFile_botton" class="w3-green" disabled="true" style="height:30px;width:100px"><u>D</u>ownload</button> or 
 						<button id="CopyClipboard_botton" class="w3-green" disabled="true" style="height:30px;width:60px"><u>c</u>opy</button> data
 					</p>
-					<textarea id="textarea_MT_pulseList" rows="38" style="font-size:85%;" readonly=""></textarea>
+					<textarea id="textarea_MT_pulseList" rows="38" style="font-size: small;" readonly=""></textarea>
 					<font size="1">
-						<p><a href="#header_top">Back to top.</a></p>
+						<p><a href="#header_top">Back to top</a>.</p>
 					</font>
 				</div>
 			</div>
@@ -1846,7 +1847,7 @@
 					</p>
 					<canvas id="canvas_response" width="600" height="750"></canvas>
 					<font size="1" class="column2-hide">
-						<p><a href="#header_top">Back to top.</a></p>
+						<p><a href="#header_top">Back to top</a>.</p>
 					</font>
 				</div>
 			</div>
@@ -1859,23 +1860,54 @@
 		</div>
 
 		<div class="both">
-			<div class="left_column">
+			<div class="equal_column">
+				<div class="w3-container w3-light-blue">
+					<h3 id="header_information">Method description and instructions</h3>
+				</div>
+				<div class="w3-container">
+					<p align="justify">The MT is estimated using a stochastic approximation method with a digital control sequence whose step size follows harmonic convergence 
+						with adaptive stepping (DCS-HA) and initial step size <i>a</i><sub>0</sub> of 4.2%&nbsp;MSO. For adaptive stepping, the control sequence is adjusted only 
+						when the response changes from suprathreshold to subthreshold or vice versa. With a good initial intensity, the estimator takes on average 25&nbsp;pulses 
+						to determine the MT with median relative error |&NoBreak;<i>δ</i>&NoBreak;| of less than 1.5%.</p>
+					<p align="justify" style="font-size: small;"><strong>Note</strong>: The fixed stepping method DCS-H, which was available up to version 
+						<a href="https://tms-samt.github.io/previous_versions/SAMT_v1.7.4.html">1.7.4</a>, is now deprecated, because adaptive stepping 
+						is more robust and accurate. Adaptive stepping also provides higher flexiblity and faster convergence, e.g., for cases where the starting amplitude is far from threshold, 
+						a non-hand muscle is targeted, or a non-conventional TMS pulse shape is used.</p>
+					<p align="justify">For the method to work correctly, it is important to start from an intensity that is close to the likely motor threshold (MT) and 
+						preferably <i>suprathreshold </i> (i.e., an intensity that produces motor responses more often than not). The intensity used to locate the motor hot spot is a good starting point.</p>
+					<!-- <p align="justify">Using adaptive stepping may provide faster convergence for certain cases, e.g., the starting amplitude is far from threshold or a non-conventional TMS pulse shape is used.</p>  -->
+					<p> Known limitations and bugs:</p>
+					<ul class="myUL">
+						<li>The tool is provided as is. In particular, the description of the quality of the MT estimation is based on an approximate algorithm which 
+							may prematurely declare the estimation “good”. The final judgement on the MT must always be made by the operator!</li>
+						<li>The stochastic approximation algorithm may attempt to step to impossible intensities for the MT estimate (below 0% or above 100%&nbsp;MSO). 
+							The implementation in this app limits the next intensity between 1% and 100%&nbsp;MSO and the MT estimate between 0% and 101%&nbsp;MSO.</li>
+						<li>The copy button does not work on some mobile devices. Please copy the text manually if the copy button fails.</li>
+					</ul>
+					
+					<p align="justify">All processing is done by the app locally. No data are shared online.</p>
+					<p align="justify">This HTML/JS application is written by Boshuo Wang and Lari M.&nbsp;Koponen, with contribution from Vedarsh U.&nbsp;Shah, Shivum Vaishnavi, and Yiwen Zhang.</p>
+					<p align="justify">If you have questions or feedback, please email Boshuo Wang at <a href="mailto:boshuo.wang@duke.edu">boshuo.wang@duke.edu</a>.</p>
+					<font size="1">
+						<p><a href="#header_top">Back to top</a>.</p>
+					</font>
+				</div>
 				<div class="w3-container w3-light-blue">
 					<h3 id="header_settings">Settings</h3>
 				</div>
 				<div class="w3-container">
-					<fieldset>
+					<fieldset hidden="true">
 						<legend>Stepping method of control sequence</legend>
 						<div>
 							<input type="radio" id="radio_adapt" name="stepping_method" value="adapt">
 							<label for="radio_adapt">Adaptive (DCS-HA)</label>
 						</div>
-                        <div>
+						<div>
 							<input type="radio" id="radio_non_adapt" name="stepping_method" value="non_adapt">
 							<label for="radio_non_adapt">Fixed (DCS-H)</label>
 						</div>
 					</fieldset>
-					<fieldset hidden="">	<!-- Method selection -->
+					<fieldset hidden="true">	<!-- Method selection -->
 						<legend>Estimation method</legend>
 						<fieldset>
 							<legend>Control sequence</legend>
@@ -1907,86 +1939,83 @@
 					</fieldset>
 					
 					<div style="text-align: justify;">
-						<input type="checkbox" id="autosave" name="autosave" value="autosave_checked"> 
-						<label for="autosave">Automatically trigger download of estimation history if not saved (downloaded or copied): (1) when procedure ends after pulse No.&nbsp;29 or is reset earlier; (2) when page is closed or refreshed.</label>
+						<p>
+							<input type="checkbox" id="autosave" name="autosave" value="autosave_checked"> 
+							<label for="autosave">Automatically trigger download of estimation history if not saved (downloaded or copied): 
+								(1)&nbsp;when procedure ends after pulse No.&nbsp;29 or is reset earlier; (2)&nbsp;when page is closed or refreshed.</label>
+						</p>
 					</div>
-					<font size="1">
-						<p><a href="#header_top">Back to top.</a></p>
+					<font size="1" class="column2-hide">
+						<p><a href="#header_top">Back to top</a>.</p>
 					</font>
 				</div>
-
-				<div class="w3-container w3-light-blue">
-					<h3 id="header_instructions">Instructions</h3>
-				</div>
-				<div class="w3-container">
-					<p align="justify">For the method to work correctly, it is important to start from an intensity that is close to the likely motor threshold (MT) and preferably <i>suprathreshold </i> (i.e., an intensity that produces motor responses more often than not). The intensity used to locate the motor hot spot is a good starting point.</p>
-					<p align="justify">Using adaptive stepping may provide faster convergence for certain cases, e.g., the starting amplitude is far from threshold or a non-conventional TMS pulse shape is used.</p>
-					<p> Known limitations and bugs:</p>
-					<ul class="myUL">
-						<li>The tool is provided as is. In particular, the description of the quality of the MT estimation is based on an approximate algorithm which may prematurely declare the estimation “good”. The final judgement on the MT must always be made by the operator!</li>
-						<li>The stochastic approximation algorithm may attempt to step to impossible intensities for the MT estimate (below 0% or above 100%&nbsp;MSO). The implementation in this app limits the next intensity between 1% and 100%&nbsp;MSO and the MT estimate between 0% and 101%&nbsp;MSO.</li>
-						<li>The copy button does not work on some mobile devices. Please copy the text manually if the copy button fails.</li>
-					</ul>
-					<p align="justify">If you have questions or feedback, please email Boshuo Wang at <a href="mailto:boshuo.wang@duke.edu">boshuo.wang@duke.edu</a>.</p>
-				
-					<font size="1">
-						<p><a href="#header_top">Back to top.</a></p>
-					</font>
-				</div>
-
 			</div>
-			<div class="right_column">
+			<div class="equal_column">
 				<div class="w3-container w3-light-blue">
-					<h3 id="header_information">Method description</h3>
+					<h3 id="header_references">References</h3>
 				</div>
-				<div class="w3-container">
-					<p align="justify">The MT is estimated using a stochastic approximation method with a digital control sequence (DCS) whose step size follows harmonic convergence with fixed (DCS-H) or adaptive (DCS-HA) stepping. The initial step size of the control sequence, <i>a</i><sub>0</sub>, is 6.7% and 4.2%&nbsp;MSO for fixed and adaptive stepping, respectively. With adaptive stepping, the control sequence is adjusted only when the response changes from suprathreshold to subthreshold or vice versa. With a good initial intensity, the estimator takes on average 25&nbsp;pulses to determine the MT with median relative error |&NoBreak;<i>δ</i>&NoBreak;| of less than 1.5%.</p>
-					<p align="justify">The stochastic approximation MT methods are described in the following manuscript, which explores the performance of different control sequences, stepping adaptiveness, and initial step size.</p>
+				<div class="w3-container" style="font-size: small;">
+					<p align="justify">The stochastic approximation MT methods are described in the following manuscript, which explores the performance of different control 
+						sequences, stepping adaptiveness, and initial step size.</p>
 					<ul class="myUL">
-						<li>B.&nbsp;Wang, A.&nbsp;V.&nbsp;Peterchev, and S.&nbsp;M.&nbsp;Goetz, “Three Novel Methods for Determining Motor Threshold with Transcranial Magnetic Stimulation Outperform Conventional Procedures”, <i>J.&nbsp;Neural&nbsp;Eng.</i>, vol.&nbsp;20, no.&nbsp;5, 056002, Oct.&nbsp;2023.<br>DOI:&nbsp;<a href="https://doi.org/10.1088/1741-2552/acf1cc">10.1088/1741-2552/acf1cc</a>.</li>
+						<li>B.&nbsp;Wang, A.&nbsp;V.&nbsp;Peterchev, and S.&nbsp;M.&nbsp;Goetz, “Three Novel Methods for Determining Motor Threshold with Transcranial Magnetic 
+							Stimulation Outperform Conventional Procedures”, <i>J.&nbsp;Neural&nbsp;Eng.</i>, vol.&nbsp;20, no.&nbsp;5, 056002, Oct.&nbsp;2023. 
+							DOI:&nbsp;<a href="https://doi.org/10.1088/1741-2552/acf1cc">10.1088/1741-2552/acf1cc</a>.</li>
 					</ul>
 					<p align="justify">The choice of initial stimulation intensity close to the MT and the description of the quality of the current estimation follow suggestions in:</p>
 					<ul class="myUL">
-						<li>L.&nbsp;M.&nbsp;Koponen and A.&nbsp;V.&nbsp;Peterchev, “Preventing misestimation of transcranial magnetic stimulation motor threshold with MTAT&nbsp;2.0”, <i>Brain&nbsp;Stim.</i>, vol.&nbsp;15, no.&nbsp;5, pp.&nbsp;1073–1076, Sep.&nbsp;2022.<br>DOI:&nbsp;<a href="https://doi.org/10.1016/j.brs.2022.07.057">10.1016/j.brs.2022.07.057</a>.</li>
+						<li>L.&nbsp;M.&nbsp;Koponen and A.&nbsp;V.&nbsp;Peterchev, “Preventing misestimation of transcranial magnetic stimulation motor threshold with MTAT&nbsp;2.0”, 
+							<i>Brain&nbsp;Stim.</i>, vol.&nbsp;15, no.&nbsp;5, pp.&nbsp;1073–1076, Sep.&nbsp;2022.
+							<br>DOI:&nbsp;<a href="https://doi.org/10.1016/j.brs.2022.07.057">10.1016/j.brs.2022.07.057</a>.</li>
 					</ul>
-					<p align="justify">This HTML/JS application is written by Boshuo Wang and Lari M. Koponen, with contribution from Vedarsh Shah, Shivum Vaishnavi, and Yiwen Zhang.</p>
-					<p align="justify">All processing is done by the app locally. No data are shared online.</p>
+					<p class="justified-text">Preliminary validation of SAMT in clinical trials is described in:</p>
+					<ul class="myUL">
+						<li>B.&nbsp;Wang, V.&nbsp;U.&nbsp;Shah, L.&nbsp;M.&nbsp;Koponen, S.&nbsp;M.&nbsp;Goetz, A.&nbsp;D.&nbsp;Neacsiu, J.&nbsp;Y.&nbsp;Choi,
+							Z.&nbsp;J.&nbsp;Daskalakis, P.&nbsp;B.&nbsp;Fitzgerald, L.&nbsp;G.&nbsp;Appelbaum, I.&nbsp;Hadas, H.&nbsp;Daniels, K.&nbsp;Rodrigues,
+							E.&nbsp;S.&nbsp;Gotsis, N.&nbsp;W.&nbsp;Bailey, J.&nbsp;Raveendran, A.&nbsp;T.&nbsp;Gallo, S.&nbsp;Brinley, and A.&nbsp;V.&nbsp;Peterchev,
+							“Stochastic Approximator of Motor Threshold for Transcranial Magnetic Stimulation (SAMT): Performance in Clinical Trials”, 
+							<i>2024&nbsp;NYC&nbsp;Neuromod.&nbsp;Conf.</i>, New York, NY, USA, July&nbsp;31–Aug.&nbsp;4, 2024. 
+							<i>Neuromodec J.</i>, vol.&nbsp;4, no.&nbsp;2, Nov.&nbsp;2024.
+							<br>DOI:&nbsp;<a href="https://doi.org/10.31641/nmj-DIHO5587">10.31641/nmj-DIHO5587</a>.</li>
+					</ul>
 					<!--<p>Estimation of the MT's confidence interval will be implemented in future versions and described in a separate publication.</p>--->
-					<font size="1" class="column2-hide">
-						<p><a href="#header_top">Back to top.</a></p>
+					<!-- <p class="justified-text"><a href="https://tms-samt.github.io/previous_versions/versions.txt">List of previous SAMT versions</a>.</p> -->
+					<font size="1">
+						<p><a href="#header_top">Back to top</a>.</p>
 					</font>
 				</div>
 				<div class="w3-container w3-light-blue">
 					<h3 id="header_copyright">Copyright, licensing, and no warranty</h3>
 				</div>
-				<div class="w3-container">
-					<font size="1">
-						<p id="version_info" align="justify"></p>
-						<p align="justify">
-							©&nbsp;2022, Boshuo Wang, Lari M. Koponen, Stefan M. Goetz, Angel V. Peterchev, at Duke University, the University of Birmingham. 
-							All rights reserved.
-						</p>
-						<p align="justify">
-							The copyrights of this software are owned by Duke University and the University of Birmingham. As such, two licenses for this software are offered:
-						</p>
-						<ol class="myOL">
-							<li>An open-source license under the <a href="https://opensource.org/license/gpl-2-0/">GPLv2 license</a> for non-commercial use.</li>
-							<li>A custom license with Duke University, for commercial use without the GPLv2 license restrictions. </li>
-						</ol>
-						<p align="justify">
-							As a recipient of this software, you may choose which license to receive the code under. Outside contributions to the Duke-owned code base cannot be accepted unless the contributor transfers the copyright to those changes over to Duke University.
-							To enter a custom license agreement without the GPLv2 license restrictions, please contact the Digital Innovations Department at the Duke University Office for Translation & Commercialization (OTC) (<a href="https://otc.duke.edu/digital-innovations">https://otc.duke.edu/digital-innovations</a>) at <a href="mailto:otcquestions@duke.edu">otcquestions@duke.edu</a> with reference to “OTC File No.&nbsp;8063” in your email.
-						</p>
-						<p align="justify">
-							Please note that this software is distributed AS IS, WITHOUT ANY WARRANTY; and without the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-						</p>
-					</font>
+				<div class="w3-container" style="font-size: small;">
+					<p id="version_info" align="justify"></p>
+					<p align="justify">
+						©&nbsp;2022, Boshuo Wang, Lari M. Koponen, Stefan M. Goetz, Angel V. Peterchev, at Duke University, the University of Birmingham. 
+						All rights reserved.
+					</p>
+					<p align="justify">
+						The copyrights of this software are owned by Duke University and the University of Birmingham. As such, two licenses for this software are offered:
+					</p>
+					<ol class="myOL">
+						<li>An open-source license under the <a href="https://opensource.org/license/gpl-2-0/">GPLv2 license</a> for non-commercial use.</li>
+						<li>A custom license with Duke University, for commercial use without the GPLv2 license restrictions. </li>
+					</ol>
+					<p align="justify">
+						As a recipient of this software, you may choose which license to receive the code under. Outside contributions to the Duke-owned code base cannot be accepted 
+						unless the contributor transfers the copyright to those changes over to Duke University.
+						To enter a custom license agreement without the GPLv2 license restrictions, please contact the Digital Innovations Department at 
+						the Duke University Office for Translation & Commercialization (OTC) (<a href="https://otc.duke.edu/digital-innovations">https://otc.duke.edu/digital-innovations</a>) 
+						at <a href="mailto:otcquestions@duke.edu">otcquestions@duke.edu</a> with reference to “OTC File No.&nbsp;8063” in your email.
+					</p>
+					<p align="justify">
+						Please note that this software is distributed AS IS, WITHOUT ANY WARRANTY; and without the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+					</p>
+				
 					<font size="1" class="column2-hide">
-						<p><a href="#header_top">Back to top.</a></p>
+						<p><a href="#header_top">Back to top</a>.</p>
 					</font>
 				</div>
 			</div>
-			
 		</div>
 		<div  class="w3-container" style="width: 100%;">
 			<hr>
