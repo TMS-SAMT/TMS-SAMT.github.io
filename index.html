@@ -574,14 +574,13 @@
 
 				// if (localStorage.getItem("tms_samt_stepping_method")=="non_adapt") {
 				// 	document.getElementById("radio_non_adapt").checked=true;
-				// 	document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-H</strong>: digital control sequence, fixed stepping.";
+				// 	document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-H</strong>: digital control sequence, harmonic convergence, fixed stepping.";
 				// } else {
-				document.getElementById("radio_adapt").checked=true;
+					document.getElementById("radio_adapt").checked=true;
 				// document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-HA</strong>: digital control sequence, harmonic convergence, adaptive stepping.";
-				
-				localStorage.setItem("tms_samt_stepping_method", "adapt"); // fix to adapt in version 1.7.5
 				// }
-
+				localStorage.setItem("tms_samt_stepping_method", "adapt"); // fix to adapt in version 1.7.5
+				
 				if (localStorage.getItem("tms_samt_autosave")=="autosave_checked") {
 					document.getElementById("autosave").checked=true;
 				} else {
@@ -1128,11 +1127,11 @@
 					alert("Caution! Switching to adaptive stepping.\nPlease read instructions and method descriptions.")
 				}*/
 				localStorage.setItem("tms_samt_stepping_method",radio.value);
-				// if (radio.value=="non_adapt") {
-				// 	document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-H</strong>: digital control sequence, harmonic convergence, fixed stepping.";
-				// } else {
-				// document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-HA</strong>: digital control sequence, harmonic convergence, adaptive stepping.";
-				// }
+				if (radio.value=="non_adapt") {
+					document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-H</strong>: digital control sequence, harmonic convergence, fixed stepping.";
+				} else {
+					document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-HA</strong>: digital control sequence, harmonic convergence, adaptive stepping.";
+				}
 			}
 
 			function handleClick_a0(radio) {
@@ -1861,7 +1860,7 @@
 
 		<div class="both">
 			<div class="equal_column">
-                <div class="w3-container w3-light-blue">
+				<div class="w3-container w3-light-blue">
 					<h3 id="header_settings">Settings</h3>
 				</div>
 				<div class="w3-container">
@@ -1923,9 +1922,9 @@
 				</div>
 				<div class="w3-container">
 					<p align="justify">
-                        <strong>For the method to work correctly, it is important to start from an intensity that is close to the likely motor threshold (MT) and 
+						<strong>For the method to work correctly, it is important to start from an intensity that is close to the likely motor threshold (MT) and 
 						preferably <i>suprathreshold </i> (i.e., an intensity that produces motor responses more often than not). The intensity used to locate the motor hot spot is a good starting point.</strong>
-                    </p>
+					</p>
 					<p align="justify">The MT is estimated using a stochastic approximation method with a digital control sequence whose step size follows harmonic convergence 
 						with adaptive stepping (DCS-HA) and an initial step size of 4.2%&nbsp;MSO. For adaptive stepping, the control sequence is adjusted only 
 						when the response changes from suprathreshold to subthreshold or vice versa. With a good initial intensity, the estimator takes on average 25&nbsp;pulses 
