@@ -574,14 +574,13 @@
 
 				// if (localStorage.getItem("tms_samt_stepping_method")=="non_adapt") {
 				// 	document.getElementById("radio_non_adapt").checked=true;
-				// 	document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-H</strong>: digital control sequence, fixed stepping.";
+				// 	document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-H</strong>: digital control sequence, harmonic convergence, fixed stepping.";
 				// } else {
 				document.getElementById("radio_adapt").checked=true;
-				document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-HA</strong>: digital control sequence, harmonic convergence, adaptive stepping.";
-				
-				localStorage.setItem("tms_samt_stepping_method", "adapt"); // fix to adapt in version 1.7.5
+				// document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-HA</strong>: digital control sequence, harmonic convergence, adaptive stepping.";
 				// }
-
+				localStorage.setItem("tms_samt_stepping_method", "adapt"); // fix to adapt in version 1.7.5
+				
 				if (localStorage.getItem("tms_samt_autosave")=="autosave_checked") {
 					document.getElementById("autosave").checked=true;
 				} else {
@@ -1128,11 +1127,11 @@
 					alert("Caution! Switching to adaptive stepping.\nPlease read instructions and method descriptions.")
 				}*/
 				localStorage.setItem("tms_samt_stepping_method",radio.value);
-				// if (radio.value=="non_adapt") {
-				// 	document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-H</strong>: digital control sequence, harmonic convergence, fixed stepping.";
-				// } else {
+				if (radio.value=="non_adapt") {
+					document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-H</strong>: digital control sequence, harmonic convergence, fixed stepping.";
+				} else {
 					document.getElementById("Method_selection_msg").innerHTML="<strong>DCS-HA</strong>: digital control sequence, harmonic convergence, adaptive stepping.";
-				// }
+				}
 			}
 
 			function handleClick_a0(radio) {
@@ -1780,7 +1779,7 @@
 						<output id="Method_selection_msg"></output>
 					</p>
 					<p style="font-size: small;">
-						<a href="#header_information">Method descriptions, instructions</a>, and <a href="#header_settings">settings</a>.
+						<a href="#header_settings">Settings</a>, <a href="#header_information">instructions, and method descriptions</a>.
 					</p>
 				</div>
 			</div>
@@ -1862,37 +1861,6 @@
 		<div class="both">
 			<div class="equal_column">
 				<div class="w3-container w3-light-blue">
-					<h3 id="header_information">Method description and instructions</h3>
-				</div>
-				<div class="w3-container">
-					<p align="justify">The MT is estimated using a stochastic approximation method with a digital control sequence whose step size follows harmonic convergence 
-						with adaptive stepping (DCS-HA) and initial step size <i>a</i><sub>0</sub> of 4.2%&nbsp;MSO. For adaptive stepping, the control sequence is adjusted only 
-						when the response changes from suprathreshold to subthreshold or vice versa. With a good initial intensity, the estimator takes on average 25&nbsp;pulses 
-						to determine the MT with median relative error |&NoBreak;<i>δ</i>&NoBreak;| of less than 1.5%.</p>
-					<p align="justify" style="font-size: small;"><strong>Note</strong>: The fixed stepping method DCS-H, which was available up to version 
-						<a href="https://tms-samt.github.io/previous_versions/SAMT_v1.7.4.html">1.7.4</a>, is now deprecated, because adaptive stepping 
-						is more robust and accurate. Adaptive stepping also provides higher flexiblity and faster convergence, e.g., for cases where the starting amplitude is far from threshold, 
-						a non-hand muscle is targeted, or a non-conventional TMS pulse shape is used.</p>
-					<p align="justify">For the method to work correctly, it is important to start from an intensity that is close to the likely motor threshold (MT) and 
-						preferably <i>suprathreshold </i> (i.e., an intensity that produces motor responses more often than not). The intensity used to locate the motor hot spot is a good starting point.</p>
-					<!-- <p align="justify">Using adaptive stepping may provide faster convergence for certain cases, e.g., the starting amplitude is far from threshold or a non-conventional TMS pulse shape is used.</p>  -->
-					<p> Known limitations and bugs:</p>
-					<ul class="myUL">
-						<li>The tool is provided as is. In particular, the description of the quality of the MT estimation is based on an approximate algorithm which 
-							may prematurely declare the estimation “good”. The final judgement on the MT must always be made by the operator!</li>
-						<li>The stochastic approximation algorithm may attempt to step to impossible intensities for the MT estimate (below 0% or above 100%&nbsp;MSO). 
-							The implementation in this app limits the next intensity between 1% and 100%&nbsp;MSO and the MT estimate between 0% and 101%&nbsp;MSO.</li>
-						<li>The copy button does not work on some mobile devices. Please copy the text manually if the copy button fails.</li>
-					</ul>
-					
-					<p align="justify">All processing is done by the app locally. No data are shared online.</p>
-					<p align="justify">This HTML/JS application is written by Boshuo Wang and Lari M.&nbsp;Koponen, with contribution from Vedarsh U.&nbsp;Shah, Shivum Vaishnavi, and Yiwen Zhang.</p>
-					<p align="justify">If you have questions or feedback, please email Boshuo Wang at <a href="mailto:boshuo.wang@duke.edu">boshuo.wang@duke.edu</a>.</p>
-					<font size="1">
-						<p><a href="#header_top">Back to top</a>.</p>
-					</font>
-				</div>
-				<div class="w3-container w3-light-blue">
 					<h3 id="header_settings">Settings</h3>
 				</div>
 				<div class="w3-container">
@@ -1949,6 +1917,38 @@
 						<p><a href="#header_top">Back to top</a>.</p>
 					</font>
 				</div>
+				<div class="w3-container w3-light-blue">
+					<h3 id="header_information">Instructions and method description</h3>
+				</div>
+				<div class="w3-container">
+					<p align="justify">
+                        <strong>For fast estimation, start from an intensity that is close to the likely motor threshold (MT) and preferably <i>suprathreshold </i> 
+						(i.e., an intensity that produces motor responses more often than not). The intensity used to locate the motor hot spot is a good starting point.</strong>
+					</p>
+					<p align="justify">The MT is estimated using a stochastic approximation method with a digital control sequence whose step size follows harmonic convergence 
+						with adaptive stepping (DCS-HA) and an initial step size of 4.2%&nbsp;MSO. For adaptive stepping, the control sequence is adjusted only 
+						when the response changes from suprathreshold to subthreshold or vice versa. With a good initial intensity, the estimator takes on average 25&nbsp;pulses 
+						to determine the MT with median relative error |&NoBreak;<i>δ</i>&NoBreak;| of less than 1.5%.</p>
+					<p align="justify" style="font-size: small;"><strong>Note</strong>: The fixed stepping method DCS-H, which was available up to version 
+						<a href="https://tms-samt.github.io/previous_versions/SAMT_v1.7.4.html">1.7.4</a>, is now deprecated, because adaptive stepping 
+						is more robust with respect to subject characteristics, target muscle, starting TMS amplitude, as well as TMS device and coil.</p>
+					<!-- <p align="justify">Using adaptive stepping may provide faster convergence for certain cases, e.g., the starting amplitude is far from threshold or a non-conventional TMS pulse shape is used.</p>  -->
+					<p> Known limitations and bugs:</p>
+					<ul class="myUL">
+						<li>The tool is provided as is. In particular, the description of the quality of the MT estimation is based on an approximate algorithm which 
+							may prematurely declare the estimation “good”. The final judgement on the MT must always be made by the operator!</li>
+						<li>The stochastic approximation algorithm may attempt to step to impossible intensities for the MT estimate (below 0% or above 100%&nbsp;MSO). 
+							The implementation in this app limits the next intensity between 1% and 100%&nbsp;MSO and the MT estimate between 0% and 101%&nbsp;MSO.</li>
+						<li>The copy button does not work on some mobile devices. Please copy the text manually if the copy button fails.</li>
+					</ul>
+					
+					<p align="justify">All processing is done by the app locally. No data are shared online.</p>
+					<p align="justify">This HTML/JS application is written by Boshuo Wang and Lari M.&nbsp;Koponen, with contribution from Vedarsh U.&nbsp;Shah, Shivum Vaishnavi, and Yiwen Zhang.</p>
+					<p align="justify">If you have questions or feedback, please email Boshuo Wang at <a href="mailto:boshuo.wang@duke.edu">boshuo.wang@duke.edu</a>.</p>
+					<font size="1">
+						<p><a href="#header_top">Back to top</a>.</p>
+					</font>
+				</div>
 			</div>
 			<div class="equal_column">
 				<div class="w3-container w3-light-blue">
@@ -1956,11 +1956,11 @@
 				</div>
 				<div class="w3-container" style="font-size: small;">
 					<p align="justify">The stochastic approximation MT methods are described in the following manuscript, which explores the performance of different control 
-						sequences, stepping adaptiveness, and initial step size.</p>
+						sequences, stepping adaptiveness, and initial step size:</p>
 					<ul class="myUL">
 						<li>B.&nbsp;Wang, A.&nbsp;V.&nbsp;Peterchev, and S.&nbsp;M.&nbsp;Goetz, “Three Novel Methods for Determining Motor Threshold with Transcranial Magnetic 
-							Stimulation Outperform Conventional Procedures”, <i>J.&nbsp;Neural&nbsp;Eng.</i>, vol.&nbsp;20, no.&nbsp;5, 056002, Oct.&nbsp;2023. 
-							DOI:&nbsp;<a href="https://doi.org/10.1088/1741-2552/acf1cc">10.1088/1741-2552/acf1cc</a>.</li>
+							Stimulation Outperform Conventional Procedures”, <i>J.&nbsp;Neural&nbsp;Eng.</i>, vol.&nbsp;20, no.&nbsp;5, 056002, Oct.&nbsp;2023.
+							<br>DOI:&nbsp;<a href="https://doi.org/10.1088/1741-2552/acf1cc">10.1088/1741-2552/acf1cc</a>.</li>
 					</ul>
 					<p align="justify">The choice of initial stimulation intensity close to the MT and the description of the quality of the current estimation follow suggestions in:</p>
 					<ul class="myUL">

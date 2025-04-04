@@ -1,6 +1,19 @@
 Access old versions using: https://tms-samt.github.io/previous_versions/FILENAME
 
 Filename				Date		Version		Description
+SAMT_v1.8.0								2025.04.03	1.8.0		Updated version to 1.8.0 and date to 2025.4.3.
+									Major update to lower pulse number where accuracy assessment starts from 25 to 20.
+									Major updates ported from beta versions 2.0.0 to 2.0.2.
+										Estimator class added MLE_MT and MLE_CI, as well as log-likelihood initialized with two pseudo-responses (0, false) & (150, true).
+											MLE uses logistic function with midpoint and slope matched to the normal cdf with spread = 0.07 * threshold.
+											MLE CI uses likelihood ratio method.
+										Estimator class added rate_info field to store lists of [amp, counts, responses, rate], ordered by amps; removed count_list, response_list, and per_stim.
+										Estimator class added min and max of axis limits. Used for dynamic update of axis limits.
+										Estimator class added CI for SA, using index. (Not displayed.)
+										Rewrote JavaScript script to simplify and optimize.
+										Improved HTML to simplify and modernize.
+									Added option for automatic download of figure.
+									
 SAMT_v1.7.5.html			2025.03.20	1.7.5		Updated version to 1.7.5 and date to 2025.3.20.
 									Deprecated fixed stepping method. Added note. Removed relevant stored settings.
 									Reordered information layout. 
