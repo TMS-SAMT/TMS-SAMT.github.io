@@ -578,7 +578,7 @@
 					maxX = Math.ceil( maxX / 5) * 5;
 
 					this.minAmp = Math.min(Math.max(minX, 0), this.minAmp);
-					this.maxAmp = Math.max(Math.min(maxX, 100), this.maxAmp);
+					this.maxAmp = Math.max(Math.min(maxX, 101), this.maxAmp);
 				}
 			}
 
@@ -1230,7 +1230,7 @@
 					//ctx.fillText("\t\t\tThreshold estimate & confidence interval", x1, y1);
 					ctx.fillText("\t\t\tThreshold estimate", x1, y1);
 					ctx.fillText("\t\t\tResponse present / suprathreshold", x2, y2);
-					ctx.fillText("\t\t\tResponse absent / subthreshold", x2, y3);
+					ctx.fillText("\t\t\tResponse absent  / subthreshold", x2, y3);
 				}
 
 				// {
