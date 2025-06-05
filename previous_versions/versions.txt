@@ -1,6 +1,9 @@
 Access old versions using: https://tms-samt.github.io/previous_versions/FILENAME
 
 Filename				Date		Version		Description
+SAMT_v1.8.1								2025.06.05	1.8.1		Updated version to 1.8.1 and date to 2025.6.5.
+									Updated information section to replace the conference abstract with medRxiv preprint.
+
 SAMT_v1.8.0								2025.04.03	1.8.0		Updated version to 1.8.0 and date to 2025.4.3.
 									Major update to lower pulse number where accuracy assessment starts from 25 to 20.
 									Major updates ported from beta versions 2.0.0 to 2.0.2.
