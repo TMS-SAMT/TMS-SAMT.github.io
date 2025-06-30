@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>SAMT: Stochastic Approximator of Motor Threshold</title>
+		<style type="text/css">
+			/* W3.CSS 4.15 December 2020 by Jan Egil and Borge Refsnes */
+			html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}
+			/* Extract from normalize.css by Nicolas Gallagher and Jonathan Neal git.io/normalize */
+			html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}
+			article,aside,details,figcaption,figure,footer,header,main,menu,nav,section{display:block}summary{display:list-item}
+			audio,canvas,progress,video{display:inline-block}progress{vertical-align:baseline}
+			audio:not([controls]){display:none;height:0}[hidden],template{display:none}
+			a{background-color:transparent}a:active,a:hover{outline-width:0}
+			abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}
+			b,strong{font-weight:bolder}dfn{font-style:italic}mark{background:#ff0;color:#000}
+			small{font-size:85%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+			sub{bottom:-0.25em}sup{top:-0.5em}figure{margin:1em 40px}img{border-style:none}
+			code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}hr{box-sizing:content-box;height:0;overflow:visible}
+			button,input,select,textarea,optgroup{font:inherit;margin:0}optgroup{font-weight:bold}
+			button,input{overflow:visible}button,select{text-transform:none}
+			button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button}
+			button::-moz-focus-inner,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{border-style:none;padding:0}
+			button:-moz-focusring,[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring{outline:1px dotted ButtonText}
+			fieldset{border:1px solid #c0c0c0;margin:0 2px;padding:.35em .625em .75em}
+			legend{color:inherit;display:table;max-width:100%;padding:0;white-space:normal}textarea{overflow:auto}
+			[type=checkbox],[type=radio]{padding:0}
+			[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}
+			[type=search]{-webkit-appearance:textfield;outline-offset:-2px}
+			[type=search]::-webkit-search-decoration{-webkit-appearance:none}
+			::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}
+			/* End extract */
+			html,body{font-family:Verdana,sans-serif;font-size:15px;line-height:1.5}html{overflow-x:auto}
+			h1{font-size:36px}h2{font-size:30px}h3{font-size:24px}h4{font-size:20px}h5{font-size:18px}h6{font-size:16px}
+			.w3-serif{font-family:serif}.w3-sans-serif{font-family:sans-serif}.w3-cursive{font-family:cursive}.w3-monospace{font-family:monospace}
+			h1,h2,h3,h4,h5,h6{font-family:"Segoe UI",Arial,sans-serif;font-weight:400;margin:10px 0}.w3-wide{letter-spacing:4px}
+			hr{border:0;border-top:1px solid #eee;margin:20px 0}
+			.w3-image{max-width:100%;height:auto}img{vertical-align:middle}a{color:inherit}
+			.w3-table,.w3-table-all{border-collapse:collapse;border-spacing:0;width:100%;display:table}.w3-table-all{border:1px solid #ccc}
+			.w3-bordered tr,.w3-table-all tr{border-bottom:1px solid #ddd}.w3-striped tbody tr:nth-child(even){background-color:#f1f1f1}
+			.w3-table-all tr:nth-child(odd){background-color:#fff}.w3-table-all tr:nth-child(even){background-color:#f1f1f1}
+			.w3-hoverable tbody tr:hover,.w3-ul.w3-hoverable li:hover{background-color:#ccc}.w3-centered tr th,.w3-centered tr td{text-align:center}
+			.w3-table td,.w3-table th,.w3-table-all td,.w3-table-all th{padding:8px 8px;display:table-cell;text-align:left;vertical-align:top}
+			.w3-table th:first-child,.w3-table td:first-child,.w3-table-all th:first-child,.w3-table-all td:first-child{padding-left:16px}
+			.w3-btn,.w3-button{border:none;display:inline-block;padding:8px 16px;vertical-align:middle;overflow:hidden;text-decoration:none;color:inherit;background-color:inherit;text-align:center;cursor:pointer;white-space:nowrap}
+			.w3-btn:hover{box-shadow:0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19)}
+			.w3-btn,.w3-button{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+			.w3-disabled,.w3-btn:disabled,.w3-button:disabled{cursor:not-allowed;opacity:0.3}.w3-disabled *,:disabled *{pointer-events:none}
+			.w3-btn.w3-disabled:hover,.w3-btn:disabled:hover{box-shadow:none}
+			.w3-badge,.w3-tag{background-color:#000;color:#fff;display:inline-block;padding-left:8px;padding-right:8px;text-align:center}.w3-badge{border-radius:50%}
+			.w3-ul{list-style-type:none;padding:0;margin:0}.w3-ul li{padding:8px 16px;border-bottom:1px solid #ddd}.w3-ul li:last-child{border-bottom:none}
+			.w3-tooltip,.w3-display-container{position:relative}.w3-tooltip .w3-text{display:none}.w3-tooltip:hover .w3-text{display:inline-block}
+			.w3-ripple:active{opacity:0.5}.w3-ripple{transition:opacity 0s}
+			.w3-input{padding:8px;display:block;border:none;border-bottom:1px solid #ccc;width:100%}
+			.w3-select{padding:9px 0;width:100%;border:none;border-bottom:1px solid #ccc}
+			.w3-dropdown-click,.w3-dropdown-hover{position:relative;display:inline-block;cursor:pointer}
+			.w3-dropdown-hover:hover .w3-dropdown-content{display:block}
+			.w3-dropdown-hover:first-child,.w3-dropdown-click:hover{background-color:#ccc;color:#000}
+			.w3-dropdown-hover:hover > .w3-button:first-child,.w3-dropdown-click:hover > .w3-button:first-child{background-color:#ccc;color:#000}
+			.w3-dropdown-content{cursor:auto;color:#000;background-color:#fff;display:none;position:absolute;min-width:160px;margin:0;padding:0;z-index:1}
+			.w3-check,.w3-radio{width:24px;height:24px;position:relative;top:6px}
+			.w3-sidebar{height:100%;width:200px;background-color:#fff;position:fixed!important;z-index:1;overflow:auto}
+			.w3-bar-block .w3-dropdown-hover,.w3-bar-block .w3-dropdown-click{width:100%}
+			.w3-bar-block .w3-dropdown-hover .w3-dropdown-content,.w3-bar-block .w3-dropdown-click .w3-dropdown-content{min-width:100%}
+			.w3-bar-block .w3-dropdown-hover .w3-button,.w3-bar-block .w3-dropdown-click .w3-button{width:100%;text-align:left;padding:8px 16px}
+			.w3-main,#main{transition:margin-left .4s}
+			.w3-modal{z-index:3;display:none;padding-top:100px;position:fixed;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgb(0,0,0);background-color:rgba(0,0,0,0.4)}
+			.w3-modal-content{margin:auto;background-color:#fff;position:relative;padding:0;outline:0;width:600px}
+			.w3-bar{width:100%;overflow:hidden}.w3-center .w3-bar{display:inline-block;width:auto}
+			.w3-bar .w3-bar-item{padding:8px 16px;float:left;width:auto;border:none;display:block;outline:0}
+			.w3-bar .w3-dropdown-hover,.w3-bar .w3-dropdown-click{position:static;float:left}
+			.w3-bar .w3-button{white-space:normal}
+			.w3-bar-block .w3-bar-item{width:100%;display:block;padding:8px 16px;text-align:left;border:none;white-space:normal;float:none;outline:0}
+			.w3-bar-block.w3-center .w3-bar-item{text-align:center}.w3-block{display:block;width:100%}
+			.w3-responsive{display:block;overflow-x:auto}
+			.w3-container:after,.w3-container:before,.w3-panel:after,.w3-panel:before,.w3-row:after,.w3-row:before,.w3-row-padding:after,.w3-row-padding:before,
+			.w3-cell-row:before,.w3-cell-row:after,.w3-clear:after,.w3-clear:before,.w3-bar:before,.w3-bar:after{content:"";display:table;clear:both}
+			.w3-col,.w3-half,.w3-third,.w3-twothird,.w3-threequarter,.w3-quarter{float:left;width:100%}
+			.w3-col.s1{width:8.33333%}.w3-col.s2{width:16.66666%}.w3-col.s3{width:24.99999%}.w3-col.s4{width:33.33333%}
+			.w3-col.s5{width:41.66666%}.w3-col.s6{width:49.99999%}.w3-col.s7{width:58.33333%}.w3-col.s8{width:66.66666%}
+			.w3-col.s9{width:74.99999%}.w3-col.s10{width:83.33333%}.w3-col.s11{width:91.66666%}.w3-col.s12{width:99.99999%}
+			@media (min-width:601px){.w3-col.m1{width:8.33333%}.w3-col.m2{width:16.66666%}.w3-col.m3,.w3-quarter{width:24.99999%}.w3-col.m4,.w3-third{width:33.33333%}
+			.w3-col.m5{width:41.66666%}.w3-col.m6,.w3-half{width:49.99999%}.w3-col.m7{width:58.33333%}.w3-col.m8,.w3-twothird{width:66.66666%}
+			.w3-col.m9,.w3-threequarter{width:74.99999%}.w3-col.m10{width:83.33333%}.w3-col.m11{width:91.66666%}.w3-col.m12{width:99.99999%}}
+			@media (min-width:993px){.w3-col.l1{width:8.33333%}.w3-col.l2{width:16.66666%}.w3-col.l3{width:24.99999%}.w3-col.l4{width:33.33333%}
+			.w3-col.l5{width:41.66666%}.w3-col.l6{width:49.99999%}.w3-col.l7{width:58.33333%}.w3-col.l8{width:66.66666%}
+			.w3-col.l9{width:74.99999%}.w3-col.l10{width:83.33333%}.w3-col.l11{width:91.66666%}.w3-col.l12{width:99.99999%}}
+			.w3-rest{overflow:hidden}.w3-stretch{margin-left:-16px;margin-right:-16px}
+			.w3-content,.w3-auto{margin-left:auto;margin-right:auto}.w3-content{max-width:980px}.w3-auto{max-width:1140px}
+			.w3-cell-row{display:table;width:100%}.w3-cell{display:table-cell}
+			.w3-cell-top{vertical-align:top}.w3-cell-middle{vertical-align:middle}.w3-cell-bottom{vertical-align:bottom}
+			.w3-hide{display:none!important}.w3-show-block,.w3-show{display:block!important}.w3-show-inline-block{display:inline-block!important}
+			@media (max-width:1205px){.w3-auto{max-width:95%}}
+			@media (max-width:600px){.w3-modal-content{margin:0 10px;width:auto!important}.w3-modal{padding-top:30px}
+			.w3-dropdown-hover.w3-mobile .w3-dropdown-content,.w3-dropdown-click.w3-mobile .w3-dropdown-content{position:relative}
+			.w3-hide-small{display:none!important}.w3-mobile{display:block;width:100%!important}.w3-bar-item.w3-mobile,.w3-dropdown-hover.w3-mobile,.w3-dropdown-click.w3-mobile{text-align:center}
+			.w3-dropdown-hover.w3-mobile,.w3-dropdown-hover.w3-mobile .w3-btn,.w3-dropdown-hover.w3-mobile .w3-button,.w3-dropdown-click.w3-mobile,.w3-dropdown-click.w3-mobile .w3-btn,.w3-dropdown-click.w3-mobile .w3-button{width:100%}}
+			@media (max-width:768px){.w3-modal-content{width:500px}.w3-modal{padding-top:50px}}
+			@media (min-width:993px){.w3-modal-content{width:900px}.w3-hide-large{display:none!important}.w3-sidebar.w3-collapse{display:block!important}}
+			@media (max-width:992px) and (min-width:601px){.w3-hide-medium{display:none!important}}
+			@media (max-width:992px){.w3-sidebar.w3-collapse{display:none}.w3-main{margin-left:0!important;margin-right:0!important}.w3-auto{max-width:100%}}
+			.w3-top,.w3-bottom{position:fixed;width:100%;z-index:1}.w3-top{top:0}.w3-bottom{bottom:0}
+			.w3-overlay{position:fixed;display:none;width:100%;height:100%;top:0;left:0;right:0;bottom:0;background-color:rgba(0,0,0,0.5);z-index:2}
+			.w3-display-topleft{position:absolute;left:0;top:0}.w3-display-topright{position:absolute;right:0;top:0}
+			.w3-display-bottomleft{position:absolute;left:0;bottom:0}.w3-display-bottomright{position:absolute;right:0;bottom:0}
+			.w3-display-middle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%)}
+			.w3-display-left{position:absolute;top:50%;left:0%;transform:translate(0%,-50%);-ms-transform:translate(-0%,-50%)}
+			.w3-display-right{position:absolute;top:50%;right:0%;transform:translate(0%,-50%);-ms-transform:translate(0%,-50%)}
+			.w3-display-topmiddle{position:absolute;left:50%;top:0;transform:translate(-50%,0%);-ms-transform:translate(-50%,0%)}
+			.w3-display-bottommiddle{position:absolute;left:50%;bottom:0;transform:translate(-50%,0%);-ms-transform:translate(-50%,0%)}
+			.w3-display-container:hover .w3-display-hover{display:block}.w3-display-container:hover span.w3-display-hover{display:inline-block}.w3-display-hover{display:none}
+			.w3-display-position{position:absolute}
+			.w3-circle{border-radius:50%}
+			.w3-round-small{border-radius:2px}.w3-round,.w3-round-medium{border-radius:4px}.w3-round-large{border-radius:8px}.w3-round-xlarge{border-radius:16px}.w3-round-xxlarge{border-radius:32px}
+			.w3-row-padding,.w3-row-padding>.w3-half,.w3-row-padding>.w3-third,.w3-row-padding>.w3-twothird,.w3-row-padding>.w3-threequarter,.w3-row-padding>.w3-quarter,.w3-row-padding>.w3-col{padding:0 8px}
+			.w3-container,.w3-panel{padding:0.01em 16px}.w3-panel{margin-top:16px;margin-bottom:16px}
+			.w3-code,.w3-codespan{font-family:Consolas,"courier new";font-size:16px}
+			.w3-code{width:auto;background-color:#fff;padding:8px 12px;border-left:4px solid #4CAF50;word-wrap:break-word}
+			.w3-codespan{color:crimson;background-color:#f1f1f1;padding-left:4px;padding-right:4px;font-size:110%}
+			.w3-card,.w3-card-2{box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)}
+			.w3-card-4,.w3-hover-shadow:hover{box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19)}
+			.w3-spin{animation:w3-spin 2s infinite linear}@keyframes w3-spin{0%{transform:rotate(0deg)}100%{transform:rotate(359deg)}}
+			.w3-animate-fading{animation:fading 10s infinite}@keyframes fading{0%{opacity:0}50%{opacity:1}100%{opacity:0}}
+			.w3-animate-opacity{animation:opac 0.8s}@keyframes opac{from{opacity:0} to{opacity:1}}
+			.w3-animate-top{position:relative;animation:animatetop 0.4s}@keyframes animatetop{from{top:-300px;opacity:0} to{top:0;opacity:1}}
+			.w3-animate-left{position:relative;animation:animateleft 0.4s}@keyframes animateleft{from{left:-300px;opacity:0} to{left:0;opacity:1}}
+			.w3-animate-right{position:relative;animation:animateright 0.4s}@keyframes animateright{from{right:-300px;opacity:0} to{right:0;opacity:1}}
+			.w3-animate-bottom{position:relative;animation:animatebottom 0.4s}@keyframes animatebottom{from{bottom:-300px;opacity:0} to{bottom:0;opacity:1}}
+			.w3-animate-zoom {animation:animatezoom 0.6s}@keyframes animatezoom{from{transform:scale(0)} to{transform:scale(1)}}
+			.w3-animate-input{transition:width 0.4s ease-in-out}.w3-animate-input:focus{width:100%!important}
+			.w3-opacity,.w3-hover-opacity:hover{opacity:0.60}.w3-opacity-off,.w3-hover-opacity-off:hover{opacity:1}
+			.w3-opacity-max{opacity:0.25}.w3-opacity-min{opacity:0.75}
+			.w3-greyscale-max,.w3-grayscale-max,.w3-hover-greyscale:hover,.w3-hover-grayscale:hover{filter:grayscale(100%)}
+			.w3-greyscale,.w3-grayscale{filter:grayscale(75%)}.w3-greyscale-min,.w3-grayscale-min{filter:grayscale(50%)}
+			.w3-sepia{filter:sepia(75%)}.w3-sepia-max,.w3-hover-sepia:hover{filter:sepia(100%)}.w3-sepia-min{filter:sepia(50%)}
+			.w3-tiny{font-size:10px!important}.w3-small{font-size:12px!important}.w3-medium{font-size:15px!important}.w3-large{font-size:18px!important}
+			.w3-xlarge{font-size:24px!important}.w3-xxlarge{font-size:36px!important}.w3-xxxlarge{font-size:48px!important}.w3-jumbo{font-size:64px!important}
+			.w3-left-align{text-align:left!important}.w3-right-align{text-align:right!important}.w3-justify{text-align:justify!important}.w3-center{text-align:center!important}
+			.w3-border-0{border:0!important}.w3-border{border:1px solid #ccc!important}
+			.w3-border-top{border-top:1px solid #ccc!important}.w3-border-bottom{border-bottom:1px solid #ccc!important}
+			.w3-border-left{border-left:1px solid #ccc!important}.w3-border-right{border-right:1px solid #ccc!important}
+			.w3-topbar{border-top:6px solid #ccc!important}.w3-bottombar{border-bottom:6px solid #ccc!important}
+			.w3-leftbar{border-left:6px solid #ccc!important}.w3-rightbar{border-right:6px solid #ccc!important}
+			.w3-section,.w3-code{margin-top:16px!important;margin-bottom:16px!important}
+			.w3-margin{margin:16px!important}.w3-margin-top{margin-top:16px!important}.w3-margin-bottom{margin-bottom:16px!important}
+			.w3-margin-left{margin-left:16px!important}.w3-margin-right{margin-right:16px!important}
+			.w3-padding-small{padding:4px 8px!important}.w3-padding{padding:8px 16px!important}.w3-padding-large{padding:12px 24px!important}
+			.w3-padding-16{padding-top:16px!important;padding-bottom:16px!important}.w3-padding-24{padding-top:24px!important;padding-bottom:24px!important}
+			.w3-padding-32{padding-top:32px!important;padding-bottom:32px!important}.w3-padding-48{padding-top:48px!important;padding-bottom:48px!important}
+			.w3-padding-64{padding-top:64px!important;padding-bottom:64px!important}
+			.w3-padding-top-64{padding-top:64px!important}.w3-padding-top-48{padding-top:48px!important}
+			.w3-padding-top-32{padding-top:32px!important}.w3-padding-top-24{padding-top:24px!important}
+			.w3-left{float:left!important}.w3-right{float:right!important}
+			.w3-button:hover{color:#000!important;background-color:#ccc!important}
+			.w3-transparent,.w3-hover-none:hover{background-color:transparent!important}
+			.w3-hover-none:hover{box-shadow:none!important}
+			/* Colors */
+			.w3-amber,.w3-hover-amber:hover{color:#000!important;background-color:#ffc107!important}
+			.w3-aqua,.w3-hover-aqua:hover{color:#000!important;background-color:#00ffff!important}
+			.w3-blue,.w3-hover-blue:hover{color:#fff!important;background-color:#2196F3!important}
+			.w3-light-blue,.w3-hover-light-blue:hover{color:#000!important;background-color:#87CEEB!important}
+			.w3-brown,.w3-hover-brown:hover{color:#fff!important;background-color:#795548!important}
+			.w3-cyan,.w3-hover-cyan:hover{color:#000!important;background-color:#00bcd4!important}
+			.w3-blue-grey,.w3-hover-blue-grey:hover,.w3-blue-gray,.w3-hover-blue-gray:hover{color:#fff!important;background-color:#607d8b!important}
+			.w3-green,.w3-hover-green:hover{color:#fff!important;background-color:#4CAF50!important}
+			.w3-light-green,.w3-hover-light-green:hover{color:#000!important;background-color:#8bc34a!important}
+			.w3-indigo,.w3-hover-indigo:hover{color:#fff!important;background-color:#3f51b5!important}
+			.w3-khaki,.w3-hover-khaki:hover{color:#000!important;background-color:#f0e68c!important}
+			.w3-lime,.w3-hover-lime:hover{color:#000!important;background-color:#cddc39!important}
+			.w3-orange,.w3-hover-orange:hover{color:#000!important;background-color:#ff9800!important}
+			.w3-deep-orange,.w3-hover-deep-orange:hover{color:#fff!important;background-color:#ff5722!important}
+			.w3-pink,.w3-hover-pink:hover{color:#fff!important;background-color:#e91e63!important}
+			.w3-purple,.w3-hover-purple:hover{color:#fff!important;background-color:#9c27b0!important}
+			.w3-deep-purple,.w3-hover-deep-purple:hover{color:#fff!important;background-color:#673ab7!important}
+			.w3-red,.w3-hover-red:hover{color:#fff!important;background-color:#f44336!important}
+			.w3-sand,.w3-hover-sand:hover{color:#000!important;background-color:#fdf5e6!important}
+			.w3-teal,.w3-hover-teal:hover{color:#fff!important;background-color:#009688!important}
+			.w3-yellow,.w3-hover-yellow:hover{color:#000!important;background-color:#ffeb3b!important}
+			.w3-white,.w3-hover-white:hover{color:#000!important;background-color:#fff!important}
+			.w3-black,.w3-hover-black:hover{color:#fff!important;background-color:#000!important}
+			.w3-grey,.w3-hover-grey:hover,.w3-gray,.w3-hover-gray:hover{color:#000!important;background-color:#9e9e9e!important}
+			.w3-light-grey,.w3-hover-light-grey:hover,.w3-light-gray,.w3-hover-light-gray:hover{color:#000!important;background-color:#f1f1f1!important}
+			.w3-dark-grey,.w3-hover-dark-grey:hover,.w3-dark-gray,.w3-hover-dark-gray:hover{color:#fff!important;background-color:#616161!important}
+			.w3-pale-red,.w3-hover-pale-red:hover{color:#000!important;background-color:#ffdddd!important}
+			.w3-pale-green,.w3-hover-pale-green:hover{color:#000!important;background-color:#ddffdd!important}
+			.w3-pale-yellow,.w3-hover-pale-yellow:hover{color:#000!important;background-color:#ffffcc!important}
+			.w3-pale-blue,.w3-hover-pale-blue:hover{color:#000!important;background-color:#ddffff!important}
+			.w3-text-amber,.w3-hover-text-amber:hover{color:#ffc107!important}
+			.w3-text-aqua,.w3-hover-text-aqua:hover{color:#00ffff!important}
+			.w3-text-blue,.w3-hover-text-blue:hover{color:#2196F3!important}
+			.w3-text-light-blue,.w3-hover-text-light-blue:hover{color:#87CEEB!important}
+			.w3-text-brown,.w3-hover-text-brown:hover{color:#795548!important}
+			.w3-text-cyan,.w3-hover-text-cyan:hover{color:#00bcd4!important}
+			.w3-text-blue-grey,.w3-hover-text-blue-grey:hover,.w3-text-blue-gray,.w3-hover-text-blue-gray:hover{color:#607d8b!important}
+			.w3-text-green,.w3-hover-text-green:hover{color:#4CAF50!important}
+			.w3-text-light-green,.w3-hover-text-light-green:hover{color:#8bc34a!important}
+			.w3-text-indigo,.w3-hover-text-indigo:hover{color:#3f51b5!important}
+			.w3-text-khaki,.w3-hover-text-khaki:hover{color:#b4aa50!important}
+			.w3-text-lime,.w3-hover-text-lime:hover{color:#cddc39!important}
+			.w3-text-orange,.w3-hover-text-orange:hover{color:#ff9800!important}
+			.w3-text-deep-orange,.w3-hover-text-deep-orange:hover{color:#ff5722!important}
+			.w3-text-pink,.w3-hover-text-pink:hover{color:#e91e63!important}
+			.w3-text-purple,.w3-hover-text-purple:hover{color:#9c27b0!important}
+			.w3-text-deep-purple,.w3-hover-text-deep-purple:hover{color:#673ab7!important}
+			.w3-text-red,.w3-hover-text-red:hover{color:#f44336!important}
+			.w3-text-sand,.w3-hover-text-sand:hover{color:#fdf5e6!important}
+			.w3-text-teal,.w3-hover-text-teal:hover{color:#009688!important}
+			.w3-text-yellow,.w3-hover-text-yellow:hover{color:#d2be0e!important}
+			.w3-text-white,.w3-hover-text-white:hover{color:#fff!important}
+			.w3-text-black,.w3-hover-text-black:hover{color:#000!important}
+			.w3-text-grey,.w3-hover-text-grey:hover,.w3-text-gray,.w3-hover-text-gray:hover{color:#757575!important}
+			.w3-text-light-grey,.w3-hover-text-light-grey:hover,.w3-text-light-gray,.w3-hover-text-light-gray:hover{color:#f1f1f1!important}
+			.w3-text-dark-grey,.w3-hover-text-dark-grey:hover,.w3-text-dark-gray,.w3-hover-text-dark-gray:hover{color:#3a3a3a!important}
+			.w3-border-amber,.w3-hover-border-amber:hover{border-color:#ffc107!important}
+			.w3-border-aqua,.w3-hover-border-aqua:hover{border-color:#00ffff!important}
+			.w3-border-blue,.w3-hover-border-blue:hover{border-color:#2196F3!important}
+			.w3-border-light-blue,.w3-hover-border-light-blue:hover{border-color:#87CEEB!important}
+			.w3-border-brown,.w3-hover-border-brown:hover{border-color:#795548!important}
+			.w3-border-cyan,.w3-hover-border-cyan:hover{border-color:#00bcd4!important}
+			.w3-border-blue-grey,.w3-hover-border-blue-grey:hover,.w3-border-blue-gray,.w3-hover-border-blue-gray:hover{border-color:#607d8b!important}
+			.w3-border-green,.w3-hover-border-green:hover{border-color:#4CAF50!important}
+			.w3-border-light-green,.w3-hover-border-light-green:hover{border-color:#8bc34a!important}
+			.w3-border-indigo,.w3-hover-border-indigo:hover{border-color:#3f51b5!important}
+			.w3-border-khaki,.w3-hover-border-khaki:hover{border-color:#f0e68c!important}
+			.w3-border-lime,.w3-hover-border-lime:hover{border-color:#cddc39!important}
+			.w3-border-orange,.w3-hover-border-orange:hover{border-color:#ff9800!important}
+			.w3-border-deep-orange,.w3-hover-border-deep-orange:hover{border-color:#ff5722!important}
+			.w3-border-pink,.w3-hover-border-pink:hover{border-color:#e91e63!important}
+			.w3-border-purple,.w3-hover-border-purple:hover{border-color:#9c27b0!important}
+			.w3-border-deep-purple,.w3-hover-border-deep-purple:hover{border-color:#673ab7!important}
+			.w3-border-red,.w3-hover-border-red:hover{border-color:#f44336!important}
+			.w3-border-sand,.w3-hover-border-sand:hover{border-color:#fdf5e6!important}
+			.w3-border-teal,.w3-hover-border-teal:hover{border-color:#009688!important}
+			.w3-border-yellow,.w3-hover-border-yellow:hover{border-color:#ffeb3b!important}
+			.w3-border-white,.w3-hover-border-white:hover{border-color:#fff!important}
+			.w3-border-black,.w3-hover-border-black:hover{border-color:#000!important}
+			.w3-border-grey,.w3-hover-border-grey:hover,.w3-border-gray,.w3-hover-border-gray:hover{border-color:#9e9e9e!important}
+			.w3-border-light-grey,.w3-hover-border-light-grey:hover,.w3-border-light-gray,.w3-hover-border-light-gray:hover{border-color:#f1f1f1!important}
+			.w3-border-dark-grey,.w3-hover-border-dark-grey:hover,.w3-border-dark-gray,.w3-hover-border-dark-gray:hover{border-color:#616161!important}
+			.w3-border-pale-red,.w3-hover-border-pale-red:hover{border-color:#ffe7e7!important}.w3-border-pale-green,.w3-hover-border-pale-green:hover{border-color:#e7ffe7!important}
+			.w3-border-pale-yellow,.w3-hover-border-pale-yellow:hover{border-color:#ffffcc!important}.w3-border-pale-blue,.w3-hover-border-pale-blue:hover{border-color:#e7ffff!important}
+
+			.bigger {font-size:135%;color:#4caf50;font-weight: bold;}
+			.red-warning {color:#f44336;font-weight: bold;}
+			.orange-caution {color:#ff9800;font-weight: bold;}
+			.green-ok {color:#4caf50;font-weight: bold;}
+
+			body {
+				max-width: 1280px;
+				min-width: 1280px;
+				border: 1px solid black;
+				margin: auto;
+			}
+			.justified-text {
+				text-align: justify;
+			}
+			* {
+				box-sizing: border-box;
+			}
+			#textarea_MT_pulseList {
+				width: 100%;
+				font-family: monospace;
+				font-size: min(3vw,15px);
+			}
+			.column2-hide {
+				display: none;
+			}
+			.both {
+				display: flex;
+				gap: 0.2%;
+			}
+			.wide_column {
+				vertical-align:top;
+				width: 54.9%;
+			}
+			.narrow_column {
+				vertical-align:top;
+				width: 44.9%;
+			}
+			.equal_column {
+				vertical-align:top;
+				width: 49.9%;
+			}
+
+			@media screen and (max-width: 1280px) {
+				* {
+					box-sizing: border-box;
+				}
+				body {
+					max-width: 640px;
+					min-width: 640px;
+					border: 1px solid black;
+					margin: auto;
+				}
+				.both {
+					display: block;
+					gap: 0%;
+				}
+				.wide_column, .narrow_column, .equal_column {
+					display: block;
+					width: 100%;
+				}
+				.column2-hide {
+					display: block;
+				}
+
+				h1{font-size:30px}
+				h2{font-size:24px}
+				h3{font-size:20px}
+				h4{font-size:18px}
+				h5{font-size:16px}
+				h6{font-size:14px}
+			}
+		</style>
+
+		<script type="text/javascript">
+			// An example implementation of a TMS motor threshold (MT) estimator class
+			const versionStr = '1.8.1';
+			const versionDate = 'June 5, 2025';
+
+			var MT_estimator;
+
+			class SA_MT_estimator {							// Stochastic approximation (SA). AKA stochastic root-finding
+				constructor(MT_0, Vpp_th, digital, adaptive, a_0) {
+					this.validateInitialParameters(MT_0, Vpp_th, digital, a_0);
+
+					// Initialize the class
+					this.Vpp_th = Vpp_th;					// μV
+					this.digital = digital;					// boolean
+					this.adaptive = adaptive;				// boolean
+					this.a_0 = a_0;							// % MSO
+
+					this.pulses = [];						// List of intensity of TMS pulses, % MSO
+					this.Vpps = [];							// List of Vpp EMG responses, one for each pulse. Only relevant for analog method, μV
+					this.MEPs = [];							// List of binary responses, one for each pulse, boolean
+					this.countMEPs = [];					// Count of suprathreshold responses over the past 10 pulses
+					this.sign_changes = 0;					// Number of sign changes for adaptive stepping. Not used for non-adaptive methods
+					this.steps = [];						// List of steps, a_i/i*deltaY
+					this.deltaYs = [];						// List of deltaY. Digital version: 1 & -1. Analog version: log10(Vpp/Vpp_th).
+					this.MT_nextPulse = Math.round(MT_0);	// Stimulator output for the next TMS pulse to be delivered.
+					this.MT_estimate = [MT_0];				// Current estimate of the MT.
+					this.MT_estimate_CI = [];	 			// Current confidence interval for the MT: range of probable values at step 20 or 10 steps after current step
+
+					this.rate_info = [];					// Info of response rate, lists of [amp, counts, responses, rate] ordered by amps
+					this.MLE_MT = [];						// MLE MT
+					this.MLE_CI = [];						// MLE confidence interval
+					this.initializeLLH();
+
+					this.minAmp = this.MT_nextPulse;
+					this.maxAmp = 0;
+					this.updateRange();
+
+					this.data_saved = true;					// No need to save if just started.
+					this.figure_saved = true;
+
+					this.start_description = 20;
+				}
+
+				validateInitialParameters(MT_0, Vpp_th, digital, a_0) {
+					function isValidIntensity(value, min, max) {
+					return Number.isInteger(value) && (value > min) && (value <= max);
+					}
+
+					function isValidValue(value, min, max) {
+						return (value >= min) && (value <= max);
+					}
+
+					MT_0 = Number(MT_0);	// Convert to a number and check for a value in the desired range
+					if (!isValidIntensity(MT_0, 0, 100)) {
+						throw "Please specify an initial intensity, a number between 0 and 100.";
+					}
+
+					if (!digital) {		 // Only check definition of threshold EMG Vpp for analog methods
+						Vpp_th = Number(Vpp_th);	// Convert to a number and check for a value in the desired range
+						if (!isValidValue(Vpp_th, 10, 1000)) {
+							throw "EMG threshold is not a value between 10 μV and 1 mV.";
+						}
+					}
+
+					a_0 = Number(a_0);	  // Convert to a number and check for a value in the desired range
+					if (!isValidValue(a_0, 1, 20)) {
+						throw "Initial step is not a number between 1 and 20.";
+					}
+				}
+
+				initializeLLH() {
+					const t_step = 0.1, t_max = 150, t_min = 0.1;
+					this.t_vec = generateRange(t_min, t_max, t_step);
+					this.LLH = Array(this.t_vec.length).fill(0);
+					this.t_vec.forEach((t, i) => {
+						this.LLH[i] = Math.log1p(-pLogistic(t_min, t)) + Math.log1p(pLogistic(t_max, t) - 1);
+					});
+				}
+
+				// Number of TMS pulses
+				get index() {
+					return this.pulses.length;
+				}
+
+				// Description of the quality of current estimation, based on relative frequency of positive/negative responses during last 10 pulses
+				get description() {
+					const getPulseCountDescription = (pulses) => {
+						return `This estimate is <span class='red-warning'>${pulses < 15 ? 'inaccurate' : 'likely inaccurate'}</span> due to too few pulses (${pulses}).`;
+					};
+
+					const getInaccurateDescription = (MEPs, additionalMessage) => {
+						const warningClass = "red-warning";
+						const countType = (this.digital && MEPs < 2) ? "few" : "many";
+						const responseType = this.digital ? "" : (MEPs > 8 ? "suprathreshold" : "subthreshold");
+						const responseCount = this.digital ? MEPs : (MEPs < 2 ? MEPs : 10 - MEPs);
+						return `<span class='${warningClass}'>Warning!</span> This estimate is <span class='${warningClass}'>likely inaccurate</span>
+							because the last 10 pulses have too ${countType} ${responseType} responses (${responseCount}). ${additionalMessage}`;
+					};
+
+					const getBorderlineDescription = (MEPs, additionalMessage) => {
+						const cautionClass = "orange-caution";
+						const countType = (this.digital && MEPs === 2) ? "few" : "many";
+						const responseType = this.digital ? "" : (MEPs === 8 ? "suprathreshold" : "subthreshold");
+						const responseCount = this.digital ? MEPs : (MEPs < 2 ? MEPs : 10 - MEPs);
+						return `<span class='${cautionClass}'>Caution!</span> This estimate is <span class='${cautionClass}'>borderline accurate</span>
+							because the last 10 pulses have ${countType} ${responseType} responses (${MEPs}). ${additionalMessage}`;
+					};
+
+					const getAccurateDescription = (MEPs) => {
+						const tmp_msg = this.digital
+							? `responses (${MEPs}) and no responses (${10 - MEPs})`
+							: `suprathreshold (${MEPs}) and subthreshold (${10 - MEPs}) responses`;
+						return `This estimate is <span class='green-ok'>potentially accurate</span> with a reasonable number of both ${tmp_msg} during the last 10 pulses.`;
+					};
+
+					if (this.index < this.start_description) {
+						const message = this.index < 15 ? 'inaccurate' : 'likely inaccurate';
+						return getPulseCountDescription(this.index, message);
+					} else {
+						// A good estimation sequence must have both MEPs and no MEPs towards the end, count last 10 pulses
+						const MEPs = this.countMEPs[this.index - 1];
+						const fewMorePulsesMessage = (this.index < 29) ? "Give a few more pulses." : "";
+						const lowHighMessage = (MEPs <= 2) ? "higher" : "lower";
+						const restartMessage = (this.index >= 29) ? `Restart at a ${lowHighMessage} initial TMS intensity, or ` : "";
+						const evaluateMessage = (this.index >= 29) ? `Evaluate the procedure, especially the last 10 pulses to determine whether to accept this estimate,
+							restart at a ${lowHighMessage} initial TMS intensity, or ` : "";
+
+						const commonInaccuracyMessage = `${fewMorePulsesMessage}${restartMessage}`;
+						const borderlineMessage = `${fewMorePulsesMessage}${evaluateMessage}`;
+
+						if (MEPs < 2 || MEPs > 8) {
+							return getInaccurateDescription(MEPs, commonInaccuracyMessage);
+						} else if (MEPs === 2 || MEPs === 8){
+							return getBorderlineDescription(MEPs, borderlineMessage);
+						} else {
+							return getAccurateDescription(MEPs);
+						}
+					}
+				}
+
+				stimulate(MEP, Vpp) {									// Update routine
+					this.pulses.push(this.MT_nextPulse);				// Increment pulse list with the current pulse
+					const index = this.index;
+
+					const actualMEP = this.calculateActualMEP(MEP, Vpp);
+					const deltaY = this.calculateDeltaY(MEP, Vpp);
+					const countMEPs = this.calculateCountMEP(index, actualMEP);
+
+					this.MEPs.push(actualMEP);
+					this.deltaYs.push(deltaY);
+					this.countMEPs.push(countMEPs);
+
+					if (!this.digital) {
+						this.Vpps.push(Vpp);							// Only utilized for analog methods
+					}
+
+					if (this.adaptive && index > 1 && actualMEP != this.MEPs[index - 2]) {	// Adaptive stepping after step 1
+						this.sign_changes ++;	// Number of sign changes
+					}
+
+					// Calculate step size and update MT estimate
+					const actualIndex = this.adaptive ? (this.sign_changes + 1) : index;
+					const step = -this.a_0 / actualIndex * deltaY;
+					this.steps.push(step);
+					this.MT_estimate.push(Math.max(0, Math.min(101, this.MT_estimate[index - 1] + step)));	// MT estimate clamped to 0 on lower end and 101 on higher end
+					this.updateCI(index, this.MT_estimate[index]);
+					this.updateRateInfo(this.rate_info, this.pulses[index-1], actualMEP);
+					this.updateMLE(actualMEP);
+
+					// Update the next pulse intensity, clamped between 1 and 100
+					this.MT_nextPulse = Math.max(1, Math.min(100, Math.round(this.MT_estimate[index])));
+					this.updateRange();
+
+					this.data_saved = false;
+					this.figure_saved = false;
+				}
+
+				calculateActualMEP(MEP, Vpp) {
+					return (this.digital)
+						? MEP
+						: (Vpp >= this.Vpp_th);				// Use Vpp to determine MEP, not dummy input for analog methods
+				}
+
+				calculateDeltaY(MEP, Vpp) {
+					return (this.digital)
+						? (MEP ? 1 : -1)					// Step for updating the MT estimate based on binary MEP response (specific to DCS)
+						: Math.log10(Vpp / this.Vpp_th);	// Step for updating the MT estimate based on Vpp response (specific to ACS)
+				}
+
+				calculateCountMEP(index, actualMEP) {
+					if (index === 1) {
+						return (actualMEP ? 1 : 0);
+					} else if (index <= 10) {
+						return this.countMEPs[index-2] + (actualMEP ? 1 : 0);
+					} else {
+						return this.countMEPs[index-2] + ((actualMEP === this.MEPs[index-1-10]) ? 0 : (actualMEP ? 1 : -1));
+					}
+				}
+
+				updateCI(index, MT_estimate) {		// index is NOT actualIndex!!
+					const temp_list = [
+						0.2669, 0.1612, 0.1218, 0.1009, 0.0876, 0.0784, 0.0715, 0.0662, 0.0618, 0.0582,
+						0.0552, 0.0526, 0.0503, 0.0483, 0.0465, 0.0449, 0.0434, 0.0421, 0.0409, 0.0398,
+						0.0388, 0.0378, 0.0370, 0.0361, 0.0354, 0.0346, 0.0340, 0.0333, 0.0327
+					];		// 0.07 * Math.sqrt(Math.PI / 2) * tinv(0.975, index+1) / Math.sqrt(index + 1)
+					// const a0_opt = 0.07 * Math.sqrt(Math.PI / 2) * MT_estimate;
+					// const tmp = norminv(0.975) * a0_opt / Math.sqrt(index + 1);
+
+					if (index < 1 || index > temp_list.length) {
+						throw new Error('Index out of bounds');
+					}
+
+					const tmp = temp_list[index - 1] * MT_estimate;
+					this.MT_estimate_CI.push([MT_estimate - tmp, MT_estimate + tmp]);
+				}
+
+				updateRateInfo(rateInfo, pulse, actualMEP) {
+					const numericMEP = Number(actualMEP);
+					let index = rateInfo.findIndex(info => pulse <= info[0]);
+
+					if (index === -1) {
+						rateInfo.push([pulse, 1, numericMEP, numericMEP]);
+					} else if (pulse === rateInfo[index][0]) {
+						rateInfo[index] = [
+							rateInfo[index][0],
+							rateInfo[index][1] + 1,
+							rateInfo[index][2] + numericMEP,
+							(rateInfo[index][2] + numericMEP) / (rateInfo[index][1] + 1)
+						];
+					} else {
+						rateInfo.splice(index, 0, [pulse, 1, numericMEP, numericMEP]);
+					}
+				}
+
+				updateMLE(actualMEP) {
+					this.LLH = this.LLH.map(
+						(value, i) => {
+							const pL = pLogistic(this.MT_nextPulse, this.t_vec[i]);
+							return value + (actualMEP ? Math.log1p(pL - 1) : Math.log1p(-pL));
+						}
+					);
+
+					const ind_ML = this.LLH.indexOf(Math.max(...this.LLH));	// Find the index of the maximum LLH value
+					this.MLE_MT.push(this.t_vec[ind_ML]);	// Update MLE_MT with the corresponding value from t_vec
+
+					let ind1 = this.LLH.slice(0, ind_ML).findIndex((value, i) => value >= this.LLH[ind_ML] - 1.92);
+					if (ind1 === -1) ind1 = 0;
+					let ind2 = this.LLH.slice(ind_ML + 1).findLastIndex(value => value >= this.LLH[ind_ML] - 1.92);
+					if (ind2 === -1) {
+						ind2 = this.t_vec.length - 1;
+					} else {
+						ind2 += ind_ML + 1; // Adjust index since we sliced from ind_ML + 1
+					}
+					this.MLE_CI.push([this.t_vec[ind1], this.t_vec[ind2]]);
+				}
+
+				updateRange() {
+					let minX = Math.min(...this.MT_estimate) - 2.5 * (1 + (this.index < 1));
+					let maxX = Math.max(...this.MT_estimate) + 2.5 * (1 + (this.index < 1))
+
+					minX = Math.floor(minX / 5) * 5;
+					maxX = Math.ceil( maxX / 5) * 5;
+
+					this.minAmp = Math.min(Math.max(minX, 0), this.minAmp);
+					this.maxAmp = Math.max(Math.min(maxX, 101), this.maxAmp);
+				}
+			}
+
+			// Logistic function for MLE
+			function pLogistic(x, t) {
+				if (t <= 0) {
+					throw new Error("Invalid input: parameter 't' must be positive.");
+				}
+				const k = 4 / (0.07 * t * Math.sqrt(2 * Math.PI));
+				return 1 / (1 + Math.exp(-k * (x - t)));
+			}
+
+			// Linear range
+			function generateRange(start, end, interval) {
+				return Array.from({
+					length: Math.floor((end - start) / interval) + 1 },
+					(v, i) => start + i * interval);
+			}
+
+			// Initializes the user interface
+			function MT_UI_start() {
+				// Cache DOM elements
+				const radioDigital = document.getElementById("radio_digital");
+				const radioAdapt = document.getElementById("radio_adapt");
+				const radioNonAdapt = document.getElementById("radio_non_adapt");
+				const radioDefault_a0 = document.getElementById("radio_default_a0");
+				const methodSelectionMsg = document.getElementById("Method_selection_msg");
+				const autosaveCheckbox = document.getElementById("autosave");
+				const autosavefigCheckbox = document.getElementById("autosavefig");
+				const inputVppTh = document.getElementById("input_Vpp_th");
+				const inputCustomA0 = document.getElementById("input_custom_a0");
+				const inputMT0 = document.getElementById("input_MT_0");
+				const inputVpp = document.getElementById("input_Vpp");
+				const buttonMTReset = document.getElementById("button_MT_reset");
+
+				// Set default values based on local storage
+				radioDigital.checked = true;
+				localStorage.setItem("tms_samt_stepping_method", "adapt");
+				radioAdapt.checked = true;  //(localStorage.getItem("tms_samt_stepping_method") === "adapt");
+				radioNonAdapt.checked = !radioAdapt.checked;
+				// methodSelectionMsg.innerHTML = radioAdapt.checked
+				// 	? "<strong>DCS-HA</strong>: digital control sequence, harmonic convergence, adaptive stepping."
+				// 	: "<strong>DCS-H</strong>: digital control sequence, harmonic convergence, fixed stepping.";
+
+				autosaveCheckbox.checked = (localStorage.getItem("tms_samt_autosave") === "autosave_checked");
+				autosavefigCheckbox.checked = (localStorage.getItem("tms_samt_autosavefig") === "autosavefig_checked");
+
+				radioDefault_a0.checked = true;
+
+				inputVppTh.disabled = true;
+				inputVppTh.value = 50;
+				inputCustomA0.disabled = true;
+				inputCustomA0.value = getDefault_a0().toFixed(1);
+
+				inputMT0.value = "";
+				inputVpp.value = "";
+
+				buttonMTReset.disabled = true;
+
+				document.getElementById("version_info").innerHTML = `Version&nbsp;${versionStr},&nbsp;${versionDate}`;
+				document.getElementById("header_ver").innerHTML = `v${versionStr}`;
+
+				// Add keyboard event listener
+				document.addEventListener("keydown", MT_keyboard, true);
+
+				document.getElementById('button_MT_start' ).addEventListener('click', function() {MT_start();});
+				document.getElementById('button_MT_reset' ).addEventListener('click', function() {MT_reset();});
+				document.getElementById('button_MT_MEP'   ).addEventListener('click', function() {MT_stimulate(true);});
+				document.getElementById('button_MT_noMEP' ).addEventListener('click', function() {MT_stimulate(false);});
+				document.getElementById('button_Enter_Vpp').addEventListener('click', function() {MT_stimulate(false);});
+				document.getElementById('button_MT_refine').addEventListener('click', function() {MT_refine();});
+
+				document.getElementById('DownloadFile_botton' ).addEventListener('click', function() {downloadFile();});
+				document.getElementById('CopyClipboard_botton').addEventListener('click', function() {copyToClipboard();});
+				document.getElementById('SaveImage_botton'    ).addEventListener('click', function() {saveImageFile('canvas_response');});
+
+				document.getElementById('radio_non_adapt' ).addEventListener('click', function() {handleClickA(this);});
+				document.getElementById('radio_adapt'     ).addEventListener('click', function() {handleClickA(this);});
+				document.getElementById('radio_digital'   ).addEventListener('click', function() {handleClickCS(this);});
+				document.getElementById('radio_analog'    ).addEventListener('click', function() {handleClickCS(this);});
+				document.getElementById('radio_default_a0').addEventListener('click', function() {handleClick_a0(this);});
+				document.getElementById('radio_custom_a0' ).addEventListener('click', function() {handleClick_a0(this);});
+
+				document.getElementById('autosave').addEventListener('click', function() {autoSaveStatus();});
+				document.getElementById('autosavefig').addEventListener('click', function() {autoSaveFigStatus();});
+
+				// Update UI
+				MT_UI();
+				drawLegends();
+				drawResponses();
+				drawCountChart();
+			}
+
+			// Updates the user interface based on current state
+			function MT_UI() {
+				if (MT_estimator) {
+					// Define UI elements
+					const methodMsg = document.getElementById("MT_method_msg");
+					const nextPulseMsg = document.getElementById("MT_nextPulse_msg");
+					const estimateMsg = document.getElementById("MT_estimate_msg");
+					const estimateDescriptionMsg = document.getElementById("MT_estimateDescription_msg");
+
+					const index = MT_estimator.index;
+					const digital = MT_estimator.digital;
+
+					// Determine method and control sequence strings
+					const CS_str = digital ? "DCS-H" : "ACS-H";		// control sequence string
+					const method_str = digital						// control sequence string
+						? "Digital control sequence"
+						: "Analog control sequence";
+					const adaptiveness = MT_estimator.adaptive		// adaptiveness string
+						? "adaptive stepping"
+						: "fixed stepping";
+					const a0_str = `, initial step size <i>a</i><sub>0</sub>: ${Number(document.getElementById("input_custom_a0").value).toFixed(1)}% MSO.`;
+					//var a0_str=(document.getElementById("radio_default_a0").checked)?"default <i>a</i><sub>0</sub>. ":("custom <i>a</i><sub>0</sub>: "+a_0.toFixed(1)+"% MSO. ");
+
+					// additional information for analog methods on defined EMG threshold
+					const add_str = !digital && MT_estimator.Vpp_th !== 50
+						? `<br><strong>Non-default EMG threshold</strong>: ${MT_estimator.Vpp_th.toFixed(0)} μV<sub>pp</sub>.`
+						: "";
+
+						// Update method and estimate messages
+					methodMsg.innerHTML = `<strong>${CS_str}</strong>: ${method_str}, ${adaptiveness}${a0_str}${add_str}`;
+					nextPulseMsg.innerHTML = `Give a TMS pulse at <span class='bigger'>${MT_estimator.MT_nextPulse}% MSO</span>.`;
+
+					const x = MT_estimator.MT_estimate[index].toFixed(1);
+					//const y = index ? MT_estimator.MT_estimate_CI[index-1][0].toFixed(1) : 0;
+					const z = index ? MT_estimator.MT_estimate_CI[index - 1][1].toFixed(1) : 0;
+					const CIx = (z - x).toFixed(1);
+					const MEPs = MT_estimator.countMEPs[index - 1];
+
+					let esti_str = `Pulse No. ${index}: Current estimate of MT is `;
+					esti_str += (index < MT_estimator.start_description || MEPs < 2 || MEPs > 8)
+						? `<span class='red-warning'>${x}% MSO</span>`
+						: (MEPs === 2 || MEPs === 8)
+							? `<span class='orange-caution'>${x}% MSO</span>`
+							: `<span class='green-ok'>${x}% MSO</span>`;
+					esti_str +=".";
+					// esti_str += index
+					// 	? `, with a 95% confidence interval of +/-${CIx}% MSO.`
+					// 	: ".";
+
+					estimateMsg.innerHTML = esti_str;
+					estimateDescriptionMsg.innerHTML = MT_estimator.description;
+				} else {
+					// Update UI elements for the case where MT_estimator is not defined
+					document.getElementById("MT_method_msg").innerHTML = "";
+					document.getElementById("MT_nextPulse_msg").innerHTML = "Start procedure first.";
+					document.getElementById("MT_estimate_msg").innerHTML = "Current MT estimate is undefined.";
+					document.getElementById("MT_estimateDescription_msg").innerHTML = "";
+				}
+			}
+
+			// Keyboard event listener, for quick data entry
+			function MT_keyboard(event) {
+				// Ignore already processed events or if modifier keys are pressed
+				if (event.defaultPrevented || event.ctrlKey || event.altKey || event.shiftKey || event.metaKey) {
+					return;
+				}
+				const canContinue = MT_estimator && MT_estimator.digital && (MT_estimator.index < 29);
+				// Map keys to functions
+				const keyActions = {
+					s: () => !document.getElementById("button_MT_start" ).disabled && MT_start(),
+					r: () => !document.getElementById("button_MT_reset" ).disabled && MT_reset(),
+					f: () => !document.getElementById("button_MT_refine").disabled && MT_refine(),
+					y:     () => canContinue && MT_stimulate(true),
+					n: 	   () => canContinue && MT_stimulate(false),
+					Enter: () => canContinue && MT_stimulate(false), // Dummy for analog method
+					d: () => !document.getElementById("DownloadFile_botton" ).disabled && downloadFile(),
+					c: () => !document.getElementById("CopyClipboard_botton").disabled && copyToClipboard(),
+					v: () => !document.getElementById("SaveImage_botton"    ).disabled && saveImageFile('canvas_response')
+				};
+
+				// Execute the corresponding function if the key exists in the map
+				if (keyActions[event.key]) {
+					keyActions[event.key]();
+				}
+			}
+
+			// Process start button
+			function MT_start() {
+				// Retrieve values from input elements
+				const MT_0 = Number(document.getElementById("input_MT_0").value);
+				const Vpp_th = Number(document.getElementById("input_Vpp_th").value);
+				const digital = document.getElementById("radio_digital").checked;
+				const adaptive = document.getElementById("radio_adapt").checked;
+				const a_0 = Number(document.getElementById("input_custom_a0").value);
+
+				// Call the start procedure with extracted values
+				MT_start_proc(MT_0, Vpp_th, digital, adaptive, a_0);
+			}
+
+			// Process refine button
+			function MT_refine() {
+				if (!MT_estimator.data_saved && document.getElementById("autosave").checked) {
+					downloadFile();
+				}
+				if (!MT_estimator.figure_saved && document.getElementById("autosavefig").checked) {
+					saveImageFile('canvas_response');
+				}
+
+				const { pulses, Vpp_th, digital, adaptive, a_0 } = MT_estimator;
+				const MT_0 = pulses[MT_estimator.index - 1];
+				document.getElementById("input_MT_0").value = MT_0;
+				MT_estimator = null; // Remove MT estimator object
+				MT_start_proc(MT_0, Vpp_th, digital, adaptive, a_0);
+			}
+
+			// Start procedure
+			function MT_start_proc(MT_0, Vpp_th, digital, adaptive, a_0) {
+				try {
+					// Create MT estimator object
+					MT_estimator = new SA_MT_estimator(MT_0, Vpp_th, digital, adaptive, a_0);
+
+					const elementsToDisable = [
+						"radio_non_adapt", "radio_adapt",
+						"radio_digital", "radio_analog",
+						"radio_default_a0", "radio_custom_a0",
+						"input_MT_0", "input_custom_a0", "input_Vpp_th",
+						"button_MT_start", "button_MT_refine",
+						"autosave", "autosavefig"
+					];
+
+					const elementsToEnable = [
+						"button_MT_reset", "DownloadFile_botton",
+						"CopyClipboard_botton", "SaveImage_botton"
+					];
+
+					const elementsToHide = [
+						"Start_msg", "Refine_msg"
+					];
+
+					const elementsToShow = [
+						"Reset_msg",
+						"table_response_input", "MT_estimate_msg",
+						"MT_estimateDescription_msg"
+					];
+
+					if (digital) {							// Enable and display buttons related to digital method
+						elementsToShow.push("field_is_suprathreshold_bottoms");
+						elementsToEnable.push("button_MT_MEP");
+						elementsToEnable.push("button_MT_noMEP");
+					} else {								// Enable and display buttons related to analog method
+						elementsToShow.push("field_response_Vpp_box");
+						elementsToEnable.push("input_Vpp");
+						elementsToEnable.push("button_Enter_Vpp");
+					}
+
+					disableElements(elementsToDisable, true);
+					disableElements(elementsToEnable, false);
+					hideElements(elementsToHide, true);
+					hideElements(elementsToShow, false);
+
+					// Update textarea with version, info, and heading
+					const version_info = `SAMT version ${versionStr}, ${versionDate}.\n`;
+					const CS_str = `${digital ? 'DCS-H' : 'ACS-H'}${adaptive ? 'A' : ''}`;
+					const info_str = `Stepping method:\t${CS_str}\nStarting intensity:\t${MT_0}% MSO\nProcedure start time:\t${getCurrentDateAndTime()}\n\n`;
+					const heading_str = digital
+						? "No.\tStim.\tResp.\tStep\tNext\tMT\tCount\n"
+						: "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\tCount\n";
+					document.getElementById("textarea_MT_pulseList").innerHTML = `${version_info}${info_str}${heading_str}`;
+
+					// Update user interface
+					MT_UI();
+					drawResponses();
+					drawCountChart();
+				} catch (e) {
+					alert(e);
+				}
+			}
+
+			// Process reset button
+			function MT_reset() {
+				if (!MT_estimator.data_saved && document.getElementById("autosave").checked) {
+					downloadFile();
+				}
+				if (!MT_estimator.figure_saved && document.getElementById("autosavefig").checked) {
+					saveImageFile('canvas_response');
+				}
+
+				// Determine the states of elements based on current settings
+				const digital = document.getElementById("radio_digital").checked;
+				const default_a0 = document.getElementById("radio_default_a0").checked;
+
+				// Remove MT estimator object
+				MT_estimator = null;
+
+				// Reset button states
+				const elementsToDisable = [
+					"button_MT_reset", "button_MT_refine",
+					"button_MT_MEP", "button_MT_noMEP",
+					"button_Enter_Vpp", "input_Vpp"
+				];
+
+				const elementsToEnable = [
+					"radio_non_adapt", "radio_adapt",
+					"radio_digital", "radio_analog",
+					"radio_default_a0", "radio_custom_a0", 
+					"autosave", "autosavefig", 
+					"input_MT_0",
+					"button_MT_start"
+				];
+
+				const elementsToHide = [
+					"Reset_msg", "Refine_msg",
+					"table_response_input", "MT_estimate_msg",
+					"MT_estimateDescription_msg",
+					"field_is_suprathreshold_bottoms",
+					"field_response_Vpp_box"
+				];
+
+				const elementsToShow = [
+					"Start_msg"
+				];
+
+				if (!digital) {							//Enable threshold definition only when analog is selected
+					elementsToEnable.push("input_Vpp_th");
+				} else {
+					//elementsToHide.push("input_Vpp_th_box");
+				}
+				if (!default_a0) {
+					elementsToEnable.push("input_custom_a0");
+				}
+
+				disableElements(elementsToDisable, true);
+				disableElements(elementsToEnable, false);
+				hideElements(elementsToHide, true);
+				hideElements(elementsToShow, false);
+
+				document.getElementById("input_MT_0").value="";
+
+				// Update user inferface
+				MT_UI();
+			}
+
+			// Process stimulate button
+			function MT_stimulate(MEP) {
+				const flash_time = 5;
+				let button_name, button_color;
+				let Vpp = 50; // Default value for digital methods
+				const digital = MT_estimator.digital;
+
+				try {
+					if (!digital) {			// Get EMG response for analog methods
+						button_name = "button_Enter_Vpp";
+						Vpp = Number(document.getElementById("input_Vpp").value);
+						if (isNaN(Vpp) || Vpp <= 0 || Vpp > 1000000) {
+							throw "EMG response is not a positive value within 1 V.";
+						}
+					} else {
+						button_name = MEP ? "button_MT_MEP" : "button_MT_noMEP";
+					}
+					button_color = document.getElementById(button_name).className;
+					document.getElementById(button_name).className = "w3-black";
+
+					// Update MT estimator
+					MT_estimator.stimulate(MEP, Vpp);
+					const index = MT_estimator.index;
+
+					// Update pulse list
+					let u = MT_estimator.pulses[index - 1];
+					let v = MT_estimator.steps[index - 1];
+					v = (Math.abs(v) >= 1) ? v.toFixed(1) : v.toFixed(2);
+					v = (MT_estimator.steps[index - 1] >= 0) ? `+${v}` : v;
+					let w = MT_estimator.MT_nextPulse;
+					let x = MT_estimator.MT_estimate[index].toFixed(1);
+					let y = MT_estimator.MT_estimate_CI[index - 1][0].toFixed(1);
+					let z = MT_estimator.MT_estimate_CI[index - 1][1].toFixed(1);
+					let uu = MT_estimator.countMEPs[index - 1];
+					let vv = Math.min(10, index);
+
+					const rateInfo = MT_estimator.rate_info.find(rate_info => rate_info[0] === u);
+					const u2 = rateInfo[2];
+					const v2 = rateInfo[1];
+
+					let str = `${index}\t${u}\t`;
+					str += digital
+						? (MEP ? "Yes" : "No")
+						: `${Vpp.toFixed(0)}\t${Vpp >= MT_estimator.Vpp_th ? "Suprathreshold" : "Subthreshold"}`;
+					//str += `\t${v}\t${index < 29 ? w : ""}\t${x}\t[${y}, ${z}]\t${uu}/${vv}`;
+					str += `\t${v}\t${index < 29 ? w : ""}\t${x}\t${uu}/${vv}`;
+
+					let lines = document.getElementById("textarea_MT_pulseList").innerHTML.split("\n");
+					if (index === 29) {
+						// Insert trial end information
+						lines[4] = `Procedure end time:\t${getCurrentDateAndTime()}\nThreshold estimate:\t${x}% MSO, `;
+						lines[4] += (uu < 2 || uu > 8)
+							? "likely inaccurate"
+							: (uu === 2 || uu === 8)
+								? "borderline accurate"
+								: "likely accurate";
+						lines[4] += ` (${uu}/${vv}).\n`;
+
+						if (uu <= 2 || uu >= 8) {
+							hideElements(["Refine_msg"], false);
+							disableElements(["button_MT_refine"], false);
+						}
+					}
+					document.getElementById("textarea_MT_pulseList").innerHTML = `${lines.slice(0, 6).join("\n")}\n${str}\n${lines.slice(6).join("\n")}`;
+
+					// Update user interface
+					MT_UI();
+					drawResponses();
+					drawCountPoint();
+
+					setTimeout(() => {
+						document.getElementById(button_name).className = button_color;
+					}, flash_time);
+
+					if (index === 29) {
+						document.getElementById("MT_nextPulse_msg").innerHTML = "<strong>Procedure terminated!</strong>";
+						hideElements(["table_response_input"], true);
+						disableElements(["button_MT_MEP", "button_MT_noMEP", "button_Enter_Vpp"], true);
+
+						if (!MT_estimator.data_saved && document.getElementById("autosave").checked) {
+							downloadFile();
+						}
+						if (!MT_estimator.figure_saved && document.getElementById("autosavefig").checked) {
+							saveImageFile('canvas_response');
+						}
+					}
+				} catch (e) {
+					alert(e);
+					return;
+				}
+			}
+
+			// Disable or enable specified elements
+			function disableElements(elements, flag) {
+				elements.forEach(id => {
+					const elem = document.getElementById(id);
+					if (elem) { elem.disabled = flag; }
+				});
+			}
+
+			// Hide or show specified elements
+			function hideElements(elements, flag) {
+				elements.forEach(id => {
+					const elem = document.getElementById(id);
+					if (elem) { elem.hidden = flag; }
+				});
+			}
+
+			// Get current date and time in local format
+			function getCurrentDateAndTime() {
+				return new Date().toLocaleString();
+			}
+
+			// Handle click event for control sequence radio buttons
+			function handleClickCS(radio) {
+				//document.getElementById("input_Vpp_th_box").hidden = (radio.value === "DCS");
+				const inputVppTh = document.getElementById("input_Vpp_th");
+				inputVppTh.disabled = (radio.value === "DCS");
+				inputVppTh.value = inputVppTh.disabled ? 50 : inputVppTh.value;
+				if (inputVppTh.disabled) {
+					document.getElementById("input_Vpp").value = 50;
+				}
+				if (document.getElementById("radio_default_a0").checked) {
+					document.getElementById("input_custom_a0").value = getDefault_a0().toFixed(1);
+				}
+			}
+
+			// Handle click event for stepping method radio buttons
+			function handleClickA(radio) {
+				if (document.getElementById("radio_default_a0").checked) {
+					document.getElementById("input_custom_a0").value = getDefault_a0().toFixed(1);
+				}
+				// if (radio.value=="adapt") {
+				// 	alert("Caution! Switching to adaptive stepping.\nPlease read instructions and method descriptions.")
+				// }
+				localStorage.setItem("tms_samt_stepping_method", radio.value);
+				document.getElementById("Method_selection_msg").innerHTML =
+					(radio.value === "non_adapt") ?
+					"<strong>DCS-H</strong>: digital control sequence, harmonic convergence, fixed stepping." :
+					"<strong>DCS-HA</strong>: digital control sequence, harmonic convergence, adaptive stepping.";
+			}
+
+			// Handle click event for initial step size radio buttons
+			function handleClick_a0(radio) {
+				// document.getElementById("input_a0_box").hidden = (radio.value === "default");
+				const inputCustom_a0 = document.getElementById("input_custom_a0");
+				inputCustom_a0.disabled = (radio.value === "default");
+				inputCustom_a0.value = inputCustom_a0.disabled ? getDefault_a0().toFixed(1) : inputCustom_a0.value;
+			}
+
+			// Get default initial step size
+			function getDefault_a0() {
+				let a0 = 6.67;
+				const isDigital = document.getElementById("radio_digital").checked;
+				const isAdapt = document.getElementById("radio_adapt").checked;
+				if (isDigital) {
+					//a0 *= isAdapt ? 0.63 : 0.79;  // Optimal values: 4.2 or 5.7
+					a0 *= isAdapt ? 0.63 : 1;  // Optimal values: 4.2 or 6.7  (use original for non-adaptive)
+				} else {
+					a0 *= isAdapt ? 0.79 : 1.58;  // Optimal values: 5.7 or 10.6
+				}
+				return a0;
+			}
+
+			// Helper function to set up the canvas and context
+			function setupCanvas(canvas, marginTop, marginBottom, marginLeft, marginRight, overwrite) {
+				const ctx = canvas.getContext("2d");
+				const margin = { top: marginTop, right: marginRight, bottom: marginBottom, left: marginLeft };
+				const chartWidth = canvas.width - margin.left - margin.right;
+				const chartHeight = canvas.height - margin.top - margin.bottom;
+				if (overwrite) {
+					ctx.fillStyle = "#ffffff";
+					ctx.fillRect(0, marginTop - 8, canvas.width, chartHeight + 48); // 8 above, 40 below
+				}
+				return { canvas, ctx, margin, chartWidth, chartHeight };
+			}
+
+			// Helper function to draw axes and grid lines
+			function drawAxes(ctx, margin, chartWidth, chartHeight, canvasHeight) {
+				drawLines(ctx,
+					[margin.left, margin.left, margin.left + chartWidth],
+					[margin.top, canvasHeight - margin.bottom, canvasHeight - margin.bottom],
+					"#000000", 2);
+			}
+
+			// Helper function to draw X axis label
+			function drawXAxisLabel(ctx, margin, chartWidth, chartHeight, label, YOffset) {
+				ctx.font = "16px Arial";
+				ctx.textAlign = "center";
+				ctx.textBaseline = "alphabetic";
+				ctx.fillText(label, margin.left + chartWidth / 2, margin.top + chartHeight + YOffset);
+			}
+
+			// Helper function to draw Y axis label
+			function drawYAxisLabel(ctx, margin, chartHeight, label, XOffset) {
+				ctx.font = "16px Arial";
+				ctx.textAlign = "center";
+				ctx.textBaseline = "alphabetic";
+				ctx.save();
+				ctx.translate(margin.left - XOffset, margin.top + chartHeight / 2);
+				ctx.rotate(-Math.PI / 2);
+				ctx.fillText(label, 0, 0);
+				ctx.restore();
+			}
+
+			// Helper function to draw grid lines and labels
+			function drawXTicksAndLabels(ctx, ticks, labels, minX, maxX, minY, maxY, xScale, yScale, margin, canvasHeight, canvasWidth) {
+				ticks.forEach((tick) => {
+					if (tick >= minX && tick <= maxX) {
+						const pos =  margin.left + (tick - minX) * xScale;
+						drawLines(ctx, [pos, pos], [canvasHeight - margin.bottom - 5, canvasHeight - margin.bottom + 5], "#000000", 2);
+					}
+				});
+
+				ctx.font = "14px Arial";
+				ctx.fillStyle = "#000000";
+				ctx.textAlign = "center";
+				ctx.textBaseline = "alphabetic";
+				labels.forEach((label) => {
+					if (label >= minX && label <= maxX) {
+						const pos =  margin.left + (label - minX) * xScale;
+						ctx.fillText(label, pos, canvasHeight - margin.bottom + 20);
+						drawLines(ctx, [pos, pos], [canvasHeight - margin.bottom - 5, margin.top], "#7f7f7f7f", 1);
+					}
+				});
+			}
+
+			// Helper function to draw grid lines and labels
+			function drawYTicksAndLabels(ctx, ticks, labels, minX, maxX, minY, maxY, xScale, yScale, margin, canvasHeight, canvasWidth) {
+				ticks.forEach((tick) => {
+					if (tick >= minY && tick <= maxY) {
+						const pos = canvasHeight - margin.bottom - (tick - minY) * yScale;
+						drawLines(ctx, [margin.left - 5, margin.left + 5], [pos, pos], "#000000", 2);
+					}
+				});
+
+				ctx.font = "14px Arial";
+				ctx.fillStyle = "#000000";
+				ctx.textAlign = "right";
+				ctx.textBaseline = "middle";
+				labels.forEach((label) => {
+				if (label >= minY && label <= maxY) {
+						const pos = canvasHeight - margin.bottom - (label - minY) * yScale;
+						if (label < 1 && label > 0) {
+							ctx.fillText(label.toFixed(1), margin.left - 7, pos);
+						} else {
+							ctx.fillText(label, margin.left - 7, pos);
+						}
+						drawLines(ctx, [margin.left + 5, canvasWidth - margin.right], [pos, pos], "#7f7f7f7f", 1);
+					}
+				});
+			}
+
+			// Helper function to draw the plot points
+			function drawPlotPoints(ctx, x, y, color, radius) {
+				ctx.strokeStyle = color;
+				ctx.fillStyle = color;
+				ctx.beginPath();
+				ctx.arc(x, y, radius, 0, 2 * Math.PI);
+				ctx.fill();
+			}
+
+			// Helper function to draw lines
+			function drawLines(ctx, xList, yList, color, lineWidth) {
+				if (xList.length === yList.length) {
+					ctx.strokeStyle = color;
+					ctx.lineWidth = lineWidth;
+					ctx.beginPath();
+					xList.forEach((x, i) => {
+						if (i === 0) {
+							ctx.moveTo(x, yList[i]);
+						} else {
+							ctx.lineTo(x, yList[i]);
+						}
+					});
+					ctx.stroke();
+				}
+			}
+
+			function drawLegends() {
+				// Define minimum and maximum values for axes
+				const minX = 0, maxX = 1;
+				const minY = 0, maxY = 1;
+				const radius1 = 5, radius2 = 3.5;
+				// Set up chart properties
+				const canvas = document.getElementById("canvas_response");
+				{
+					const {ctx, margin, chartWidth, chartHeight } = setupCanvas(
+						canvas, 0, canvas.height - 36, 50, 10, true
+					);
+					// Calculate scaling factors
+					const xScale = chartWidth / (maxX - minX);
+					const yScale = chartHeight / (maxY - minY);
+					const getXPosition = x => margin.left + (x - minX) * xScale;
+					const getYPosition = y => canvas.height - margin.bottom - (y - minY) * yScale;
+
+					// Legends
+					const x1 = getXPosition(0.05);
+					const y1 = getYPosition(0.55);
+					drawPlotPoints(ctx, x1, y1, "#000000", radius2);
+					//drawLines(ctx, [x1, x1], [getYPosition(0.85), getYPosition(0.25)], "#000000", 2);
+
+					const x2 = getXPosition(0.5);
+					const y2 = getYPosition(0.75);
+					drawPlotPoints(ctx, x2, y2, "#4caf50", radius1);
+
+					const y3 = getYPosition(0.35);
+					drawPlotPoints(ctx, x2, y3, "#f44336", radius1);
+
+					ctx.fillStyle = "#000000";
+					ctx.font = "12px Arial";
+					ctx.textAlign = "left";
+					ctx.textBaseline = "middle";
+					//ctx.fillText("\t\t\tThreshold estimate & confidence interval", x1, y1);
+					ctx.fillText("\t\t\tThreshold estimate", x1, y1);
+					ctx.fillText("\t\t\tResponse present / suprathreshold", x2, y2);
+					ctx.fillText("\t\t\tResponse absent  / subthreshold", x2, y3);
+				}
+
+				// {
+				// 	const {ctx, margin, chartWidth, chartHeight } = setupCanvas(
+				// 		canvas, canvas.height / 2, canvas.height / 2 - 36, 50, 10, true
+				// 	);
+				// 	// Calculate scaling factors
+				// 	const xScale = chartWidth / (maxX - minX);
+				// 	const yScale = chartHeight / (maxY - minY);
+				// 	const getXPosition = x => margin.left + (x - minX) * xScale;
+				// 	const getYPosition = y => canvas.height - margin.bottom - (y - minY) * yScale;
+
+				// 	// Legends
+				// 	const x1 = getXPosition(0.05);
+				// 	const y1 = getYPosition(0.55);
+				// 	drawPlotPoints(ctx, x1, y1, "#00539B", radius2);
+				// 	ctx.save();
+				// 	ctx.setLineDash([5, 3]);
+				// 	drawLines(ctx, [getXPosition(0.025), getXPosition(0.075)], [y1, y1], "#00539B", 2);
+
+				// 	const x = 0.3;
+				// 	const x2 = getXPosition(x);
+				// 	const y2 = getYPosition(0.75);
+				// 	drawLines(ctx, [getXPosition(x - 0.025), getXPosition(x + 0.025)], [y2, y2], "#A020F0", 2);
+				// 	ctx.restore();
+
+				// 	const y3 = getYPosition(0.35);
+				// 	drawPlotPoints(ctx, x2, y3, "#A020F0", radius1);
+				// 	drawLines(ctx, [getXPosition(x - 0.025), getXPosition(x + 0.025)], [y3, y3], "#A020F0", 2);
+
+				// 	ctx.fillStyle = "#000000";
+				// 	ctx.font = "12px Arial";
+				// 	ctx.textAlign = "left";
+				// 	ctx.textBaseline = "middle";
+				// 	ctx.fillText("\t\t\t\t\t\tResponse rate", x1, y1);
+				// 	ctx.fillText("\t\t\t\t\t\tMLE model response rate", x2, y2);
+				// 	ctx.fillText("\t\t\t\t\t\tMLE threshold and confidence interval", x2, y3);
+				// }
+			}
+
+			function drawResponses() {
+				// Set up chart properties
+				const canvas = document.getElementById("canvas_response");
+				const { ctx, margin, chartWidth, chartHeight } = setupCanvas(
+					canvas, 40, canvas.height / 2 + 40, 50, 10, true
+				);
+
+				// Define minimum and maximum values for axes
+				const minX = 0, maxX = 30;
+				const minY = MT_estimator ? MT_estimator.minAmp : 40;
+				const maxY = MT_estimator ? MT_estimator.maxAmp : 60;
+
+				const MT_0 = MT_estimator ? MT_estimator.MT_estimate[MT_estimator.index] : 50;
+
+				// Calculate scaling factors
+				const xScale = chartWidth / (maxX - minX);
+				const yScale = chartHeight / (maxY - minY);
+
+				// Helper functions for x and y positions
+				const getXPosition = x => margin.left + (x - minX) * xScale;
+				const getYPosition = y => canvas.height - margin.bottom - (y - minY) * yScale;
+
+				// Draw axeslines
+				drawAxes(ctx, margin, chartWidth, chartHeight, canvas.height);
+
+				// Draw x & y axes tick marks and labels
+				drawXTicksAndLabels(ctx, generateRange(1, 29, 1), generateRange(5, 25, 5).concat([1,29]),
+					minX, maxX, minY, maxY, xScale, yScale, margin, canvas.height, canvas.width);
+				const interval = maxY - minY <= 30 ? 1 : 5;
+				const labels = interval === 1
+					? generateRange(minY, maxY, 5)
+					: generateRange(Math.ceil(minY / 10) * 10, Math.floor(maxY / 10) * 10, 10) ;
+				drawYTicksAndLabels(ctx, generateRange(minY, maxY, interval), labels,
+					minX, maxX, minY, maxY, xScale, yScale, margin, canvas.height, canvas.width);
+
+				// Draw x & y axes label
+				drawXAxisLabel(ctx, margin, chartWidth, chartHeight, "TMS pulse number", 35);
+				drawYAxisLabel(ctx, margin, chartHeight, "TMS intensity (% MSO)", 35);
+
+				if (MT_estimator) {
+					// First estimate at pulse No. 0
+					const { pulses, MEPs, MT_estimate, MT_estimate_CI } = MT_estimator;
+					const radius1 = 5, radius2 = 3.5;
+
+					let xList = [], yList = [];
+					MT_estimate.forEach((estimate, index) => {
+						const x1 = getXPosition(index + 1);
+						const y1 = getYPosition(MT_estimate[index]);
+						xList.push(x1);
+						yList.push(y1);
+
+						drawPlotPoints(ctx, x1, y1, "#000000", radius2);
+						// if (index > 0) {
+						// 	const y2 = getYPosition(Math.max(MT_estimate_CI[index - 1][0], minY));
+						// 	const y3 = getYPosition(Math.min(MT_estimate_CI[index - 1][1], maxY));
+						// 	drawLines(ctx, [x1, x1], [y2, y3], "#000000", 2);
+						// }
+					});
+					drawLines(ctx, xList, yList, "#000000", 2);
+					MT_estimate.forEach((estimate, index) => {
+						if (index > 0) {
+							const x1 = getXPosition(index);
+							const y1 = getYPosition(pulses[index - 1]);
+							drawPlotPoints(ctx, x1, y1, MEPs[index - 1] ? "#4caf50" : "#f44336", radius1);
+						}
+					});
+				}
+			}
+
+			function drawCountChart() {
+				// Set up chart properties
+				const canvas = document.getElementById("canvas_response");
+				const { ctx, margin, chartWidth, chartHeight } = setupCanvas(
+					canvas, canvas.height / 2 + 10, 40, 50, 10, true
+				);
+
+				// Define minimum and maximum values for axes
+				const minX = 0, maxX = 30;
+				const minY = 0, maxY = 10;
+				const xScale = chartWidth / (maxX - minX);
+				const yScale = chartHeight / (maxY - minY);
+
+				// Create background gradient
+				let grd = ctx.createLinearGradient(canvas.width / 2, margin.top, canvas.width / 2, canvas.height - margin.bottom);
+				grd.addColorStop(0.0, "#f443367f");
+				grd.addColorStop(0.1, "#f443367f");
+				grd.addColorStop(0.2, "#ff98007f");
+				grd.addColorStop(0.3, "#4caf507f");
+				grd.addColorStop(0.7, "#4caf507f");
+				grd.addColorStop(0.8, "#ff98007f");
+				grd.addColorStop(0.9, "#f443367f");
+				grd.addColorStop(1.0, "#f443367f");
+				ctx.fillStyle = grd;
+				ctx.fillRect(margin.left, margin.top, chartWidth, chartHeight);
+
+				// Overlay gradient
+				grd = ctx.createLinearGradient(margin.left, canvas.height / 2, margin.left + chartWidth, canvas.height / 2);
+				grd.addColorStop(0.0, "#ffffffff");
+				grd.addColorStop(9 / 30, "#ffffffff");
+				grd.addColorStop(24 / 30, "#ffffff00");
+				grd.addColorStop(1.0, "#ffffff00");
+				ctx.fillStyle = grd;
+				ctx.fillRect(margin.left, margin.top, chartWidth, chartHeight);
+
+				// Helper functions for x and y positions
+				const getXPosition = x => margin.left + (x - minX) * xScale;
+				const getYPosition = y => canvas.height - margin.bottom - (y - minY) * yScale;
+
+				// Draw axeslines
+				drawAxes(ctx, margin, chartWidth, chartHeight, canvas.height);
+
+				// Draw x & y axes tick marks and labels
+				drawXTicksAndLabels(ctx, generateRange(1, 29, 1), generateRange(5, 25, 5).concat([1,29]),
+					minX, maxX, minY, maxY, xScale, yScale, margin, canvas.height, canvas.width);
+				drawYTicksAndLabels(ctx, generateRange(minY, maxY, 1), generateRange(minY, maxY, 1),
+					minX, maxX, minY, maxY, xScale, yScale, margin, canvas.height, canvas.width);
+
+				// Draw x & y axes label
+				drawXAxisLabel(ctx, margin, chartWidth, chartHeight, "TMS pulse number", 35);
+				drawYAxisLabel(ctx, margin, chartHeight, "Number of responses in last 10 pulses", 35);
+			}
+
+			function drawCountPoint() {
+				// Set up chart properties
+				const canvas = document.getElementById("canvas_response");
+				const { ctx, margin, chartWidth, chartHeight } = setupCanvas(
+					canvas, canvas.height / 2 + 10, 40, 50, 10, false
+				);
+
+				// Define minimum and maximum values for axes
+				const minX = 0, maxX = 30;
+				const minY = 0, maxY = 10;
+				const xScale = chartWidth / (maxX - minX);
+				const yScale = chartHeight / (maxY - minY);
+
+				const radius = 5;
+
+				let x2 = margin.left + (MT_estimator.index - minX) * xScale;
+				let y2 = canvas.height - margin.bottom - (MT_estimator.countMEPs[MT_estimator.index - 1] - minY) * yScale;
+				let color = (MT_estimator.index <= 10) ? "#7f7f7f" : "#000000";
+
+				if (MT_estimator.index > 1) {
+					let x1 = margin.left + (MT_estimator.index - 1 - minX) * xScale;
+					let y1 = canvas.height - margin.bottom - (MT_estimator.countMEPs[MT_estimator.index - 2] - minY) * yScale;
+					drawLines(ctx, [x1, x2], [y1, y2], color, 2);
+					drawPlotPoints(ctx, x1, y1, color, radius);
+				}
+				drawPlotPoints(ctx, x2, y2, color, radius);
+			}
+
+			// Copy pulse list to clipboard
+			async function copyToClipboard() {
+				const element = document.getElementById("textarea_MT_pulseList");
+				element.select();
+				element.setSelectionRange(0, 9999);
+				try {
+					await navigator.clipboard.writeText(element.textContent);
+					alert("Copied pulse list to clipboard.");
+					MT_estimator.data_saved = true;
+				} catch {
+					alert("Copy to clipboard failed, a known problem with Android phones.");
+				}
+			}
+
+			// Download pulse list as a file
+			function downloadFile() {
+				const text = document.getElementById("textarea_MT_pulseList").innerHTML;
+				const element = document.createElement("a");
+				element.href = `data:text/plain;charset=utf-8,${encodeURIComponent(text)}`;
+				element.download = `${defaultFilename()}.txt`;
+				element.style.display = "none";
+				document.body.appendChild(element).click();
+				document.body.removeChild(element);
+				MT_estimator.data_saved = true;
+			}
+
+			// Save canvas as an image file
+			function saveImageFile(canvasName) {
+				const element = document.createElement("a");
+				element.href = document.getElementById(canvasName).toDataURL("image/png");
+				element.download = `${defaultFilename()}.png`;
+				element.style.display = "none";
+				document.body.appendChild(element).click();
+				document.body.removeChild(element);
+				MT_estimator.figure_saved = true;
+			}
+
+			// Generate a default filename based on the current date and time
+			function defaultFilename() {
+				const dateTime = new Date();
+				const M_str = `${dateTime.getMonth() + 1}`.padStart(2, '0');
+				const d_str = `${dateTime.getDate()}`.padStart(2, '0');
+				const h_str = `${dateTime.getHours()}`.padStart(2, '0');
+				const m_str = `${dateTime.getMinutes()}`.padStart(2, '0');
+				return `SAMT_${dateTime.getFullYear()}${M_str}${d_str}-${h_str}${m_str}_subjectID`;
+			}
+
+			// Update autosave status in localStorage
+			function autoSaveStatus() {
+				localStorage.setItem("tms_samt_autosave",
+					document.getElementById("autosave").checked ? "autosave_checked" : "autosave_unchecked");
+			}
+
+			function autoSaveFigStatus() {
+				localStorage.setItem("tms_samt_autosavefig",
+					document.getElementById("autosavefig").checked ? "autosavefig_checked" : "autosavefig_unchecked");
+			}
+
+			// Save data before unloading the page if autosave is enabled and data is not saved
+			window.addEventListener("beforeunload", (event) => {
+				if (MT_estimator && !MT_estimator.data_saved && document.getElementById("autosave").checked) {
+					downloadFile();
+					event.preventDefault();
+				}
+				if (MT_estimator && !MT_estimator.figure_saved && document.getElementById("autosavefig").checked) {
+					saveImageFile('canvas_response');
+					event.preventDefault();
+				}
+			});
+
+		</script>
+	</head>
+
+	<body onload="MT_UI_start()">
+		<div class="w3-container w3-indigo" id="header_top">
+			<h1>TMS Motor Threshold (MT) Estimation App</h1>
+		</div>
+
+		<div class="w3-container w3-blue">
+			<h2>Stochastic Approximator of MT (SAMT) <span style="font-size: small"><a id="header_ver" href="#header_copyright"> </a></span></h2>
+		</div>
+
+		<div class="both">
+			<div class="narrow_column">
+				<div class="w3-container w3-light-blue">
+					<h3>Initialize procedure</h3>
+				</div>
+				<div class="w3-container">
+					<fieldset>
+						<legend>Enter final TMS intensity for motor hot spot determination</legend>
+						<input type="number" id="input_MT_0" name="MT_0" max="100" min="1" placeholder=" " step="1" value=" " size="3" required="">%&nbsp;MSO
+					</fieldset>
+					<p id="Start_msg">
+						<button class="w3-green" id="button_MT_start" style="height:35px;width:80px"><u>S</u>tart</button> and move to next section.
+					</p>
+					<p id="Reset_msg" hidden="">
+						<button class="w3-black" id="button_MT_reset" style="height:35px;width:80px"><u>R</u>eset</button> to start a new procedure and change settings.
+					</p>
+					<p align="justify" style="font-size: small;">		<!-- Method selection -->
+						<output id="Method_selection_msg"></output>
+					</p>
+					<p style="font-size: small;">
+						<a href="#header_settings">Settings</a>, <a href="#header_information">instructions, and method descriptions</a>.
+					</p>
+				</div>
+			</div>
+			<div class="wide_column">
+				<div class="w3-container w3-light-blue" >
+					<h3>Motor threshold estimate</h3>
+				</div>
+				<div class="w3-container" style="height:250px">
+					<p>		<!-- Method selection -->
+						<output id="MT_method_msg" hidden=""></output>
+					</p>
+					<p>
+						<output id="MT_nextPulse_msg">Start procedure first.</output>
+					</p>
+					<div id="table_response_input" hidden="">
+						<fieldset id="field_is_suprathreshold_bottoms" hidden="">
+							<legend>TMS response present / MEP suprathreshold?</legend>
+							<button class="w3-green" id="button_MT_MEP" disabled="" style="height:50px;width:250px"><u>Y</u>es: present / suprathreshold</button>
+							<button class="w3-red" id="button_MT_noMEP" disabled="" style="height:50px;width:250px"><u>N</u>o: absent / subthreshold</button>
+						</fieldset>
+						<fieldset id="field_response_Vpp_box" hidden="">
+							<legend>TMS response</legend>
+							<div>
+								<label>EMG:</label>
+								<input type="number" id="input_Vpp" name="Vpp" max="1000000" min="0" placeholder="50" step="1" value="50" size="6" required="">
+								μV<sub>pp</sub>, (0 to 10<sup>6</sup>].
+							</div>
+							<div>
+								<button class="w3-green" id="button_Enter_Vpp" disabled="" style="height:50px;width:300px"><u>Enter</u></button>	<!--Dummy input for analog methods-->
+							</div>
+						</fieldset>
+					</div>
+					<p class="justified-text">
+						<output id="MT_estimate_msg" hidden=""></output>
+						<br>
+						<output id="MT_estimateDescription_msg" hidden=""></output>
+						<output id="Refine_msg" hidden="">
+							<button class="w3-gray" id="button_MT_refine" disabled="" style="height:35px;width:80px">re<u>f</u>ine</button> threshold estimate starting from current intensity.
+						</output>
+					</p>
+				</div>
+			</div>
+			</div>
+
+			<div class="w3-container w3-light-blue">
+				<h3>Estimation history</h3>
+			</div>
+
+		<div class="both">
+			<div class="equal_column">
+				<div class="w3-container">
+					<p>
+						<button id="DownloadFile_botton" class="w3-green" disabled="true" style="height:30px;width:100px"><u>D</u>ownload</button> or
+						<button id="CopyClipboard_botton" class="w3-green" disabled="true" style="height:30px;width:60px"><u>c</u>opy</button> data
+					</p>
+					<textarea id="textarea_MT_pulseList" rows="38" style="font-size: small;" readonly=""></textarea>
+					<p>
+						<span style="font-size: x-small"><a href="#header_top">Back to top</a>.</span>
+					</p>
+
+				</div>
+			</div>
+			<div class="equal_column">
+				<div class="w3-container" id="graphing">
+					<p>
+					<button id="SaveImage_botton" class="w3-green" disabled="true" style="height:30px;width:60px">Sa<u>v</u>e</button> image
+					</p>
+					<canvas id="canvas_response" width="600" height="750"></canvas>
+					<p class="column2-hide">
+						<span style="font-size: x-small"><a href="#header_top">Back to top</a>.</span>
+					</p>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+		<div class="w3-container w3-blue">
+			<h2>Information about this app</h2>
+		</div>
+
+		<div class="both">
+			<div class="wide_column">
+				<div class="w3-container w3-light-blue">
+					<h3 id="header_settings">Settings</h3>
+				</div>
+				<div class="w3-container">
+					<fieldset hidden="true">
+						<legend>Stepping method of control sequence</legend>
+						<div>
+							<input type="radio" id="radio_non_adapt" name="stepping_method" value="non_adapt">
+							<label for="radio_non_adapt">Fixed (DCS-H)</label>
+						</div>
+						<div>
+							<input type="radio" id="radio_adapt" name="stepping_method" value="adapt">
+							<label for="radio_adapt">Adaptive (DCS-HA)</label>
+						</div>
+					</fieldset>
+					<fieldset hidden="true">	<!-- Method selection -->
+						<legend>Estimation method</legend>
+						<fieldset>
+							<legend>Control sequence</legend>
+							<div>
+								<input type="radio" id="radio_digital" name="control_sequence" value="DCS" checked="">
+								<label for="radio_digital">Digital (default)</label>
+							</div>
+							<div>
+								<input type="radio" id="radio_analog" name="control_sequence" value="ACS">
+								<!--<div id="input_Vpp_th_box">-->
+								<label for="radio_analog">Analog. MEP threshold:</label>
+								<input type="number" id="input_Vpp_th" name="Vpp_th" max="1000" min="10" placeholder="50" step="1" value="50" size="4" disabled="" required="">
+								μV<sub>pp</sub>, [10,1000].
+							</div>
+						</fieldset>
+						<fieldset>
+							<legend>Initial step size of control sequence (<i>a</i><sub>0</sub>)</legend>
+							<div>
+								<input type="radio" id="radio_default_a0" name="a0" value="default" checked="">
+								<label for="radio_default_a0">Optimal (default)</label>
+							</div>
+							<div>
+								<input type="radio" id="radio_custom_a0" name="a0" value="custom">
+								<label for="radio_custom_a0">Custom:</label>
+								<input type="number" id="input_custom_a0" name="a0_custom" max="20" min="1" placeholder="6.7" step="0.1" value="6.7" size="4" disabled="" required="">
+								%&nbsp;MSO, [1, 20].
+							</div>
+						</fieldset>
+					</fieldset>
+
+					<div class="justified-text">
+						<p> 
+							If estimation history is not saved, automatically trigger download 
+							when (1)&nbsp;the procedure ends after pulse No.&nbsp;29 or is reset earlier, 
+							or (2)&nbsp;the page is closed or refreshed:<br>
+							<input type="checkbox" id="autosave" name="autosave" value="autosave_checked">
+							<label for="autosave">Output log</label><br>
+							<input type="checkbox" id="autosavefig" name="autosavefig" value="autosavefig_checked">
+							<label for="autosavefig">Figure</label>
+						</p>
+					</div>
+					<p>
+						<span style="font-size: x-small"><a href="#header_top">Back to top</a>.</span>
+					</p>
+				</div>
+
+				<div class="w3-container w3-light-blue">
+					<h3 id="header_information">Instructions and method description</h3>
+				</div>
+				<div class="w3-container">
+					<p class="justified-text"><strong>For fast estimation, start from an intensity that is close to the likely motor threshold (MT) 
+						and preferably <i>suprathreshold </i> (i.e., an intensity that produces motor responses more often than not). 
+						The intensity used to locate the motor hot spot is a good starting point.</strong></p>
+					<p class="justified-text">The MT is estimated using a stochastic approximation method with a digital control sequence 
+						whose step size follows harmonic convergence with adaptive stepping (DCS-HA) and an initial step size of 4.2%&nbsp;MSO. 
+						For adaptive stepping, the control sequence is adjusted only when the response changes from suprathreshold to subthreshold 
+						or vice versa. With a good initial intensity, the estimator takes on average 20&nbsp;pulses 
+						to determine the MT with median relative error |&NoBreak;<i>δ</i>&NoBreak;| of less than 1.5%.</p>
+					<p class="justified-text" style="font-size: small;"><strong>Note</strong>: The fixed stepping method DCS-H, which was available up to version 
+						<a href="https://tms-samt.github.io/previous_versions/SAMT_v1.7.4.html">1.7.4</a>, is now deprecated, because adaptive stepping 
+						is more robust with respect to subject characteristics, target muscle, starting TMS amplitude, as well as TMS device and coil.</p>
+					<!-- 
+					<p class="justified-text">Besides the count of the responses during the last 10 pulses, the distance between the SAMT threshold
+						and the maximum likelihood estimation (MLE) as well as the overlap between their corresponding confidence intervals (CI)
+						provide anothor metric for assessing the accuracy of the SAMT threshold. A closer distance between the SAMT and MLE thresholds
+						as well as a greater overlap of the CIs indicate a higher accuracy. </p>
+					<p class="justified-text">The MLE is performed on the stimuli-response sequence of SAMT, using an input-output model
+						with a sigmoidal function whose slope at the midpoint has a fixed ratio versus the midpoint based on emperical data.
+					-->
+						<!-- a logistic function whose slope at the midpoint has a fixed ratio versus the midpoint.  -->
+						<!-- This response ratio curve therefore matches the shape of an emperical model using the cummulative normal distribution.
+						<span style="font-size:x-small">
+							(see F.&nbsp;Awiszus, "Chapter 2 TMS and threshold hunting", in <i>Supplements to Clinical Neurophysiology</i>,
+							vol.&nbsp;56, Elsevier; 2003, p.&nbsp;13–23, 2003. DOI:&nbsp;<a href="https://doi.org/10.1016/S1567-424X(09)70205-3">10.1016/S1567-424X(09)70205-3</a>)
+						</span> -->
+					</p>
+					<p> Known limitations and bugs:</p>
+					<ul class="justified-text">
+						<li>The tool is provided as is. In particular, the description of the quality of the MT estimation is based on an approximate algorithm
+							which may prematurely declare the estimation “good”. The final judgement on the MT must always be made by the operator!</li>
+						<li>The stochastic approximation algorithm may attempt to step to impossible intensities for the MT estimate (below 0% or above 100%&nbsp;MSO).
+							The implementation in this app limits the next intensity between 1% and 100%&nbsp;MSO and the MT estimate between 0% and 101%&nbsp;MSO.</li>
+						<li>The copy button does not work on some mobile devices. Please copy the text manually if the copy button fails.</li>
+					</ul>
+					<p class="justified-text">All processing is done by the app locally. No data are shared online.</p>
+					<p class="justified-text">This HTML/JS application is written by Boshuo Wang and Lari M.&nbsp;Koponen, with contribution from Vedarsh U.&nbsp;Shah, Shivum Vaishnavi, and Yiwen Zhang.</p>
+					<p class="justified-text">If you have questions or feedback, please email Boshuo Wang at <a href="mailto:boshuo.wang@duke.edu">boshuo.wang@duke.edu</a>.</p>
+					<p>
+						<span style="font-size: x-small"><a href="#header_top">Back to top</a>.</span>
+					</p>
+				</div>
+
+			</div>
+			<div class="narrow_column">
+				<div class="w3-container w3-light-blue">
+					<h3 id="header_references">References</h3>
+				</div>
+				<div class="w3-container" style="font-size: small;">
+					<p class="justified-text">The stochastic approximation MT methods are described in the following manuscript,
+						which explores the performance of different control sequences, stepping adaptiveness, and initial step size:</p>
+					<ul class="justified-text">
+						<li>B.&nbsp;Wang, A.&nbsp;V.&nbsp;Peterchev, and S.&nbsp;M.&nbsp;Goetz,
+							“Three Novel Methods for Determining Motor Threshold with Transcranial Magnetic Stimulation Outperform Conventional Procedures”,
+							<i>J.&nbsp;Neural&nbsp;Eng.</i>, vol.&nbsp;20, no.&nbsp;5, 056002, Oct.&nbsp;2023.
+							<br>DOI:&nbsp;<a href="https://doi.org/10.1088/1741-2552/acf1cc">10.1088/1741-2552/acf1cc</a>.</li>
+					</ul>
+					<p class="justified-text">The choice of initial stimulation intensity close to the MT and
+						the description of the quality of the current estimation follow suggestions in:</p>
+					<ul class="justified-text">
+						<li>L.&nbsp;M.&nbsp;Koponen and A.&nbsp;V.&nbsp;Peterchev, “Preventing misestimation of transcranial magnetic stimulation motor threshold with MTAT&nbsp;2.0”,
+							<i>Brain&nbsp;Stim.</i>, vol.&nbsp;15, no.&nbsp;5, pp.&nbsp;1073–6, Sep.&nbsp;2022.
+							<br>DOI:&nbsp;<a href="https://doi.org/10.1016/j.brs.2022.07.057">10.1016/j.brs.2022.07.057</a>.</li>
+					</ul>
+					<p class="justified-text">Assessment of SAMT in clinical studies is described here:</p>
+					<ul class="justified-text">
+						<li>B.&nbsp;Wang, V.&nbsp;U.&nbsp;Shah, L.&nbsp;M.&nbsp;Koponen, 
+							A.&nbsp;D.&nbsp;Neacsiu, Z.&nbsp;J.&nbsp;Daskalakis, P.&nbsp;B.&nbsp;Fitzgerald, L.&nbsp;G.&nbsp;Appelbaum, 
+							J.&nbsp;Y.&nbsp;Choi, N.&nbsp;Gerlus, Y.&nbsp;Li, 
+							I.&nbsp;Hadas, Y.&nbsp;Sun, M.&nbsp;Poorganji, H.&nbsp;Daniels, K.&nbsp;Rodrigues,
+							E.&nbsp;S.&nbsp;Gotsis, N.&nbsp;W.&nbsp;Bailey, J.&nbsp;Raveendran, A.&nbsp;T.&nbsp;Gallo, S.&nbsp;Brinley, 
+							S.&nbsp;M.&nbsp;Goetz, and A.&nbsp;V.&nbsp;Peterchev,
+							“Stochastic Approximator of Motor Threshold (SAMT) for Transcranial Magnetic Stimulation: Online Software and Its Performance in Clinical Studies”,
+							<i>medRxiv</i>, Jun.&nbsp;2025.
+							<br>DOI:&nbsp;<a href="https://doi.org/10.1101/2025.06.03.25328918">10.1101/2025.06.03.25328918</a>.</li>
+					</ul>
+					<!--<p>Estimation of the MT's confidence interval will be implemented in future versions and described in a separate publication.</p>--->
+					<p class="column2-hide">
+						<span style="font-size: x-small"><a href="#header_top">Back to top</a>.</span>
+					</p>
+				</div>
+				<div class="w3-container w3-light-blue">
+					<h3 id="header_copyright">Copyright, licensing, and no warranty</h3>
+				</div>
+				<div class="w3-container" style="font-size: small;">
+					<!-- <span style="font-size:x-small"> -->
+						<p id="version_info" class="justified-text"></p>
+						<p class="justified-text">
+							©&nbsp;2022, Boshuo&nbsp;Wang, Lari&nbsp;M.&nbsp;Koponen, Stefan&nbsp;M.&nbsp;Goetz, Angel&nbsp;V.&nbsp;Peterchev,
+							at Duke University, the University of Birmingham.
+							All rights reserved.
+						</p>
+						<p class="justified-text">
+							The copyrights of this software are owned by Duke University and the University of Birmingham. As such, two licenses for this software are offered:
+						</p>
+						<ol class="justified-text">
+							<li>An open-source license under the <a href="https://opensource.org/license/gpl-2-0/">GPLv2 license</a> for non-commercial use.</li>
+							<li>A custom license with Duke University, for commercial use without the GPLv2 license restrictions. </li>
+						</ol>
+						<p class="justified-text">
+							As a recipient of this software, you may choose which license to receive the code under.
+							Outside contributions to the Duke-owned code base cannot be accepted
+							unless the contributor transfers the copyright to those changes over to Duke University.
+							To enter a custom license agreement without the GPLv2 license restrictions,
+							please contact the Digital Innovations Department at the Duke University Office for Translation & Commercialization (OTC)
+							(<a href="https://otc.duke.edu/digital-innovations">otc.duke.edu/digital-innovations</a>)
+							at <a href="mailto:otcquestions@duke.edu">otcquestions@duke.edu</a> with reference to “OTC File No.&nbsp;8063” in your email.
+						</p>
+						<p class="justified-text">
+							Please note that this software is distributed AS IS, WITHOUT ANY WARRANTY;
+							and without the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+						</p>
+					<!-- </span> -->
+					<p class="column2-hide">
+						<span style="font-size: x-small"><a href="#header_top">Back to top</a>.</span>
+					</p>
+				</div>
+			</div>
+
+		</div>
+		<div  class="w3-container" style="width: 100%;">
+			<hr>
+			Number of visits:
+			<!-- Default Statcounter code for TMS-SAMT https://tms-samt.github.io/ -->
+			<script type="text/javascript">
+				var sc_project=12909996;
+				var sc_invisible=0;
+				var sc_security="bdd0174f";
+				var scJsHost = "https://";
+				document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
+				"statcounter.com/counter/counter.js'></"+"script>");
+			</script>
+			<noscript>
+				<div class="statcounter">
+					<a title="Web Analytics"
+					href="https://statcounter.com/" target="_blank"><img class="statcounter"
+					src="https://c.statcounter.com/12909996/0/bdd0174f/0/" alt="Web Analytics"
+					referrerPolicy="no-referrer-when-downgrade">
+					</a>
+				</div>
+			</noscript>
+			<!-- End of Statcounter Code -->
+		</div>
+
+	</body>
+</html>
