@@ -1,6 +1,11 @@
 Access old versions using: https://tms-samt.github.io/previous_versions/FILENAME
 
 Filename				Date		Version		Description
+SAMT_v1.8.2.html			2025.06.30	1.8.2		Updated version to 1.8.2 and date to 2025.6.30.
+									Change "reset" button to "terminate/reset". 
+									Terminating/resetting procedure will automatically add trial end time and current threshold estimate with accuracy description.
+									Terminating prior to pulse 20 allows refining threshold from current amplitude.
+									
 SAMT_v1.8.1.html			2025.06.05	1.8.1		Updated version to 1.8.1 and date to 2025.6.5.
 									Updated information section to replace the conference abstract with medRxiv preprint.
 
@@ -16,6 +21,7 @@ SAMT_v1.8.0.html			2025.04.03	1.8.0		Updated version to 1.8.0 and date to 2025.4
 										Rewrote JavaScript script to simplify and optimize.
 										Improved HTML to simplify and modernize.
 									Added option for automatic download of figure.
+									Axis limits max limit increased from 100 %MSO to 101 %MSO.
 									
 SAMT_v1.7.5.html			2025.03.20	1.7.5		Updated version to 1.7.5 and date to 2025.3.20.
 									Deprecated fixed stepping method. Added note. Removed relevant stored settings.

@@ -315,9 +315,8 @@
 		</style>
 
 		<script type="text/javascript">
-			// An example implementation of a TMS motor threshold (MT) estimator class
-			const versionStr = '1.8.1';
-			const versionDate = 'June 5, 2025';
+			const versionStr = '1.8.2';
+			const versionDate = 'June 30, 2025';
 
 			var MT_estimator;
 
@@ -742,8 +741,8 @@
 				// Map keys to functions
 				const keyActions = {
 					s: () => !document.getElementById("button_MT_start" ).disabled && MT_start(),
-					r: () => !document.getElementById("button_MT_reset" ).disabled && MT_reset(),
-					f: () => !document.getElementById("button_MT_refine").disabled && MT_refine(),
+					t: () => !document.getElementById("button_MT_reset" ).disabled && MT_reset(),
+					r: () => !document.getElementById("button_MT_refine").disabled && MT_refine(),
 					y:     () => canContinue && MT_stimulate(true),
 					n: 	   () => canContinue && MT_stimulate(false),
 					Enter: () => canContinue && MT_stimulate(false), // Dummy for analog method
@@ -780,8 +779,8 @@
 					saveImageFile('canvas_response');
 				}
 
-				const { pulses, Vpp_th, digital, adaptive, a_0 } = MT_estimator;
-				const MT_0 = pulses[MT_estimator.index - 1];
+				const { MT_nextPulse, Vpp_th, digital, adaptive, a_0 } = MT_estimator;
+				const MT_0 = MT_nextPulse;;
 				document.getElementById("input_MT_0").value = MT_0;
 				MT_estimator = null; // Remove MT estimator object
 				MT_start_proc(MT_0, Vpp_th, digital, adaptive, a_0);
@@ -790,6 +789,9 @@
 			// Start procedure
 			function MT_start_proc(MT_0, Vpp_th, digital, adaptive, a_0) {
 				try {
+					// Remove MT estimator object
+					MT_estimator = null;
+					
 					// Create MT estimator object
 					MT_estimator = new SA_MT_estimator(MT_0, Vpp_th, digital, adaptive, a_0);
 
@@ -863,12 +865,9 @@
 				const digital = document.getElementById("radio_digital").checked;
 				const default_a0 = document.getElementById("radio_default_a0").checked;
 
-				// Remove MT estimator object
-				MT_estimator = null;
-
 				// Reset button states
 				const elementsToDisable = [
-					"button_MT_reset", "button_MT_refine",
+					"button_MT_reset",
 					"button_MT_MEP", "button_MT_noMEP",
 					"button_Enter_Vpp", "input_Vpp"
 				];
@@ -883,9 +882,8 @@
 				];
 
 				const elementsToHide = [
-					"Reset_msg", "Refine_msg",
-					"table_response_input", "MT_estimate_msg",
-					"MT_estimateDescription_msg",
+					"Reset_msg",
+					"table_response_input",
 					"field_is_suprathreshold_bottoms",
 					"field_response_Vpp_box"
 				];
@@ -910,8 +908,44 @@
 
 				document.getElementById("input_MT_0").value="";
 
+				// Insert trial end information
+				const index = MT_estimator.index;
+				let x = MT_estimator.MT_estimate[index].toFixed(1);
+				let uu = (index) ? MT_estimator.countMEPs[index - 1] : 0;
+				let vv = Math.min(10, index);
+				let lines = document.getElementById("textarea_MT_pulseList").innerHTML.split("\n");
+				lines[4] = `Procedure end time:\t${getCurrentDateAndTime()}\nThreshold estimate:\t`;
+				lines[4] += (index) ? `${x}% MSO, ` : "N/A, ";
+				if (index < MT_estimator.start_description) {
+					lines[4] += (index < 15) 
+						? "inaccurate (too few pulses).\n"
+						: "likely inaccurate (too few pulses).\n"
+				} else {
+					lines[4] += (uu < 2 || uu > 8)
+						? "likely inaccurate"
+						: (uu === 2 || uu === 8)
+							? "borderline accurate"
+							: "likely accurate";
+					lines[4] += ` (${uu}/${vv}).\n`;
+				}
+				if (index < MT_estimator.start_description || uu <= 2 || uu >= 8) {
+					hideElements(["Refine_msg"], false);
+					disableElements(["button_MT_refine"], false);
+				}
+				document.getElementById("textarea_MT_pulseList").innerHTML = `${lines.slice(0, 6).join("\n")}\n${lines.slice(6).join("\n")}`;
+
 				// Update user inferface
 				MT_UI();
+
+				document.getElementById("MT_nextPulse_msg").innerHTML = "<strong>Procedure terminated!</strong>";
+				hideElements(["table_response_input"], true);
+				disableElements(["button_MT_MEP", "button_MT_noMEP", "button_Enter_Vpp"], true);
+				if (!MT_estimator.data_saved && document.getElementById("autosave").checked) {
+					downloadFile();
+				}
+				if (!MT_estimator.figure_saved && document.getElementById("autosavefig").checked) {
+					saveImageFile('canvas_response');
+				}
 			}
 
 			// Process stimulate button
@@ -962,21 +996,6 @@
 					str += `\t${v}\t${index < 29 ? w : ""}\t${x}\t${uu}/${vv}`;
 
 					let lines = document.getElementById("textarea_MT_pulseList").innerHTML.split("\n");
-					if (index === 29) {
-						// Insert trial end information
-						lines[4] = `Procedure end time:\t${getCurrentDateAndTime()}\nThreshold estimate:\t${x}% MSO, `;
-						lines[4] += (uu < 2 || uu > 8)
-							? "likely inaccurate"
-							: (uu === 2 || uu === 8)
-								? "borderline accurate"
-								: "likely accurate";
-						lines[4] += ` (${uu}/${vv}).\n`;
-
-						if (uu <= 2 || uu >= 8) {
-							hideElements(["Refine_msg"], false);
-							disableElements(["button_MT_refine"], false);
-						}
-					}
 					document.getElementById("textarea_MT_pulseList").innerHTML = `${lines.slice(0, 6).join("\n")}\n${str}\n${lines.slice(6).join("\n")}`;
 
 					// Update user interface
@@ -989,16 +1008,7 @@
 					}, flash_time);
 
 					if (index === 29) {
-						document.getElementById("MT_nextPulse_msg").innerHTML = "<strong>Procedure terminated!</strong>";
-						hideElements(["table_response_input"], true);
-						disableElements(["button_MT_MEP", "button_MT_noMEP", "button_Enter_Vpp"], true);
-
-						if (!MT_estimator.data_saved && document.getElementById("autosave").checked) {
-							downloadFile();
-						}
-						if (!MT_estimator.figure_saved && document.getElementById("autosavefig").checked) {
-							saveImageFile('canvas_response');
-						}
+						MT_reset();
 					}
 				} catch (e) {
 					alert(e);
@@ -1517,7 +1527,7 @@
 						<button class="w3-green" id="button_MT_start" style="height:35px;width:80px"><u>S</u>tart</button> and move to next section.
 					</p>
 					<p id="Reset_msg" hidden="">
-						<button class="w3-black" id="button_MT_reset" style="height:35px;width:80px"><u>R</u>eset</button> to start a new procedure and change settings.
+						<button class="w3-black" id="button_MT_reset" style="height:35px;width:140px"><u>T</u>erminate/reset</button> current procedure.
 					</p>
 					<p align="justify" style="font-size: small;">		<!-- Method selection -->
 						<output id="Method_selection_msg"></output>
@@ -1561,7 +1571,7 @@
 						<br>
 						<output id="MT_estimateDescription_msg" hidden=""></output>
 						<output id="Refine_msg" hidden="">
-							<button class="w3-gray" id="button_MT_refine" disabled="" style="height:35px;width:80px">re<u>f</u>ine</button> threshold estimate starting from current intensity.
+							<button class="w3-gray" id="button_MT_refine" disabled="" style="height:35px;width:80px"><u>R</u>efine</button> threshold estimate starting from current intensity.
 						</output>
 					</p>
 				</div>
