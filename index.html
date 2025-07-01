@@ -321,7 +321,7 @@
 			var MT_estimator;
 
 			class SA_MT_estimator {							// Stochastic approximation (SA). AKA stochastic root-finding
-				constructor(MT_0, Vpp_th, digital, adaptive, a_0) {
+				constructor(MT_0, Vpp_th, digital, adaptive, a_0, subject_ID) {
 					this.validateInitialParameters(MT_0, Vpp_th, digital, a_0);
 
 					// Initialize the class
@@ -354,7 +354,7 @@
 					this.figure_saved = true;
 
 					this.start_description = 20;
-					this.subjectID = document.getElementById("input_subject_ID").value;
+					this.subject_ID = subject_ID;
 				}
 
 				validateInitialParameters(MT_0, Vpp_th, digital, a_0) {
@@ -771,9 +771,9 @@
 				const digital = document.getElementById("radio_digital").checked;
 				const adaptive = document.getElementById("radio_adapt").checked;
 				const a_0 = Number(document.getElementById("input_custom_a0").value);
-
+				const subject_ID = document.getElementById("input_subject_ID").value;
 				// Call the start procedure with extracted values
-				MT_start_proc(MT_0, Vpp_th, digital, adaptive, a_0);
+				MT_start_proc(MT_0, Vpp_th, digital, adaptive, a_0, subject_ID);
 			}
 
 			// Process refine button
@@ -785,21 +785,22 @@
 					saveImageFile('canvas_response');
 				}
 
-				const { MT_nextPulse, Vpp_th, digital, adaptive, a_0 } = MT_estimator;
+				const { MT_nextPulse, Vpp_th, digital, adaptive, a_0, subject_ID } = MT_estimator;
 				const MT_0 = MT_nextPulse;;
 				document.getElementById("input_MT_0").value = MT_0;
+				document.getElementById("input_subject_ID").value = subject_ID;
 				MT_estimator = null; // Remove MT estimator object
-				MT_start_proc(MT_0, Vpp_th, digital, adaptive, a_0);
+				MT_start_proc(MT_0, Vpp_th, digital, adaptive, a_0, subject_ID);
 			}
 
 			// Start procedure
-			function MT_start_proc(MT_0, Vpp_th, digital, adaptive, a_0) {
+			function MT_start_proc(MT_0, Vpp_th, digital, adaptive, a_0, subject_ID) {
 				try {
 					// Remove MT estimator object
 					MT_estimator = null;
 					
 					// Create MT estimator object
-					MT_estimator = new SA_MT_estimator(MT_0, Vpp_th, digital, adaptive, a_0);
+					MT_estimator = new SA_MT_estimator(MT_0, Vpp_th, digital, adaptive, a_0, subject_ID);
 
 					const elementsToDisable = [
 						"radio_non_adapt", "radio_adapt",
@@ -843,8 +844,7 @@
 					// Update textarea with version, info, and heading
 					const version_info = `SAMT version ${versionStr}, ${versionDate}.\n`;
 					const CS_str = `${digital ? 'DCS-H' : 'ACS-H'}${adaptive ? 'A' : ''}`;
-					const subjectID = MT_estimator.subjectID;
-					const info_str = `Subject ID:\t\t${subjectID}\nStepping method:\t${CS_str}\nStarting intensity:\t${MT_0}% MSO\nProcedure start time:\t${getCurrentDateAndTime()}\n\n`;
+					const info_str = `Subject ID:\t\t${subject_ID}\nStepping method:\t${CS_str}\nStarting intensity:\t${MT_0}% MSO\nProcedure start time:\t${getCurrentDateAndTime()}\n\n`;
 					const heading_str = digital
 						? "No.\tStim.\tResp.\tStep\tNext\tMT\tCount\n"
 						: "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\tCount\n";
@@ -1476,8 +1476,8 @@
 				const d_str = `${dateTime.getDate()}`.padStart(2, '0');
 				const h_str = `${dateTime.getHours()}`.padStart(2, '0');
 				const m_str = `${dateTime.getMinutes()}`.padStart(2, '0');
-				const subjectID = MT_estimator.subjectID;
-				return `SAMT_${dateTime.getFullYear()}${M_str}${d_str}-${h_str}${m_str}_${subjectID}`;
+				const subject_ID = MT_estimator.subject_ID;
+				return `SAMT_${dateTime.getFullYear()}${M_str}${d_str}-${h_str}${m_str}_${subject_ID}`;
 			}
 
 			// Update autosave status in localStorage
