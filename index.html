@@ -842,7 +842,8 @@
 					// Update textarea with version, info, and heading
 					const version_info = `SAMT version ${versionStr}, ${versionDate}.\n`;
 					const CS_str = `${digital ? 'DCS-H' : 'ACS-H'}${adaptive ? 'A' : ''}`;
-					const info_str = `Stepping method:\t${CS_str}\nStarting intensity:\t${MT_0}% MSO\nProcedure start time:\t${getCurrentDateAndTime()}\n\n`;
+					const subjectID = document.getElementById("input_subject_ID").value;
+					const info_str = `Subject ID:\t\t${subjectID}\nStepping method:\t${CS_str}\nStarting intensity:\t${MT_0}% MSO\nProcedure start time:\t${getCurrentDateAndTime()}\n\n`;
 					const heading_str = digital
 						? "No.\tStim.\tResp.\tStep\tNext\tMT\tCount\n"
 						: "No.\tStim.\tEMG\tResp.\tStep\tNext\tMT\tCount\n";
@@ -859,13 +860,6 @@
 
 			// Process reset button
 			function MT_reset() {
-				if (!MT_estimator.data_saved && document.getElementById("autosave").checked) {
-					downloadFile();
-				}
-				if (!MT_estimator.figure_saved && document.getElementById("autosavefig").checked) {
-					saveImageFile('canvas_response');
-				}
-
 				// Determine the states of elements based on current settings
 				const digital = document.getElementById("radio_digital").checked;
 				const default_a0 = document.getElementById("radio_default_a0").checked;
@@ -920,25 +914,25 @@
 				let uu = (index) ? MT_estimator.countMEPs[index - 1] : 0;
 				let vv = Math.min(10, index);
 				let lines = document.getElementById("textarea_MT_pulseList").innerHTML.split("\n");
-				lines[4] = `Procedure end time:\t${getCurrentDateAndTime()}\nThreshold estimate:\t`;
-				lines[4] += (index) ? `${x}% MSO, ` : "N/A, ";
+				lines[5] = `Procedure end time:\t${getCurrentDateAndTime()}\nThreshold estimate:\t`;
+				lines[5] += (index) ? `${x}% MSO, ` : "N/A, ";
 				if (index < MT_estimator.start_description) {
-					lines[4] += (index < 15) 
+					lines[5] += (index < 15) 
 						? "inaccurate (too few pulses).\n"
 						: "likely inaccurate (too few pulses).\n"
 				} else {
-					lines[4] += (uu < 2 || uu > 8)
+					lines[5] += (uu < 2 || uu > 8)
 						? "likely inaccurate"
 						: (uu === 2 || uu === 8)
 							? "borderline accurate"
 							: "likely accurate";
-					lines[4] += ` (${uu}/${vv}).\n`;
+					lines[5] += ` (${uu}/${vv}).\n`;
 				}
 				if (index < MT_estimator.start_description || uu <= 2 || uu >= 8) {
 					hideElements(["Refine_msg"], false);
 					disableElements(["button_MT_refine"], false);
 				}
-				document.getElementById("textarea_MT_pulseList").innerHTML = `${lines.slice(0, 6).join("\n")}\n${lines.slice(6).join("\n")}`;
+				document.getElementById("textarea_MT_pulseList").innerHTML = `${lines.slice(0, 7).join("\n")}\n${lines.slice(7).join("\n")}`;
 
 				// Update user inferface
 				MT_UI();
@@ -1002,7 +996,7 @@
 					str += `\t${v}\t${index < 29 ? w : ""}\t${x}\t${uu}/${vv}`;
 
 					let lines = document.getElementById("textarea_MT_pulseList").innerHTML.split("\n");
-					document.getElementById("textarea_MT_pulseList").innerHTML = `${lines.slice(0, 6).join("\n")}\n${str}\n${lines.slice(6).join("\n")}`;
+					document.getElementById("textarea_MT_pulseList").innerHTML = `${lines.slice(0, 7).join("\n")}\n${str}\n${lines.slice(7).join("\n")}`;
 
 					// Update user interface
 					MT_UI();
@@ -1600,7 +1594,7 @@
 						<button id="DownloadFile_botton" class="w3-green" disabled="true" style="height:30px;width:100px"><u>D</u>ownload</button> or
 						<button id="CopyClipboard_botton" class="w3-green" disabled="true" style="height:30px;width:60px"><u>c</u>opy</button> data
 					</p>
-					<textarea id="textarea_MT_pulseList" rows="38" style="font-size: small;" readonly=""></textarea>
+					<textarea id="textarea_MT_pulseList" rows="39" style="font-size: small;" readonly=""></textarea>
 					<p>
 						<span style="font-size: x-small"><a href="#header_top">Back to top</a>.</span>
 					</p>
