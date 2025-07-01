@@ -315,8 +315,8 @@
 		</style>
 
 		<script type="text/javascript">
-			const versionStr = '1.8.3';
-			const versionDate = 'July 1, 2025';
+			const versionStr = '1.8.2';
+			const versionDate = 'June 30, 2025';
 
 			var MT_estimator;
 
@@ -733,11 +733,6 @@
 
 			// Keyboard event listener, for quick data entry
 			function MT_keyboard(event) {
-				// Ignore if focused element is an input or textarea
-				const id = document.activeElement.id;
-				if (id === "input_subject_ID") {
-					return;
-				}
 				// Ignore already processed events or if modifier keys are pressed
 				if (event.defaultPrevented || event.ctrlKey || event.altKey || event.shiftKey || event.metaKey) {
 					return;
@@ -804,7 +799,7 @@
 						"radio_non_adapt", "radio_adapt",
 						"radio_digital", "radio_analog",
 						"radio_default_a0", "radio_custom_a0",
-						"input_subject_ID", "input_MT_0", "input_custom_a0", "input_Vpp_th",
+						"input_MT_0", "input_custom_a0", "input_Vpp_th",
 						"button_MT_start", "button_MT_refine",
 						"autosave", "autosavefig"
 					];
@@ -882,7 +877,7 @@
 					"radio_digital", "radio_analog",
 					"radio_default_a0", "radio_custom_a0", 
 					"autosave", "autosavefig", 
-					"input_subject_ID", "input_MT_0",
+					"input_MT_0",
 					"button_MT_start"
 				];
 
@@ -912,7 +907,6 @@
 				hideElements(elementsToShow, false);
 
 				document.getElementById("input_MT_0").value="";
-				document.getElementById("input_subject_ID").value="";
 
 				// Insert trial end information
 				const index = MT_estimator.index;
@@ -1481,8 +1475,7 @@
 				const d_str = `${dateTime.getDate()}`.padStart(2, '0');
 				const h_str = `${dateTime.getHours()}`.padStart(2, '0');
 				const m_str = `${dateTime.getMinutes()}`.padStart(2, '0');
-				const subjectID = document.getElementById("input_subject_ID").value;
-				return `SAMT_${dateTime.getFullYear()}${M_str}${d_str}-${h_str}${m_str}_${subjectID}`;
+				return `SAMT_${dateTime.getFullYear()}${M_str}${d_str}-${h_str}${m_str}_subjectID`;
 			}
 
 			// Update autosave status in localStorage
@@ -1527,12 +1520,8 @@
 				</div>
 				<div class="w3-container">
 					<fieldset>
-						<legend>Subject ID</legend>
-						<input type="text" id="input_subject_ID" name="subject_ID" placeholder="Enter ID" value="" size="12" required autocomplete="off">
-					</fieldset>
-					<fieldset>
 						<legend>Enter final TMS intensity for motor hot spot determination</legend>
-						<input type="number" id="input_MT_0" name="MT_0" max="100" min="1" placeholder="" step="1" value="" size="3" required="">%&nbsp;MSO
+						<input type="number" id="input_MT_0" name="MT_0" max="100" min="1" placeholder=" " step="1" value=" " size="3" required="">%&nbsp;MSO
 					</fieldset>
 					<p id="Start_msg">
 						<button class="w3-green" id="button_MT_start" style="height:35px;width:80px"><u>S</u>tart</button> and move to next section.
@@ -1632,19 +1621,19 @@
 					<h3 id="header_settings">Settings</h3>
 				</div>
 				<div class="w3-container">
+					<fieldset hidden="true">
+						<legend>Stepping method of control sequence</legend>
+						<div>
+							<input type="radio" id="radio_non_adapt" name="stepping_method" value="non_adapt">
+							<label for="radio_non_adapt">Fixed (DCS-H)</label>
+						</div>
+						<div>
+							<input type="radio" id="radio_adapt" name="stepping_method" value="adapt">
+							<label for="radio_adapt">Adaptive (DCS-HA)</label>
+						</div>
+					</fieldset>
 					<fieldset hidden="true">	<!-- Method selection -->
 						<legend>Estimation method</legend>
-						<fieldset>
-							<legend>Stepping method of control sequence</legend>
-							<div>
-								<input type="radio" id="radio_non_adapt" name="stepping_method" value="non_adapt">
-								<label for="radio_non_adapt">Fixed (DCS-H)</label>
-							</div>
-							<div>
-								<input type="radio" id="radio_adapt" name="stepping_method" value="adapt">
-								<label for="radio_adapt">Adaptive (DCS-HA)</label>
-							</div>
-						</fieldset>
 						<fieldset>
 							<legend>Control sequence</legend>
 							<div>
