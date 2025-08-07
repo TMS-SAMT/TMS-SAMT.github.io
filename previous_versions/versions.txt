@@ -1,7 +1,17 @@
 Access old versions using: https://tms-samt.github.io/previous_versions/FILENAME
 
 Filename				Date		Version		Description
-SAMT_v1.8.3.html					2025.07.01	1.8.3		Updated version to 1.8.3 and date to 2025.7.1.
+SAMT_v1.8.4								2025.08.05	1.8.4		Updated version to 1.8.4 and date to 2025.8.5.
+									Check boxes for choosing date format in automatically generated filenames: YYYYMMDD, MMDDYYYY, or DDMMYYYY.
+									Clicker compatibility: mapped common presentation scrolling keys to response and no response for DCS.
+										Response: "ArrowLeft", "PageUp", "ArrowUp", "Backspace"
+										No response: "ArrowRight", "PageDown", "ArrowDown", "Space", "Enter"
+										Start: "F5"
+										Terminate: "Escape"
+									Added sound option for YES/NO button clicks.
+									Added characters checks for input to the subject ID (valid filaname characters only) and starting amplitude (numeric only).
+
+SAMT_v1.8.3								2025.07.01	1.8.3		Updated version to 1.8.3 and date to 2025.7.1.
 									Input box for subject ID for automatic inclusion of file names.
 									Subject ID included in log.
 									
