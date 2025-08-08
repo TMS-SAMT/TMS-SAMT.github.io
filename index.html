@@ -1802,7 +1802,7 @@
 				<div class="w3-container w3-light-blue">
 					<h3 id="header_settings">Settings</h3>
 				</div>
-				<div class="w3-container">
+				<div class="w3-container" style="height: 520px">
 					<fieldset hidden="">	<!-- Method selection -->
 						<legend>Estimation method</legend>
 						<fieldset>
@@ -1887,7 +1887,13 @@
 					<fieldset>
 						<legend>Other settings</legend>
 						<input type="checkbox" id="clickerenable" name="clickerenable" value="clicker_enabled">
-						<label for="clickerenable">Enable input from presentation clicker.</label><br>
+						<label for="clickerenable">Enable input from presentation clicker.</label> Button mapping:<br>
+						<ul class="justified-text" style="margin-top: 0; margin-bottom: 0;">
+							<li>Previous slide: Yes, response present.</li>
+							<li>Next slide: No, response abset.</li>
+							<li>Start presentation: start procedure.</li>
+							<li>End presentation: terminate/reset procedure.</li>
+						</ul>
 						<input type="checkbox" id="soundenable" name="soundenable" value="sound_enabled">
 						<label for="soundenable">Enable beeping sound for response input.</label>
 					</fieldset>	
@@ -1926,14 +1932,15 @@
 							vol.&nbsp;56, Elsevier; 2003, p.&nbsp;13–23, 2003. DOI:&nbsp;<a href="https://doi.org/10.1016/S1567-424X(09)70205-3">10.1016/S1567-424X(09)70205-3</a>)
 						</span> -->
 					</p>
-					<p> Known limitations and bugs:</p>
-					<ul class="justified-text">
-						<li>The tool is provided as is. In particular, the description of the quality of the MT estimation is based on an approximate algorithm
-							which may prematurely declare the estimation “good”. The final judgement on the MT must always be made by the operator!</li>
-						<li>The stochastic approximation algorithm may attempt to step to impossible intensities for the MT estimate (below 0% or above 100%&nbsp;MSO).
-							The implementation in this app limits the next intensity between 1% and 100%&nbsp;MSO and the MT estimate between 0% and 101%&nbsp;MSO.</li>
-						<li>The copy button does not work on some mobile devices. Please copy the text manually if the copy button fails.</li>
-					</ul>
+					<p style="margin-top: 0; margin-bottom: 0;"> Known limitations and bugs:
+						<ul class="justified-text" style="margin-top: 0; margin-bottom: 0;">
+							<li>The tool is provided as is. In particular, the description of the quality of the MT estimation is based on an approximate algorithm
+								which may prematurely declare the estimation “good”. The final judgement on the MT must always be made by the operator!</li>
+							<li>The stochastic approximation algorithm may attempt to step to impossible intensities for the MT estimate (below 0% or above 100%&nbsp;MSO).
+								The implementation in this app limits the next intensity between 1% and 100%&nbsp;MSO and the MT estimate between 0% and 101%&nbsp;MSO.</li>
+							<li>The copy button does not work on some mobile devices. Please copy the text manually if the copy button fails.</li>
+						</ul>
+					</p>
 					<p class="justified-text">All processing is done by the app locally. No data are shared online.</p>
 					<p class="justified-text">This HTML/JS application is written by Boshuo Wang and Lari M.&nbsp;Koponen, with contribution from Vedarsh U.&nbsp;Shah, Shivum Vaishnavi, and Yiwen Zhang.</p>
 					<p class="justified-text">If you have questions or feedback, please email Boshuo Wang at <a href="mailto:boshuo.wang@duke.edu">boshuo.wang@duke.edu</a>.</p>
@@ -1947,34 +1954,37 @@
 				<div class="w3-container w3-light-blue">
 					<h3 id="header_references">References</h3>
 				</div>
-				<div class="w3-container" style="font-size: small;">
-					<p class="justified-text">The stochastic approximation MT methods are described in the following manuscript,
-						which explores the performance of different control sequences, stepping adaptiveness, and initial step size:</p>
-					<ul class="justified-text">
-						<li>B.&nbsp;Wang, A.&nbsp;V.&nbsp;Peterchev, and S.&nbsp;M.&nbsp;Goetz,
-							“Three Novel Methods for Determining Motor Threshold with Transcranial Magnetic Stimulation Outperform Conventional Procedures”,
-							<i>J.&nbsp;Neural&nbsp;Eng.</i>, vol.&nbsp;20, no.&nbsp;5, 056002, Oct.&nbsp;2023.
-							<br>DOI:&nbsp;<a href="https://doi.org/10.1088/1741-2552/acf1cc">10.1088/1741-2552/acf1cc</a>.</li>
-					</ul>
-					<p class="justified-text">The choice of initial stimulation intensity close to the MT and
-						the description of the quality of the current estimation follow suggestions in:</p>
-					<ul class="justified-text">
-						<li>L.&nbsp;M.&nbsp;Koponen and A.&nbsp;V.&nbsp;Peterchev, “Preventing misestimation of transcranial magnetic stimulation motor threshold with MTAT&nbsp;2.0”,
-							<i>Brain&nbsp;Stim.</i>, vol.&nbsp;15, no.&nbsp;5, pp.&nbsp;1073–6, Sep.&nbsp;2022.
-							<br>DOI:&nbsp;<a href="https://doi.org/10.1016/j.brs.2022.07.057">10.1016/j.brs.2022.07.057</a>.</li>
-					</ul>
-					<p class="justified-text">Assessment of SAMT in clinical studies is described here:</p>
-					<ul class="justified-text">
-						<li>B.&nbsp;Wang, V.&nbsp;U.&nbsp;Shah, L.&nbsp;M.&nbsp;Koponen, 
-							A.&nbsp;D.&nbsp;Neacsiu, Z.&nbsp;J.&nbsp;Daskalakis, P.&nbsp;B.&nbsp;Fitzgerald, L.&nbsp;G.&nbsp;Appelbaum, 
-							J.&nbsp;Y.&nbsp;Choi, N.&nbsp;Gerlus, Y.&nbsp;Li, 
-							I.&nbsp;Hadas, Y.&nbsp;Sun, M.&nbsp;Poorganji, H.&nbsp;Daniels, K.&nbsp;Rodrigues,
-							E.&nbsp;S.&nbsp;Gotsis, N.&nbsp;W.&nbsp;Bailey, J.&nbsp;Raveendran, A.&nbsp;T.&nbsp;Gallo, S.&nbsp;Brinley, 
-							S.&nbsp;M.&nbsp;Goetz, and A.&nbsp;V.&nbsp;Peterchev,
-							“Stochastic Approximator of Motor Threshold (SAMT) for Transcranial Magnetic Stimulation: Online Software and Its Performance in Clinical Studies”,
-							<i>medRxiv</i>, Jun.&nbsp;2025.
-							<br>DOI:&nbsp;<a href="https://doi.org/10.1101/2025.06.03.25328918">10.1101/2025.06.03.25328918</a>.</li>
-					</ul>
+				<div class="w3-container" style="font-size: small; height: 520px">
+					<p class="justified-text" style="margin-bottom: 0;">The stochastic approximation MT methods are described in the following manuscript,
+						which explores the performance of different control sequences, stepping adaptiveness, and initial step size:
+						<ul class="justified-text" style="margin-top: 0; margin-bottom: 0;">
+							<li>B.&nbsp;Wang, A.&nbsp;V.&nbsp;Peterchev, and S.&nbsp;M.&nbsp;Goetz,
+								“Three Novel Methods for Determining Motor Threshold with Transcranial Magnetic Stimulation Outperform Conventional Procedures”,
+								<i>J.&nbsp;Neural&nbsp;Eng.</i>, vol.&nbsp;20, no.&nbsp;5, 056002, Oct.&nbsp;2023.
+								<br>DOI:&nbsp;<a href="https://doi.org/10.1088/1741-2552/acf1cc">10.1088/1741-2552/acf1cc</a>.</li>
+						</ul>
+					</p>
+					<p class="justified-text" style="margin-top: 0; margin-bottom: 0;">The choice of initial stimulation intensity close to the MT and
+						the description of the quality of the current estimation follow suggestions in:
+						<ul class="justified-text" style="margin-top: 0; margin-bottom: 0;">
+							<li>L.&nbsp;M.&nbsp;Koponen and A.&nbsp;V.&nbsp;Peterchev, “Preventing misestimation of transcranial magnetic stimulation motor threshold with MTAT&nbsp;2.0”,
+								<i>Brain&nbsp;Stim.</i>, vol.&nbsp;15, no.&nbsp;5, pp.&nbsp;1073–6, Sep.&nbsp;2022.
+								<br>DOI:&nbsp;<a href="https://doi.org/10.1016/j.brs.2022.07.057">10.1016/j.brs.2022.07.057</a>.</li>
+						</ul>
+					</p>
+					<p class="justified-text" style="margin-top: 0; margin-bottom: 0;">Assessment of SAMT in clinical studies is described here:
+						<ul class="justified-text" style="margin-top: 0; margin-bottom: 0;">
+							<li>B.&nbsp;Wang, V.&nbsp;U.&nbsp;Shah, L.&nbsp;M.&nbsp;Koponen, 
+								A.&nbsp;D.&nbsp;Neacsiu, Z.&nbsp;J.&nbsp;Daskalakis, P.&nbsp;B.&nbsp;Fitzgerald, L.&nbsp;G.&nbsp;Appelbaum, 
+								J.&nbsp;Y.&nbsp;Choi, N.&nbsp;Gerlus, Y.&nbsp;Li, 
+								I.&nbsp;Hadas, Y.&nbsp;Sun, M.&nbsp;Poorganji, H.&nbsp;Daniels, K.&nbsp;Rodrigues,
+								E.&nbsp;S.&nbsp;Gotsis, N.&nbsp;W.&nbsp;Bailey, J.&nbsp;Raveendran, A.&nbsp;T.&nbsp;Gallo, S.&nbsp;Brinley, 
+								S.&nbsp;M.&nbsp;Goetz, and A.&nbsp;V.&nbsp;Peterchev,
+								“Stochastic Approximator of Motor Threshold (SAMT) for Transcranial Magnetic Stimulation: Online Software and Its Performance in Clinical Studies”,
+								<i>medRxiv</i>, Jun.&nbsp;2025.
+								<br>DOI:&nbsp;<a href="https://doi.org/10.1101/2025.06.03.25328918">10.1101/2025.06.03.25328918</a>.</li>
+						</ul>
+					</p>
 					<!--<p>Estimation of the MT's confidence interval will be implemented in future versions and described in a separate publication.</p>--->
 					<p class="column2-hide">
 						<span style="font-size: x-small"><a href="#header_top">Back to top</a>.</span>
@@ -1991,13 +2001,13 @@
 							at Duke University, the University of Birmingham.
 							All rights reserved.
 						</p>
-						<p class="justified-text">
+						<p class="justified-text" style="margin-top: 0; margin-bottom: 0;">
 							The copyrights of this software are owned by Duke University and the University of Birmingham. As such, two licenses for this software are offered:
+							<ol class="justified-text" style="margin-top: 0; margin-bottom: 0;">
+								<li>An open-source license under the <a href="https://opensource.org/license/gpl-2-0/">GPLv2 license</a> for non-commercial use.</li>
+								<li>A custom license with Duke University, for commercial use without the GPLv2 license restrictions. </li>
+							</ol>
 						</p>
-						<ol class="justified-text">
-							<li>An open-source license under the <a href="https://opensource.org/license/gpl-2-0/">GPLv2 license</a> for non-commercial use.</li>
-							<li>A custom license with Duke University, for commercial use without the GPLv2 license restrictions. </li>
-						</ol>
 						<p class="justified-text">
 							As a recipient of this software, you may choose which license to receive the code under.
 							Outside contributions to the Duke-owned code base cannot be accepted
