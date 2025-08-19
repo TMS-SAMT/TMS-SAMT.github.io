@@ -1,6 +1,9 @@
 Access old versions using: https://tms-samt.github.io/previous_versions/FILENAME
 
 Filename				Date		Version		Description
+SAMT_v1.8.5								2025.08.18	1.8.5		Updated version to 1.8.5 and date to 2025.8.18.
+									Added SOP pdf file.
+
 SAMT_v1.8.4								2025.08.05	1.8.4		Updated version to 1.8.4 and date to 2025.8.5.
 									Check boxes for choosing date format in automatically generated filenames: YYYYMMDD, MMDDYYYY, or DDMMYYYY.
 									Clicker compatibility: mapped common presentation scrolling keys to response and no response for DCS.
