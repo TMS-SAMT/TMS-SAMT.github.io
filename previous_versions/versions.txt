@@ -1,6 +1,9 @@
 Access old versions using: https://tms-samt.github.io/previous_versions/FILENAME
 
 Filename				Date		Version		Description
+SAMT_v1.8.6								2025.10.20	1.8.6		Updated version to 1.8.6 and date to 2025.10.20.
+									Changed "subject" to "participant" throughout.
+
 SAMT_v1.8.5								2025.08.18	1.8.5		Updated version to 1.8.5 and date to 2025.8.18.
 									Added SOP pdf file.
 
