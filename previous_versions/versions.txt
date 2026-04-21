@@ -1,6 +1,10 @@
 Access old versions using: https://tms-samt.github.io/previous_versions/FILENAME
 
 Filename				Date		Version		Description
+SAMT_v1.9.0	(beta)						2026.04.16	1.9.0		Updated version to 1.9.0 and date to 2026.04.16.
+									Options for voice control.
+									Update medRxiv preprint to paper.
+
 SAMT_v1.8.7								2026.03.10	1.8.7		Updated version to 1.8.6 and date to 2026.03.10.
 									Minor correction (typos).
 
