@@ -339,6 +339,9 @@
 			var voiceLoopMode = false;
 			var voiceRestartTimer = null;
 
+			let voiceStatusTimer = null;
+			let voiceStatusLockedUntil = 0;
+
 			class SA_MT_estimator {							// Stochastic approximation (SA). AKA stochastic root-finding
 				constructor(MT_0, Vpp_th, digital, adaptive, a_0, participant_ID) {
 					this.validateInitialParameters(MT_0, Vpp_th, digital, a_0);
@@ -1685,13 +1688,34 @@
 				return null;
 			}
 
-			function setVoiceStatusMessage(message, cssClass = "") {
+			function setVoiceStatusMessage(message, cssClass = "", holdMs = 0) {
 				const voiceStatus = document.getElementById("voice_status_msg");
 				if (!voiceStatus) {
 					return;
 				}
+
+				if (voiceStatusTimer) {
+					clearTimeout(voiceStatusTimer);
+					voiceStatusTimer = null;
+				}
+
 				voiceStatus.className = cssClass ? `voice-status ${cssClass}` : "voice-status";
 				voiceStatus.textContent = message;
+
+				if (holdMs > 0) {
+					voiceStatusLockedUntil = Date.now() + holdMs;
+
+					voiceStatusTimer = setTimeout(() => {
+						voiceStatusLockedUntil = 0;
+						voiceStatusTimer = null;
+					}, holdMs);
+				} else {
+					voiceStatusLockedUntil = 0;
+				}
+			}
+
+			function voiceStatusIsLocked() {
+				return Date.now() < voiceStatusLockedUntil;
 			}
 
 			function canUseVoiceDigitalInput() {
@@ -1724,6 +1748,10 @@
 				voiceButton.textContent = voiceLoopMode ? "Stop listening" : "Listen";
 				voiceButton.disabled = !(voiceCheckbox.checked && hasSpeechRecognition);
 
+				// Do not overwrite a recent transient message unless explicitly forced
+				if (!forceStatusMessage && voiceStatusIsLocked()) {
+					return;
+				}
 				if (!hasSpeechRecognition) {
 					setVoiceStatusMessage("Voice recognition is unavailable in this browser.", "red-warning");
 					return;
@@ -1782,19 +1810,19 @@
 					const command = parseVoiceCommand(text);
 
 					if (!canUseVoiceDigitalInput()) {
-						setVoiceStatusMessage(`Heard "${text}", but digital Yes/No input is not active.`, "orange-caution");
+						setVoiceStatusMessage(`Heard "${text}", but digital Yes/No input is not active.`, "orange-caution", 1000);
 						voiceLoopMode = false;
 						return;
 					}
 
 					if (command === "yes") {
 						MT_stimulate(true);
-						setVoiceStatusMessage(`Heard "${text}". Accepted: RESPONSE YES.`, "green-ok");
+						setVoiceStatusMessage(`Heard "${text}". Accepted: RESPONSE YES.`, "green-ok", 2000);
 					} else if (command === "no") {
 						MT_stimulate(false);
-						setVoiceStatusMessage(`Heard "${text}". Accepted: RESPONSE NO.`, "green-ok");
+						setVoiceStatusMessage(`Heard "${text}". Accepted: RESPONSE NO.`, "green-ok", 2000);
 					} else {
-						setVoiceStatusMessage(`Heard "${text}". Say "RESPONSE YES" or "RESPONSE NO".`, "orange-caution");
+						setVoiceStatusMessage(`Heard "${text}". Say "RESPONSE YES" or "RESPONSE NO".`, "orange-caution", 2000);
 					}
 				};
 
