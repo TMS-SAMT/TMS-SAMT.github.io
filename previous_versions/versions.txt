@@ -1,7 +1,12 @@
 Access old versions using: https://tms-samt.github.io/previous_versions/FILENAME
 
 Filename				Date		Version		Description
-SAMT_v1.9.0	(beta)						2026.04.16	1.9.0		Updated version to 1.9.0 and date to 2026.04.16.
+SAMT_v1.9.1-beta						2026.04.21	1.9.0-beta		Updated version to 1.9.1-beta and date to 2026.04.22.
+									Fuzzy voice recognition using phrase dictionary + Levenshtein distance.
+									Include information about voice recognition API.
+
+
+SAMT_v1.9.0-beta						2026.04.16	1.9.0-beta		Updated version to 1.9.0-beta and date to 2026.04.16.
 									Options for voice control.
 									Update medRxiv preprint to paper.
 
