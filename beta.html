@@ -1961,6 +1961,7 @@
 
 				if (voiceLoopMode || voiceListening) {
 					voiceLoopMode = false;
+					voiceListening  = false;
 
 					if (voiceRestartTimer) {
 						clearTimeout(voiceRestartTimer);
@@ -2075,7 +2076,7 @@
 					<p id="Reset_msg" hidden="">
 						<button class="w3-black" id="button_MT_reset" style="height:35px;width:140px"><u>T</u>erminate/reset</button> current procedure.
 					</p>
-					<p align="justify" style="font-size: small;">		<!-- Method selection -->
+					<p style="font-size: small;text-align: justify;">		<!-- Method selection -->
 						<output id="Method_selection_msg"></output>
 					</p>
 					<p style="font-size: small;">
