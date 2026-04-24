@@ -2193,6 +2193,19 @@
 				}
 			});
 
+			function toggleSection(header) {
+				const content = header.nextElementSibling;
+				const arrow = header.querySelector(".arrow");
+
+				const isHidden = content.style.display === "none";
+
+				content.style.display = isHidden ? "block" : "none";
+
+				if (arrow) {
+					arrow.textContent = isHidden ? "▼" : "▶";
+				}
+			}
+
 		</script>
 	</head>
 
@@ -2202,7 +2215,7 @@
 		</div>
 
 		<div class="w3-container w3-blue">
-			<h2>Stochastic Approximator of MT (SAMT) <span style="font-size: small"><a id="header_ver" href="#header_copyright"> </a>, back to <a href="https://tms-samt.github.io">stable version</a></span></h2>
+			<h2>Stochastic Approximator of MT (SAMT) <span style="font-size: small"><a id="header_ver" href="#header_copyright"> </a></span></h2>
 		</div>
 
 		<div class="both">
@@ -2435,10 +2448,10 @@
 					</p>
 				</div>
 
-				<div class="w3-container w3-light-blue">
-					<h3 id="header_information">Instructions and method description</h3>
+				<div class="w3-container w3-light-blue"onclick="toggleSection(this)" style="cursor: pointer;">
+					<h3 id="header_information">Instructions and method description <span class="arrow">▼</span></h3>
 				</div>
-				<div class="w3-container">
+				<div class="w3-container" style="display: block;">
                     <p><a href="https://tms-samt.github.io/SOP_SAMT_v1.8.7.pdf">Standard operating procedure (SOP_SAMT_v1.8.7.pdf)</a></p>
 					<p class="justified-text"><strong>For fast estimation, start from an intensity that is close to the likely motor threshold (MT) 
 						and preferably <i>suprathreshold </i> (i.e., an intensity that produces motor responses more often than not). 
@@ -2490,10 +2503,10 @@
 
 			</div>
 			<div class="narrow_column">
-				<div class="w3-container w3-light-blue">
-					<h3 id="header_references">References</h3>
+				<div class="w3-container w3-light-blue" onclick="toggleSection(this)" style="cursor: pointer;">
+					<h3 id="header_references">References <span class="arrow">▶</span></h3>
 				</div>
-				<div class="w3-container" style="font-size: small; height: 620px">
+				<div class="w3-container" style="font-size: small; display: none;">
 					<p class="justified-text" style="margin-bottom: 0;">The stochastic approximation MT methods are described in the following manuscript,
 						which explores the performance of different control sequences, stepping adaptiveness, and initial step size:
 					</p>
@@ -2529,10 +2542,10 @@
 						<span style="font-size: x-small"><a href="#header_top">Back to top</a>.</span>
 					</p>
 				</div>
-				<div class="w3-container w3-light-blue">
-					<h3 id="header_copyright">Copyright, licensing, and no warranty</h3>
+				<div class="w3-container w3-light-blue" onclick="toggleSection(this)" style="cursor: pointer;">
+					<h3 id="header_copyright">Copyright, licensing, and no warranty <span class="arrow">▶</span></h3>
 				</div>
-				<div class="w3-container" style="font-size: small;">
+				<div class="w3-container"  style="font-size: small; display: none;">
 					<!-- <span style="font-size:x-small"> -->
 						<p id="version_info" class="justified-text"></p>
 						<p class="justified-text">
