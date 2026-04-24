@@ -1,6 +1,11 @@
 Access old versions using: https://tms-samt.github.io/previous_versions/FILENAME
 
 Filename				Date		Version		Description
+
+SAMT_v1.9.2-beta						2026.04.24	1.9.2-beta		Updated version to 1.9.2-beta and date to 2026.04.24.
+									Make sections collapsible.
+									Voice feedback for received input and next amplitude.
+
 SAMT_v1.9.1-beta						2026.04.21	1.9.1-beta		Updated version to 1.9.1-beta and date to 2026.04.22.
 									Fuzzy voice recognition using phrase dictionary + Levenshtein distance.
 									Include information about voice recognition API.
