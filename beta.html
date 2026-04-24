@@ -334,6 +334,10 @@
 					max-width: 600px;
 				}
 			}
+
+			[hidden] {
+				display: none !important;
+			}
 		</style>
 
 		<script type="text/javascript">
@@ -2196,13 +2200,12 @@
 			function toggleSection(header) {
 				const content = header.nextElementSibling;
 				const arrow = header.querySelector(".arrow");
+				const willOpen = content.hidden;
 
-				const isHidden = content.style.display === "none";
-
-				content.style.display = isHidden ? "block" : "none";
+				content.hidden = !willOpen;
 
 				if (arrow) {
-					arrow.textContent = isHidden ? "▼" : "▶";
+					arrow.textContent = willOpen ? "▼" : "▶";
 				}
 			}
 
@@ -2298,7 +2301,6 @@
 			<div class="w3-container w3-light-blue" onclick="toggleSection(this)" style="cursor: pointer;">
 				<h3>Estimation history <span class="arrow">▼</span></h3>
 			</div>
-
 		<div class="both">
 			<div class="equal_column">
 				<div class="w3-container" id="log">
@@ -2451,7 +2453,7 @@
 				<div class="w3-container w3-light-blue" onclick="toggleSection(this)" style="cursor: pointer;">
 					<h3 id="header_information">Instructions and method description <span class="arrow">▼</span></h3>
 				</div>
-				<div class="w3-container" style="display: block;">
+				<div class="w3-container">
                     <p><a href="https://tms-samt.github.io/SOP_SAMT_v1.8.7.pdf">Standard operating procedure (SOP_SAMT_v1.8.7.pdf)</a></p>
 					<p class="justified-text"><strong>For fast estimation, start from an intensity that is close to the likely motor threshold (MT) 
 						and preferably <i>suprathreshold </i> (i.e., an intensity that produces motor responses more often than not). 
@@ -2509,7 +2511,7 @@
 				<div class="w3-container w3-light-blue" onclick="toggleSection(this)" style="cursor: pointer;">
 					<h3 id="header_references">References <span class="arrow">▶</span></h3>
 				</div>
-				<div class="w3-container" style="font-size: small; display: none;">
+				<div class="w3-container" style="font-size: small;"  hidden>
 					<p class="justified-text" style="margin-bottom: 0;">The stochastic approximation MT methods are described in the following manuscript,
 						which explores the performance of different control sequences, stepping adaptiveness, and initial step size:
 					</p>
@@ -2550,7 +2552,7 @@
 				<div class="w3-container w3-light-blue" onclick="toggleSection(this)" style="cursor: pointer;">
 					<h3 id="header_copyright">Copyright, licensing, and no warranty <span class="arrow">▶</span></h3>
 				</div>
-				<div class="w3-container"  style="font-size: small; display: none;">
+				<div class="w3-container"  style="font-size: small;" hidden>
 					<!-- <span style="font-size:x-small"> -->
 						<p id="version_info" class="justified-text"></p>
 						<p class="justified-text">
