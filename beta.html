@@ -306,7 +306,7 @@
 				}
 				body {
 					max-width: 640px;
-					min-width: 640px;
+					min-width: 320px;
 					border: 1px solid black;
 					margin: auto;
 				}
@@ -328,6 +328,11 @@
 				h4{font-size:18px}
 				h5{font-size:16px}
 				h6{font-size:14px}
+				
+				canvas {
+					width: 93.75%; /* To maintain the ratio between canvas width to body width, 600/640 = 0.9375 */
+					max-width: 600px;
+				}
 			}
 		</style>
 
