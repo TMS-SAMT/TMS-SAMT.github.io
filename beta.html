@@ -293,7 +293,7 @@
 				min-height: 340px;
 				height: auto;
 			}
-
+			
 			.setting-note {
 				font-size: 0.85em;
 				color: #555;
@@ -334,10 +334,14 @@
 					max-width: 600px;
 				}
 			}
-
-			[hidden] {
-				display: none !important;
+			.arrow {
+				font-family: Arial, sans-serif;
+				/* font-size: 1em; */
+				/* margin-left: 0.25em; */
 			}
+			[hidden] {
+			display: none !important;
+		}
 		</style>
 
 		<script type="text/javascript">
@@ -865,7 +869,7 @@
 				const keysForNo  = ["KeyN", "ArrowRight", "PageDown", "ArrowDown", "Space", "Enter"];
 				const scrollKeys = [
 					"ArrowUp", "ArrowDown",
-                    "ArrowLeft", "ArrowLeft",
+					"ArrowLeft", "ArrowLeft",
 					"PageUp", "PageDown",
 					"Space"
 				];
@@ -1166,10 +1170,10 @@
 					if (localStorage.getItem("tms_samt_sound") === "sound_enabled") {
 						if (MEP) {
 							yesSound.currentTime = 0;
-      						yesSound.play();
+	  						yesSound.play();
 						} else {
 							noSound.currentTime = 0;
-      						noSound.play();
+	  						noSound.play();
 						}
 					}
 					speakNextPulseAnnouncement(false);
@@ -1705,7 +1709,6 @@
 				return `SAMT_${date_str}-${time_str}_${participant_ID}`;
 			}
 
-			
 			function hasSpeechSynthesisSupport() {
 				return !!(window.speechSynthesis && window.SpeechSynthesisUtterance);
 			}
@@ -1753,7 +1756,7 @@
 				const utterancetext = (firstpulse ? '' : (MEP ? 'Response Yes. ' : 'Response NO. ') ) +  `Next pulse intensity: ${nextPulse} percent MSO.`;
 				const utterance = new SpeechSynthesisUtterance(utterancetext);
 				utterance.lang = "en-US";
-				utterance.rate = 1.5;
+				utterance.rate = 1;
 				utterance.pitch = 1;
 				utterance.volume = 1;
 
@@ -1903,12 +1906,12 @@
 				const dn  = minDistanceToList(w2, noWords);
 
 				// thresholds (tune these if needed)
-				if (d1 > 2) return null;          // first word must be close to "response"
+				if (d1 > 2) return null;		  // first word must be close to "response"
 
 				// choose best match
 				const best = Math.min(dy, dn);
 
-				if (best > 2) return null;        // too far from both yes/no
+				if (best > 2) return null;		// too far from both yes/no
 
 				// ambiguity check (important!)
 				if (Math.abs(dy - dn) < 1) return null;
@@ -2169,7 +2172,7 @@
 				localStorage.setItem("tms_samt_sound",
 					document.getElementById("soundenable").checked ? "sound_enabled" : "sound_disabled");
 			}
-			
+
 			function speechOutputStatus() {
 				const speechCheckbox = document.getElementById("speechoutputenable");
 				if (!speechCheckbox) {
@@ -2200,15 +2203,38 @@
 			function toggleSection(header) {
 				const content = header.nextElementSibling;
 				const arrow = header.querySelector(".arrow");
-				const willOpen = content.hidden;
+				const sectionId = header.dataset.sectionId;
 
+				const willOpen = content.hidden;
+				
 				content.hidden = !willOpen;
 
 				if (arrow) {
-					arrow.textContent = willOpen ? "▼" : "▶";
+					arrow.textContent = willOpen ? "▾" : "▸";
 				}
+
+				localStorage.setItem(`section_${sectionId}_open`, willOpen ? "true" : "false");
 			}
 
+			function restoreCollapsibleSections() {
+				const headers = document.querySelectorAll(".collapsible-header");
+
+				headers.forEach(header => {
+					const content = header.nextElementSibling;
+					const arrow = header.querySelector(".arrow");
+					const sectionId = header.dataset.sectionId;
+
+					const isClosed = localStorage.getItem(`section_${sectionId}_open`) === "false";
+
+					content.hidden = isClosed;
+
+					if (arrow) {
+						arrow.textContent = !isClosed ? "▾" : "▸";
+					}
+				});
+			}
+
+			window.addEventListener("DOMContentLoaded", restoreCollapsibleSections);
 		</script>
 	</head>
 
@@ -2296,11 +2322,11 @@
 					</p>
 				</div>
 			</div>
-			</div>
+		</div>
 
-			<div class="w3-container w3-light-blue" onclick="toggleSection(this)" style="cursor: pointer;">
-				<h3>Estimation history <span class="arrow">▼</span></h3>
-			</div>
+		<div class="w3-container w3-light-blue collapsible-header" onclick="toggleSection(this)" style="cursor: pointer;" data-section-id="History">
+			<h3>Estimation history <span class="arrow">▾</span></h3>
+		</div>
 		<div class="both">
 			<div class="equal_column">
 				<div class="w3-container" id="log">
@@ -2335,9 +2361,9 @@
 		</div>
 
 		<div class="both">
-			<div class="wide_column">
-				<div class="w3-container w3-light-blue" onclick="toggleSection(this)" style="cursor: pointer;">
-					<h3 id="header_settings">Settings <span class="arrow">▼</span></h3>
+			<div class="narrow_column">
+			<div class="w3-container w3-light-blue collapsible-header" onclick="toggleSection(this)" style="cursor: pointer;" data-section-id="Settings">
+					<h3 id="header_settings">Settings <span class="arrow">▾</span></h3>
 				</div>
 				<div class="w3-container">
 					<fieldset hidden="">	<!-- Method selection -->
@@ -2381,7 +2407,6 @@
 							</div>
 						</fieldset>
 					</fieldset>
-
 					<fieldset>
 						<legend>Automatic file download</legend>
 						<div class="justified-text">
@@ -2434,8 +2459,8 @@
 						<input type="checkbox" id="voiceenable" name="voiceenable" value="voice_enabled">
 						<label for="voiceenable">Enable voice input (say “RESPONSE YES” or “RESPONSE NO”).</label> 
 						<div class="setting-note">
-							Uses your microphone; speech may be processed by your browser's speech recognition service (e.g., Google).
-							Not supported by some browsers, e.g., Firefox.
+							Uses your microphone; speech may be processed by your browser's speech recognition service (e.g., Google). 
+							Not supported by some browsers (e.g., Firefox).
 						</div>
 						<input type="checkbox" id="speechoutputenable" name="speechoutputenable" value="speech_output_enabled">
 						<label for="speechoutputenable">Enable verbal feedback of next TMS pulse intensity.</label>
@@ -2449,12 +2474,13 @@
 						<span style="font-size: x-small"><a href="#header_top">Back to top</a>.</span>
 					</p>
 				</div>
-
-				<div class="w3-container w3-light-blue" onclick="toggleSection(this)" style="cursor: pointer;">
-					<h3 id="header_information">Instructions and method description <span class="arrow">▼</span></h3>
+			</div>
+			<div class="wide_column">
+				<div class="w3-container w3-light-blue collapsible-header" onclick="toggleSection(this)" style="cursor: pointer;" data-section-id="Instructions">
+					<h3 id="header_information">Instructions and method description <span class="arrow">▾</span></h3>
 				</div>
 				<div class="w3-container">
-                    <p><a href="https://tms-samt.github.io/SOP_SAMT_v1.8.7.pdf">Standard operating procedure (SOP_SAMT_v1.8.7.pdf)</a></p>
+					<p><a href="https://tms-samt.github.io/SOP_SAMT_v1.8.7.pdf">Standard operating procedure (SOP_SAMT_v1.8.7.pdf)</a></p>
 					<p class="justified-text"><strong>For fast estimation, start from an intensity that is close to the likely motor threshold (MT) 
 						and preferably <i>suprathreshold </i> (i.e., an intensity that produces motor responses more often than not). 
 						The intensity used to locate the motor hot spot is a good starting point.</strong></p>
@@ -2488,12 +2514,11 @@
 							<li>The stochastic approximation algorithm may attempt to step to impossible intensities for the MT estimate (below 0% or above 100%&nbsp;MSO).
 								The implementation in this app limits the next intensity between 1% and 100%&nbsp;MSO and the MT estimate between 0% and 101%&nbsp;MSO.</li>
 							<li>The copy button does not work on some mobile devices. Please copy the text manually if the copy button fails.</li>
-							<li>Voice input requires microphone access and depends on browser support. Accuracy may vary across environments and users.</li>
 						</ul>
 					</p>
 					<p class="justified-text">All processing is performed locally within the app, except for optional voice features. 
 						When voice input is enabled, speech may be processed using the browser's built-in speech recognition services, 
-						which can transmit audio to third-party providers (e.g., Google, Apple) for recognition. 
+						which can transmit audio to third-party providers (e.g., Google, Apple) for recognition.
 						If spoken output is enabled, text may be processed by the browser's speech synthesis functionality, 
 						which may use either local or remote voices depending on the browser and system configuration. 
 						The app itself does not store or transmit voice data, transcripts, or text used for speech synthesis online.
@@ -2505,54 +2530,57 @@
 						<span style="font-size: x-small"><a href="#header_top">Back to top</a>.</span>
 					</p>
 				</div>
-
 			</div>
+		</div>
+		<div class="both">
 			<div class="narrow_column">
-				<div class="w3-container w3-light-blue" onclick="toggleSection(this)" style="cursor: pointer;">
-					<h3 id="header_references">References <span class="arrow">▶</span></h3>
+				<div class="w3-container w3-light-blue collapsible-header" onclick="toggleSection(this)" style="cursor: pointer;" data-section-id="References">
+					<h3 id="header_references">References <span class="arrow">▾</span></h3>
 				</div>
-				<div class="w3-container" style="font-size: small;"  hidden>
+				<div class="w3-container" style="font-size: small;">
 					<p class="justified-text" style="margin-bottom: 0;">The stochastic approximation MT methods are described in the following manuscript,
 						which explores the performance of different control sequences, stepping adaptiveness, and initial step size:
 					</p>
-						<ul class="justified-text" style="margin-top: 0; margin-bottom: 0;">
-							<li>B.&nbsp;Wang, A.&nbsp;V.&nbsp;Peterchev, and S.&nbsp;M.&nbsp;Goetz,
-								“Three Novel Methods for Determining Motor Threshold with Transcranial Magnetic Stimulation Outperform Conventional Procedures”,
-								<i>J.&nbsp;Neural&nbsp;Eng.</i>, vol.&nbsp;20, no.&nbsp;5, 056002, Oct.&nbsp;2023.
-								<br>DOI:&nbsp;<a href="https://doi.org/10.1088/1741-2552/acf1cc">10.1088/1741-2552/acf1cc</a>.</li>
-						</ul>
+					<ul class="justified-text" style="margin-top: 0; margin-bottom: 0;">
+						<li>B.&nbsp;Wang, A.&nbsp;V.&nbsp;Peterchev, and S.&nbsp;M.&nbsp;Goetz,
+							“Three Novel Methods for Determining Motor Threshold with Transcranial Magnetic Stimulation Outperform Conventional Procedures”,
+							<i>J.&nbsp;Neural&nbsp;Eng.</i>, vol.&nbsp;20, no.&nbsp;5, 056002, Oct.&nbsp;2023.
+							<br>DOI:&nbsp;<a href="https://doi.org/10.1088/1741-2552/acf1cc">10.1088/1741-2552/acf1cc</a>.</li>
+					</ul>
 					<p class="justified-text" style="margin-top: 0; margin-bottom: 0;">The choice of initial stimulation intensity close to the MT and
 						the description of the quality of the current estimation follow suggestions in:
 					</p>
-						<ul class="justified-text" style="margin-top: 0; margin-bottom: 0;">
-							<li>L.&nbsp;M.&nbsp;Koponen and A.&nbsp;V.&nbsp;Peterchev, “Preventing misestimation of transcranial magnetic stimulation motor threshold with MTAT&nbsp;2.0”,
-								<i>Brain&nbsp;Stim.</i>, vol.&nbsp;15, no.&nbsp;5, pp.&nbsp;1073–6, Sep.&nbsp;2022.
-								<br>DOI:&nbsp;<a href="https://doi.org/10.1016/j.brs.2022.07.057">10.1016/j.brs.2022.07.057</a>.</li>
-						</ul>
+					<ul class="justified-text" style="margin-top: 0; margin-bottom: 0;">
+						<li>L.&nbsp;M.&nbsp;Koponen and A.&nbsp;V.&nbsp;Peterchev, “Preventing misestimation of transcranial magnetic stimulation motor threshold with MTAT&nbsp;2.0”,
+							<i>Brain&nbsp;Stim.</i>, vol.&nbsp;15, no.&nbsp;5, pp.&nbsp;1073–6, Sep.&nbsp;2022.
+							<br>DOI:&nbsp;<a href="https://doi.org/10.1016/j.brs.2022.07.057">10.1016/j.brs.2022.07.057</a>.</li>
+					</ul>
 					<p class="justified-text" style="margin-top: 0; margin-bottom: 0;">
 						Assessment of SAMT in clinical studies is described here:
 					</p>
 						<ul class="justified-text" style="margin-top: 0; margin-bottom: 0;">
-							<li>B.&nbsp;Wang, V.&nbsp;U.&nbsp;Shah, L.&nbsp;M.&nbsp;Koponen, 
-								A.&nbsp;D.&nbsp;Neacsiu, Z.&nbsp;J.&nbsp;Daskalakis, P.&nbsp;B.&nbsp;Fitzgerald, L.&nbsp;G.&nbsp;Appelbaum, 
-								J.&nbsp;Y.&nbsp;Choi, N.&nbsp;Gerlus, Y.&nbsp;Li, 
-								I.&nbsp;Hadas, Y.&nbsp;Sun, M.&nbsp;Poorganji, H.&nbsp;Daniels, K.&nbsp;Rodrigues,
-								E.&nbsp;S.&nbsp;Gotsis, N.&nbsp;W.&nbsp;Bailey, J.&nbsp;Raveendran, A.&nbsp;T.&nbsp;Gallo, S.&nbsp;Brinley, 
-								S.&nbsp;M.&nbsp;Goetz, and A.&nbsp;V.&nbsp;Peterchev,
-								“Stochastic Approximator of Motor Threshold (SAMT) for Transcranial Magnetic Stimulation: Online Software and Its Performance in Clinical Studies”,
-								<i>Transcranial Magn. Stimul.</i>, vol.&nbsp;7, 100312, Jun.&nbsp;2026.
-								<br>DOI:&nbsp;<a href="https://doi.org/10.1016/j.transm.2026.100312">10.1016/j.transm.2026.100312</a>.</li>
-						</ul>
+						<li>B.&nbsp;Wang, V.&nbsp;U.&nbsp;Shah, L.&nbsp;M.&nbsp;Koponen, 
+							A.&nbsp;D.&nbsp;Neacsiu, Z.&nbsp;J.&nbsp;Daskalakis, P.&nbsp;B.&nbsp;Fitzgerald, L.&nbsp;G.&nbsp;Appelbaum, 
+							J.&nbsp;Y.&nbsp;Choi, N.&nbsp;Gerlus, Y.&nbsp;Li, 
+							I.&nbsp;Hadas, Y.&nbsp;Sun, M.&nbsp;Poorganji, H.&nbsp;Daniels, K.&nbsp;Rodrigues,
+							E.&nbsp;S.&nbsp;Gotsis, N.&nbsp;W.&nbsp;Bailey, J.&nbsp;Raveendran, A.&nbsp;T.&nbsp;Gallo, S.&nbsp;Brinley, 
+							S.&nbsp;M.&nbsp;Goetz, and A.&nbsp;V.&nbsp;Peterchev,
+							“Stochastic Approximator of Motor Threshold (SAMT) for Transcranial Magnetic Stimulation: Online Software and Its Performance in Clinical Studies”,
+							<i>Transcranial Magn. Stimul.</i>, vol.&nbsp;7, 100312, Jun.&nbsp;2026.
+							<br>DOI:&nbsp;<a href="https://doi.org/10.1016/j.transm.2026.100312">10.1016/j.transm.2026.100312</a>.</li>
+					</ul>
 					<p></p>
 					<!--<p>Estimation of the MT's confidence interval will be implemented in future versions and described in a separate publication.</p>--->
-					<p class="column2-hide">
+					<p>
 						<span style="font-size: x-small"><a href="#header_top">Back to top</a>.</span>
 					</p>
 				</div>
-				<div class="w3-container w3-light-blue" onclick="toggleSection(this)" style="cursor: pointer;">
-					<h3 id="header_copyright">Copyright, licensing, and no warranty <span class="arrow">▶</span></h3>
+			</div>
+			<div class="wide_column">
+				<div class="w3-container w3-light-blue collapsible-header" onclick="toggleSection(this)" style="cursor: pointer;" data-section-id="Copyright">
+					<h3 id="header_copyright">Copyright, licensing, and no warranty <span class="arrow">▾</span></h3>
 				</div>
-				<div class="w3-container"  style="font-size: small;" hidden>
+				<div class="w3-container"  style="font-size: small;">
 					<!-- <span style="font-size:x-small"> -->
 						<p id="version_info" class="justified-text"></p>
 						<p class="justified-text">
@@ -2586,12 +2614,11 @@
 							Use of these services is subject to their respective terms and privacy policies, which are independent of this software.
 						</p>
 					<!-- </span> -->
-					<p class="column2-hide">
+					<p>
 						<span style="font-size: x-small"><a href="#header_top">Back to top</a>.</span>
 					</p>
 				</div>
 			</div>
-
 		</div>
 		<div  class="w3-container" style="width: 100%;">
 			<hr>
