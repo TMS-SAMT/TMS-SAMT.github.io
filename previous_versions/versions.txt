@@ -15,6 +15,10 @@ SAMT_v1.9.0-beta						2026.04.16	1.9.0-beta		Updated version to 1.9.0-beta and d
 									Options for voice control.
 									Update medRxiv preprint to paper.
 
+SAMT_v1.8.8								2026.03.10	1.8.8		Updated version to 1.8.8 and date to 2026.04.26.
+									Make sections collapsible.
+									Improved support for smartphones: Reduce minimum screen width from 640px to 320px (CSS pixels). PR: LMK.
+
 SAMT_v1.8.7								2026.03.10	1.8.7		Updated version to 1.8.6 and date to 2026.03.10.
 									Minor correction (typos).
 
