@@ -1728,6 +1728,20 @@
 			}
 
 			window.addEventListener("DOMContentLoaded", restoreCollapsibleSections);
+
+			window.addEventListener("load", function () {
+				const box = document.getElementById("visit_counter_box");
+				const area = document.getElementById("visit_counter_area");
+
+				if (!box || !area) return;
+
+				const visibleText = area.innerText.trim();
+				const hasCounterImage = area.querySelector("img.statcounter");
+
+				if (!visibleText && !hasCounterImage) {
+					box.style.display = "none";
+				}
+			});
 		</script>
 	</head>
 
@@ -2084,18 +2098,20 @@
 				</div>
 			</div>
 		</div>
-		<div  class="w3-container" style="width: 100%;">
+		<div id="visit_counter_box" class="w3-container" style="width: 100%;">
 			<hr>
 			Number of visits:
 			<!-- Default Statcounter code for TMS-SAMT https://tms-samt.github.io/ -->
-			<script type="text/javascript">
-				var sc_project=12909996;
-				var sc_invisible=0;
-				var sc_security="bdd0174f";
-				var scJsHost = "https://";
-				document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
-				"statcounter.com/counter/counter.js'></"+"script>");
-			</script>
+			<span id="visit_counter_area">
+				<script type="text/javascript">
+					var sc_project=12909996;
+					var sc_invisible=0;
+					var sc_security="bdd0174f";
+					var scJsHost = "https://";
+					document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
+					"statcounter.com/counter/counter.js'></"+"script>");
+				</script>
+			</span>
 			<noscript>
 				<div class="statcounter">
 					<a title="Web Analytics"
