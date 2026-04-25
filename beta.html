@@ -321,7 +321,11 @@
 				.column2-hide {
 					display: block;
 				}
-
+				
+				.mt-estimate-panel {
+					min-height: 10px;
+					height: auto;
+				}
 				h1{font-size:30px}
 				h2{font-size:24px}
 				h3{font-size:20px}
@@ -2237,17 +2241,32 @@
 			window.addEventListener("DOMContentLoaded", restoreCollapsibleSections);
 
 			window.addEventListener("load", function () {
-				const box = document.getElementById("visit_counter_box");
-				const area = document.getElementById("visit_counter_area");
+				setTimeout(function () {
+					const box = document.getElementById("visit_counter_box");
+					const area = document.getElementById("visit_counter_area");
 
-				if (!box || !area) return;
+					if (!box || !area) return;
 
-				const visibleText = area.innerText.trim();
-				const hasCounterImage = area.querySelector("img.statcounter");
+					window.sc_project = 12909996;
+					window.sc_invisible = 0;
+					window.sc_security = "bdd0174f";
 
-				if (!visibleText && !hasCounterImage) {
-					box.style.display = "none";
-				}
+					const script = document.createElement("script");
+					script.type = "text/javascript";
+					script.src = "https://statcounter.com/counter/counter.js";
+
+					// If script loads → show the counter
+					script.onload = function () {
+						box.style.display = "block";
+					};
+
+					// If blocked → keep it hidden
+					script.onerror = function () {
+						// do nothing (stays hidden)
+					};
+					
+					area.appendChild(script);
+				}, 50); // 50 microsecond delay
 			});
 		</script>
 	</head>
@@ -2258,7 +2277,7 @@
 		</div>
 
 		<div class="w3-container w3-blue">
-			<h2>Stochastic Approximator of MT (SAMT) <span style="font-size: small"><a id="header_ver" href="#header_copyright"> </a>, back to <a href="https://tms-samt.github.io">stable release</a></span></h2>
+			<h2>Stochastic Approximator of MT (SAMT) <span style="font-size: small"><a id="header_ver" href="#header_copyright"></a>, back to <a href="https://tms-samt.github.io">stable release</a></span></h2>
 		</div>
 
 		<div class="both">
@@ -2532,7 +2551,7 @@
 					</p>
 					<p class="justified-text">All processing is performed locally within the app, except for optional voice features. 
 						When voice input is enabled, speech may be processed using the browser's built-in speech recognition services, 
-						which can transmit audio to third-party providers (e.g., Google, Apple) for recognition.
+						which can transmit audio to third-party providers (e.g., Google, Apple) for recognition. 
 						If spoken output is enabled, text may be processed by the browser's speech synthesis functionality, 
 						which may use either local or remote voices depending on the browser and system configuration. 
 						The app itself does not store or transmit voice data, transcripts, or text used for speech synthesis online.
@@ -2594,7 +2613,7 @@
 				<div class="w3-container w3-light-blue collapsible-header" onclick="toggleSection(this)" style="cursor: pointer;" data-section-id="Copyright">
 					<h3 id="header_copyright">Copyright, licensing, and no warranty <span class="arrow">▾</span></h3>
 				</div>
-				<div class="w3-container"  style="font-size: small;">
+				<div class="w3-container" style="font-size: small;">
 					<!-- <span style="font-size:x-small"> -->
 						<p id="version_info" class="justified-text"></p>
 						<p class="justified-text">
@@ -2634,30 +2653,10 @@
 				</div>
 			</div>
 		</div>
-		<div id="visit_counter_box" class="w3-container" style="width: 100%;">
+		<div id="visit_counter_box" class="w3-container" style="width: 100%; display: none;">
 			<hr>
 			Number of visits:
-			<!-- Default Statcounter code for TMS-SAMT https://tms-samt.github.io/ -->
-			<span id="visit_counter_area">
-				<script type="text/javascript">
-					var sc_project=12909996;
-					var sc_invisible=0;
-					var sc_security="bdd0174f";
-					var scJsHost = "https://";
-					document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
-					"statcounter.com/counter/counter.js'></"+"script>");
-				</script>
-			</span>
-			<noscript>
-				<div class="statcounter">
-					<a title="Web Analytics"
-					href="https://statcounter.com/" target="_blank"><img class="statcounter"
-					src="https://c.statcounter.com/12909996/0/bdd0174f/0/" alt="Web Analytics"
-					referrerPolicy="no-referrer-when-downgrade">
-					</a>
-				</div>
-			</noscript>
-			<!-- End of Statcounter Code -->
+			<span id="visit_counter_area"></span>
 		</div>
 
 	</body>
