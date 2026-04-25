@@ -282,6 +282,11 @@
 				vertical-align:top;
 				width: 49.9%;
 			}
+			
+            .mt-estimate-panel {
+				min-height: 250px;
+				height: auto;
+			}
 
 			@media screen and (max-width: 1280px) {
 				* {
@@ -305,6 +310,10 @@
 					display: block;
 				}
 
+				.mt-estimate-panel {
+					min-height: 10px;
+					height: auto;
+				}
 				h1{font-size:30px}
 				h2{font-size:24px}
 				h3{font-size:20px}
@@ -1730,17 +1739,32 @@
 			window.addEventListener("DOMContentLoaded", restoreCollapsibleSections);
 
 			window.addEventListener("load", function () {
+				setTimeout(function () {
 				const box = document.getElementById("visit_counter_box");
 				const area = document.getElementById("visit_counter_area");
 
 				if (!box || !area) return;
 
-				const visibleText = area.innerText.trim();
-				const hasCounterImage = area.querySelector("img.statcounter");
+					window.sc_project = 12909996;
+					window.sc_invisible = 0;
+					window.sc_security = "bdd0174f";
 
-				if (!visibleText && !hasCounterImage) {
-					box.style.display = "none";
-				}
+					const script = document.createElement("script");
+					script.type = "text/javascript";
+					script.src = "https://statcounter.com/counter/counter.js";
+
+					// If script loads → show the counter
+					script.onload = function () {
+						box.style.display = "block";
+					};
+
+					// If blocked → keep it hidden
+					script.onerror = function () {
+						// do nothing (stays hidden)
+					};
+					
+					area.appendChild(script);
+				}, 50); // 50 microsecond delay
 			});
 		</script>
 	</head>
@@ -1751,7 +1775,7 @@
 		</div>
 
 		<div class="w3-container w3-blue">
-			<h2>Stochastic Approximator of MT (SAMT) <span style="font-size: small"><a id="header_ver" href="#header_copyright"> </a>, latest <a href="https://tms-samt.github.io/beta.html">beta version</a></span></h2>
+			<h2>Stochastic Approximator of MT (SAMT) <span style="font-size: small"><a id="header_ver" href="#header_copyright"></a>, latest <a href="https://tms-samt.github.io/beta.html">beta version</a></span></h2>
 		</div>
 
 		<div class="both">
@@ -1786,7 +1810,7 @@
 				<div class="w3-container w3-light-blue" >
 					<h3>Motor threshold estimate</h3>
 				</div>
-				<div class="w3-container" style="height:250px">
+				<div class="w3-container mt-estimate-panel">
 					<p>		<!-- Method selection -->
 						<output id="MT_method_msg" hidden=""></output>
 					</p>
@@ -2098,30 +2122,10 @@
 				</div>
 			</div>
 		</div>
-		<div id="visit_counter_box" class="w3-container" style="width: 100%;">
+		<div id="visit_counter_box" class="w3-container" style="width: 100%; display: none;">
 			<hr>
 			Number of visits:
-			<!-- Default Statcounter code for TMS-SAMT https://tms-samt.github.io/ -->
-			<span id="visit_counter_area">
-				<script type="text/javascript">
-					var sc_project=12909996;
-					var sc_invisible=0;
-					var sc_security="bdd0174f";
-					var scJsHost = "https://";
-					document.write("<sc"+"ript type='text/javascript' src='" + scJsHost+
-					"statcounter.com/counter/counter.js'></"+"script>");
-				</script>
-			</span>
-			<noscript>
-				<div class="statcounter">
-					<a title="Web Analytics"
-					href="https://statcounter.com/" target="_blank"><img class="statcounter"
-					src="https://c.statcounter.com/12909996/0/bdd0174f/0/" alt="Web Analytics"
-					referrerPolicy="no-referrer-when-downgrade">
-					</a>
-				</div>
-			</noscript>
-			<!-- End of Statcounter Code -->
+			<span id="visit_counter_area"></span>
 		</div>
 
 	</body>
