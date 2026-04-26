@@ -246,6 +246,27 @@
 			.orange-caution {color:#ff9800;font-weight: bold;}
 			.green-ok {color:#4caf50;font-weight: bold;}
 
+			:root {
+				--app-font-size: 15px;
+				--h1-size: 36px;
+				--h2-size: 30px;
+				--h3-size: 24px;
+				--h4-size: 20px;
+				--h5-size: 18px;
+				--h6-size: 16px;
+			}
+
+			html, body {
+				font-size: var(--app-font-size);
+			}
+
+			h1 { font-size: var(--h1-size); }
+			h2 { font-size: var(--h2-size); }
+			h3 { font-size: var(--h3-size); }
+			h4 { font-size: var(--h4-size); }
+			h5 { font-size: var(--h5-size); }
+			h6 { font-size: var(--h6-size); }
+
 			body {
 				max-width: 1280px;
 				min-width: 1280px;
@@ -254,14 +275,13 @@
 			}
 			.justified-text {
 				text-align: justify;
+				font-size: var(--app-font-size);
 			}
-			* {
-				box-sizing: border-box;
-			}
+			
 			#textarea_MT_pulseList {
 				width: 100%;
 				font-family: monospace;
-				font-size: min(3vw,15px);
+				font-size: min(1em,15px);
 			}
 			.column2-hide {
 				display: none;
@@ -282,16 +302,26 @@
 				vertical-align:top;
 				width: 49.9%;
 			}
-			
-            .mt-estimate-panel {
-				min-height: 250px;
+			.mt-estimate-panel {
+				min-height: 340px;
 				height: auto;
 			}
-
+            .response-button-row {
+				display: flex;
+				gap: 6px;
+				flex-wrap: nowrap;   /* always side by side */
+			}
+			.response-button {
+				flex: 1 1 0;
+				min-width: 0;
+				font-size: 1em;
+				padding: 0.75em 0.75em;
+			}
+			.regular-button {
+				font-size: 1em;
+				padding: 0.15em 0.75em;
+			}
 			@media screen and (max-width: 1280px) {
-				* {
-					box-sizing: border-box;
-				}
 				body {
 					max-width: 640px;
 					min-width: 320px;
@@ -309,31 +339,49 @@
 				.column2-hide {
 					display: block;
 				}
-
 				.mt-estimate-panel {
 					min-height: 10px;
 					height: auto;
 				}
-				h1{font-size:30px}
-				h2{font-size:24px}
-				h3{font-size:20px}
-				h4{font-size:18px}
-				h5{font-size:16px}
-				h6{font-size:14px}
-				
+				.voice-status {
+					font-size: 0.7em;
+				}
+				:root {
+					--h1-size: 30px;
+					--h2-size: 24px;
+					--h3-size: 20px;
+					--h4-size: 18px;
+					--h5-size: 16px;
+					--h6-size: 14px;
+				}
 				canvas {
 					width: 93.75%; /* To maintain the ratio between canvas width to body width, 600/640 = 0.9375 */
 					max-width: 600px;
 				}
 			}
+
+			@media screen and (max-width: 640px) {
+				:root {
+					--app-font-size: clamp(9px, calc(3px + 1.875vw), 15px);
+
+					--h1-size: clamp(15px, calc(0px + 4.6875vw), 30px);
+					--h2-size: clamp(14px, calc(4px + 3.125vw), 24px);
+					--h3-size: clamp(13px, calc(6px + 2.1875vw), 20px);
+					--h4-size: clamp(12px, calc(6px + 1.875vw), 18px);
+					--h5-size: clamp(11px, calc(6px + 1.5625vw), 16px);
+					--h6-size: clamp(10px, calc(6px + 1.25vw), 14px);
+				}
+			}
+			
 			.arrow {
 				font-family: Arial, sans-serif;
 				/* font-size: 1em; */
 				/* margin-left: 0.25em; */
 			}
+			
 			[hidden] {
-			display: none !important;
-			}
+				display: none !important;
+				}
 		</style>
 
 		<script type="text/javascript">
@@ -1775,7 +1823,7 @@
 		</div>
 
 		<div class="w3-container w3-blue">
-			<h2>Stochastic Approximator of MT (SAMT) <span style="font-size: small"><a id="header_ver" href="#header_copyright"></a>, latest <a href="https://tms-samt.github.io/beta.html">beta version</a></span></h2>
+			<h2>Stochastic Approximator of MT (SAMT) <span style="font-size: 0.5em"><a id="header_ver" href="#header_copyright"></a>, latest <a href="https://tms-samt.github.io/beta.html">beta version</a></span></h2>
 		</div>
 
 		<div class="both">
@@ -1793,15 +1841,15 @@
 						<input type="number" id="input_MT_0" name="MT_0" max="100" min="1" placeholder="" step="1" value="" size="3" required="">%&nbsp;MSO
 					</fieldset>
 					<p id="Start_msg">
-						<button class="w3-green" id="button_MT_start" style="height:35px;width:80px"><u>S</u>tart</button> and move to next section.
+						<button class="w3-green regular-button" id="button_MT_start"><u>S</u>tart</button> and move to next section.
 					</p>
 					<p id="Reset_msg" hidden="">
-						<button class="w3-black" id="button_MT_reset" style="height:35px;width:140px"><u>T</u>erminate/reset</button> current procedure.
+						<button class="w3-black regular-button" id="button_MT_reset"><u>T</u>erminate/reset</button> current procedure.
 					</p>
-					<p class = "justified-text" style="font-size: small;">		<!-- Method selection -->
+					<p class = "justified-text" style="font-size: 0.85em;">		<!-- Method selection -->
 						<output id="Method_selection_msg"></output>
 					</p>
-					<p style="font-size: small;">
+					<p style="font-size: 0.85em;">
 						<a href="#header_settings">Settings</a>, <a href="#header_information">instructions, and method descriptions</a>.
 					</p>
 				</div>
@@ -1810,7 +1858,7 @@
 				<div class="w3-container w3-light-blue" >
 					<h3>Motor threshold estimate</h3>
 				</div>
-				<div class="w3-container mt-estimate-panel">
+				<div class="w3-container" style="min-height:250px">
 					<p>		<!-- Method selection -->
 						<output id="MT_method_msg" hidden=""></output>
 					</p>
@@ -1820,8 +1868,10 @@
 					<div id="table_response_input" hidden="">
 						<fieldset id="field_is_suprathreshold_bottoms" hidden="">
 							<legend>TMS response present / MEP suprathreshold?</legend>
-							<button class="w3-green" id="button_MT_MEP" disabled="" style="height:50px;width:250px"><u>Y</u>es: present / suprathreshold</button>
-							<button class="w3-red" id="button_MT_noMEP" disabled="" style="height:50px;width:250px"><u>N</u>o: absent / subthreshold</button>
+                            <div class="response-button-row">
+								<button class="w3-green response-button" id="button_MT_MEP" disabled=""><u>Y</u>es: present / suprathreshold</button>
+								<button class="w3-red response-button" id="button_MT_noMEP" disabled=""><u>N</u>o: absent / subthreshold</button>
+							</div>
 						</fieldset>
 						<fieldset id="field_response_Vpp_box" hidden="">
 							<legend>TMS response</legend>
@@ -1831,7 +1881,7 @@
 								μV<sub>pp</sub>, (0 to 10<sup>6</sup>].
 							</div>
 							<div>
-								<button class="w3-green" id="button_Enter_Vpp" disabled="" style="height:50px;width:300px"><u>Enter</u></button>	<!--Dummy input for analog methods-->
+								<button class="w3-green response-button" id="button_Enter_Vpp" disabled=""><u>Enter</u></button>	<!--Dummy input for analog methods-->
 							</div>
 						</fieldset>
 					</div>
@@ -1840,8 +1890,8 @@
 						<br>
 						<output id="MT_estimateDescription_msg" hidden=""></output>
 						<output id="Refine_msg" hidden="">
-							<button class="w3-gray" id="button_MT_refine" disabled="" style="height:35px;width:80px">
-								<u>R</u>estart
+							<button class="w3-gray regular-button" id="button_MT_refine" disabled="">
+								<u>r</u>estart
 							</button> threshold estimation from last intensity of current procedure.
 						</output>
 					</p>
@@ -1856,10 +1906,10 @@
 			<div class="equal_column">
 				<div class="w3-container" id="log">
 					<p>
-						<button id="DownloadFile_botton" class="w3-green" disabled="true" style="height:30px;width:100px"><u>D</u>ownload</button> or
-						<button id="CopyClipboard_botton" class="w3-green" disabled="true" style="height:30px;width:60px"><u>c</u>opy</button> data
+						<button class="w3-green regular-button" id="DownloadFile_botton" disabled="true"><u>D</u>ownload</button> or
+						<button class="w3-green regular-button" id="CopyClipboard_botton" disabled="true"><u>c</u>opy</button> data
 					</p>
-					<textarea id="textarea_MT_pulseList" rows="39" style="font-size: small;" readonly=""></textarea>
+					<textarea id="textarea_MT_pulseList" rows="39" style="font-size: 0.85em;" readonly=""></textarea>
 					<p>
 						<span style="font-size: x-small"><a href="#header_top">Back to top</a>.</span>
 					</p>
@@ -1869,7 +1919,7 @@
 			<div class="equal_column">
 				<div class="w3-container" id="graphing">
 					<p>
-					<button id="SaveImage_botton" class="w3-green" disabled="true" style="height:30px;width:60px">Sa<u>v</u>e</button> image
+					<button id="SaveImage_botton" class="w3-green regular-button" disabled="true" >Sa<u>v</u>e</button> image
 					</p>
 					<canvas id="canvas_response" width="600" height="750"></canvas>
 					<p class="column2-hide">
@@ -2003,7 +2053,7 @@
 						For adaptive stepping, the control sequence is adjusted only when the response changes from suprathreshold to subthreshold 
 						or vice versa. With a good initial intensity, the estimator takes on average 20&nbsp;pulses 
 						to determine the MT with median relative error |&NoBreak;<i>δ</i>&NoBreak;| of less than 1.5%.</p>
-					<p class="justified-text" style="font-size: small;"><strong>Note</strong>: The fixed stepping method DCS-H, which was available up to version 
+					<p class="justified-text" style="font-size: 0.85em;"><strong>Note</strong>: The fixed stepping method DCS-H, which was available up to version 
 						<a href="https://tms-samt.github.io/previous_versions/SAMT_v1.7.4.html">1.7.4</a>, is now deprecated, because adaptive stepping 
 						is more robust with respect to participant characteristics, target muscle, starting TMS amplitude, as well as TMS device and coil.</p>
 					<!-- 
@@ -2044,7 +2094,7 @@
 				<div class="w3-container w3-light-blue collapsible-header" onclick="toggleSection(this)" style="cursor: pointer;" data-section-id="References">
 					<h3 id="header_references">References <span class="arrow">▾</span></h3>
 				</div>
-				<div class="w3-container" style="font-size: small;">
+				<div class="w3-container" style="font-size: 0.85em;">
 					<p class="justified-text" style="margin-bottom: 0;">The stochastic approximation MT methods are described in the following manuscript,
 						which explores the performance of different control sequences, stepping adaptiveness, and initial step size:
 					</p>
@@ -2087,7 +2137,7 @@
 				<div class="w3-container w3-light-blue collapsible-header" onclick="toggleSection(this)" style="cursor: pointer;" data-section-id="Copyright">
 					<h3 id="header_copyright">Copyright, licensing, and no warranty <span class="arrow">▾</span></h3>
 				</div>
-				<div class="w3-container" style="font-size: small;">
+				<div class="w3-container" style="font-size: 0.85em;">
 					<!-- <span style="font-size:x-small"> -->
 						<p id="version_info" class="justified-text"></p>
 						<p class="justified-text">
