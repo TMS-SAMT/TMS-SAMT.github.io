@@ -298,7 +298,7 @@
 				width: 49.9%;
 			}
 			.mt-estimate-panel {
-				min-height: 340px;
+				min-height: 250px;
 				height: auto;
 			}
             .response-button-row {
@@ -468,7 +468,7 @@
 				// Description of the quality of current estimation, based on relative frequency of positive/negative responses during last 10 pulses
 				get description() {
 					const getPulseCountDescription = (pulses) => {
-						return `This estimate is <span class='red-warning'>${pulses < 15 ? 'inaccurate' : 'likely inaccurate'}</span> due to too few pulses (${pulses}).`;
+						return `This estimate is <span class='red-warning'>${pulses < 15 ? 'inaccurate' : 'likely inaccurate'}</span> due to too few pulses (${pulses}). ${this.active ? '' : 'Please '}`;
 					};
 
 					const getInaccurateDescription = (MEPs, additionalMessage) => {
@@ -502,10 +502,10 @@
 					} else {
 						// A good estimation sequence must have both MEPs and no MEPs towards the end, count last 10 pulses
 						const MEPs = this.countMEPs[this.index - 1];
-						const fewMorePulsesMessage = (this.index < 29) ? "Give a few more pulses." : "";
+						const fewMorePulsesMessage = (this.index < 29 && this.active) ? "Give a few more pulses." : "Please ";
 						const lowHighMessage = (MEPs <= 2) ? "higher" : "lower";
-						const restartMessage = (this.index >= 29) ? `Restart at a ${lowHighMessage} initial TMS intensity, or ` : "";
-						const evaluateMessage = (this.index >= 29) ? `Evaluate the procedure, especially the last 10 pulses to determine whether to accept this estimate,
+						const restartMessage = (this.index >= 29 || !this.active) ? `restart at a ${lowHighMessage} initial TMS intensity, or ` : "";
+						const evaluateMessage = (this.index >= 29 || !this.active) ? `evaluate the procedure, especially the last 10 pulses to determine whether to accept this estimate,
 							restart at a ${lowHighMessage} initial TMS intensity, or ` : "";
 
 						const commonInaccuracyMessage = `${fewMorePulsesMessage}${restartMessage}`;
@@ -1051,7 +1051,7 @@
 				const elementsToShow = [
 					"Start_msg"
 				];
-
+				
 				if (!digital) {							//Enable threshold definition only when analog is selected
 					elementsToEnable.push("input_Vpp_th");
 				} else {
@@ -1068,6 +1068,7 @@
 
 				document.getElementById("input_MT_0").value="";
 				document.getElementById("input_participant_ID").value="";
+				
 
 				// Insert trial end information
 				const index = MT_estimator.index;
@@ -1094,6 +1095,7 @@
 					disableElements(["button_MT_refine"], false);
 				}
 				document.getElementById("textarea_MT_pulseList").innerHTML = `${lines.slice(0, 7).join("\n")}\n${lines.slice(7).join("\n")}`;
+				MT_estimator.active = false;
 
 				// Update user inferface
 				MT_UI();
@@ -1107,7 +1109,7 @@
 				if (!MT_estimator.figure_saved && document.getElementById("autosavefig").checked) {
 					saveImageFile('canvas_response');
 				}
-				MT_estimator.active = false;
+				
 			}
 
 			// Process stimulate button
@@ -1850,7 +1852,7 @@
 				<div class="w3-container w3-light-blue" >
 					<h3>Motor threshold estimate</h3>
 				</div>
-				<div class="w3-container" style="min-height:250px">
+				<div class="w3-container mt-estimate-panel">
 					<p>		<!-- Method selection -->
 						<output id="MT_method_msg" hidden=""></output>
 					</p>

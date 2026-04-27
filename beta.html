@@ -490,7 +490,7 @@
 				// Description of the quality of current estimation, based on relative frequency of positive/negative responses during last 10 pulses
 				get description() {
 					const getPulseCountDescription = (pulses) => {
-						return `This estimate is <span class='red-warning'>${pulses < 15 ? 'inaccurate' : 'likely inaccurate'}</span> due to too few pulses (${pulses}).`;
+						return `This estimate is <span class='red-warning'>${pulses < 15 ? 'inaccurate' : 'likely inaccurate'}</span> due to too few pulses (${pulses}). ${this.active ? '' : 'Please '}`;
 					};
 
 					const getInaccurateDescription = (MEPs, additionalMessage) => {
@@ -524,10 +524,10 @@
 					} else {
 						// A good estimation sequence must have both MEPs and no MEPs towards the end, count last 10 pulses
 						const MEPs = this.countMEPs[this.index - 1];
-						const fewMorePulsesMessage = (this.index < 29) ? "Give a few more pulses." : "";
+						const fewMorePulsesMessage = (this.index < 29 && this.active) ? "Give a few more pulses." : "Please ";
 						const lowHighMessage = (MEPs <= 2) ? "higher" : "lower";
-						const restartMessage = (this.index >= 29) ? `Restart at a ${lowHighMessage} initial TMS intensity, or ` : "";
-						const evaluateMessage = (this.index >= 29) ? `Evaluate the procedure, especially the last 10 pulses to determine whether to accept this estimate,
+						const restartMessage = (this.index >= 29 || !this.active) ? `restart at a ${lowHighMessage} initial TMS intensity, or ` : "";
+						const evaluateMessage = (this.index >= 29 || !this.active) ? `evaluate the procedure, especially the last 10 pulses to determine whether to accept this estimate,
 							restart at a ${lowHighMessage} initial TMS intensity, or ` : "";
 
 						const commonInaccuracyMessage = `${fewMorePulsesMessage}${restartMessage}`;
@@ -1108,6 +1108,7 @@
 				document.getElementById("input_MT_0").value="";
 				document.getElementById("input_participant_ID").value="";
 
+
 				// Insert trial end information
 				const index = MT_estimator.index;
 				let x = MT_estimator.MT_estimate[index].toFixed(1);
@@ -1133,9 +1134,10 @@
 					disableElements(["button_MT_refine"], false);
 				}
 				document.getElementById("textarea_MT_pulseList").innerHTML = `${lines.slice(0, 7).join("\n")}\n${lines.slice(7).join("\n")}`;
-
+				
+				MT_estimator.active = false;
 				stopSpeechOutput();
-
+				
 				// Update user inferface
 				MT_UI();
 				updateVoiceUI(false);
