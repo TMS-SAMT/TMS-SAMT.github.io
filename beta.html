@@ -1712,7 +1712,6 @@
 				const isIOS =
 					/iPad|iPhone|iPod/.test(navigator.userAgent) ||
 					(navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-
 				// iPhone / iPad: use native share sheet
 				if (
 					isIOS &&
@@ -1723,7 +1722,6 @@
 						await navigator.share({
 							files: [file]
 						});
-
 						MT_estimator.data_saved = true;
 						return;
 					} catch (error) {
@@ -1754,13 +1752,59 @@
 
 			// Save canvas as an image file
 			function saveImageFile(canvasName) {
-				const element = document.createElement("a");
-				element.href = document.getElementById(canvasName).toDataURL("image/png");
-				element.download = `${defaultFilename()}.png`;
-				element.style.display = "none";
-				document.body.appendChild(element).click();
-				document.body.removeChild(element);
-				MT_estimator.figure_saved = true;
+				const canvas = document.getElementById(canvasName);
+				const filename = `${defaultFilename()}.png`;
+
+				canvas.toBlob(async function(blob) {
+					if (!blob) {
+						console.error("Failed to create image.");
+						return;
+					}
+					const file = new File(
+						[blob],
+						filename,
+						{ type: "image/png" }
+					);
+					const isIOS =
+						/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+						(navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+					// iPhone / iPad: use native share sheet
+					if (
+						isIOS &&
+						navigator.canShare &&
+						navigator.canShare({ files: [file] })
+					) {
+						try {
+							await navigator.share({
+								files: [file]
+							});
+							MT_estimator.figure_saved = true;
+							return;
+						} catch (error) {
+							if (error.name === "AbortError") {
+								return;
+							}
+							console.warn("iOS image sharing failed:", error);
+						}
+					}
+
+					// Standard browser download
+					const url = URL.createObjectURL(blob);
+					const element = document.createElement("a");
+
+					element.href = url;
+					element.download = filename;
+					element.style.display = "none";
+
+					document.body.appendChild(element);
+					element.click();
+					element.remove();
+
+					setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+					MT_estimator.figure_saved = true;
+
+				}, "image/png");
 			}
 
 			// Generate a default filename based on the current date and time
@@ -2581,7 +2625,9 @@
 						<input type="checkbox" id="voiceenable" name="voiceenable" value="voice_enabled">
 						<label for="voiceenable">Enable voice input (say “RESPONSE YES” or “RESPONSE NO”).</label> 
 						<div class="setting-note">
-							Uses your microphone; speech may be processed by your browser's speech recognition service (e.g., Google). 
+							Uses your microphone. 
+							For best results, use a close-positioned microphone (e.g., headset, ear-mounted, or clip-on/lavalier) rather than a distant built-in microphone.
+							Speech may be processed by your browser's speech recognition service (e.g., Google).
 							Not supported by some browsers (e.g., Firefox).
 						</div>
 						<input type="checkbox" id="speechoutputenable" name="speechoutputenable" value="speech_output_enabled">
@@ -2680,7 +2726,7 @@
 					<p class="justified-text" style="margin-top: 0; margin-bottom: 0;">
 						Assessment of SAMT in clinical studies is described here:
 					</p>
-						<ul class="justified-text" style="margin-top: 0; margin-bottom: 0;">
+					<ul class="justified-text" style="margin-top: 0; margin-bottom: 0;">
 						<li>B.&nbsp;Wang, V.&nbsp;U.&nbsp;Shah, L.&nbsp;M.&nbsp;Koponen, 
 							A.&nbsp;D.&nbsp;Neacsiu, Z.&nbsp;J.&nbsp;Daskalakis, P.&nbsp;B.&nbsp;Fitzgerald, L.&nbsp;G.&nbsp;Appelbaum, 
 							J.&nbsp;Y.&nbsp;Choi, N.&nbsp;Gerlus, Y.&nbsp;Li, 
