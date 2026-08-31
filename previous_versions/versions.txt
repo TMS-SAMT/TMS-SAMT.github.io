@@ -1,6 +1,9 @@
 Access old versions using: https://tms-samt.github.io/previous_versions/FILENAME
 
 Filename				Date		Version		Description
+SAMT_v1.9.4								2026.08.31	1.9.4	Updated version to 1.9.4 and date to 2026.08.31.
+									Voice features moved to stable release. No beta version.
+									
 SAMT_v1.9.3-beta						2026.08.26	1.9.3-beta	Updated version to 1.9.3-beta and date to 2026.08.26.
 									Fixed file download bug for iPhone and iPads due to recent iOS updates.
 									Fixed bug with voice feedback on last pulse.
